@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "863362114183",
+    "project_id": "cosmo-care-db4b9",
+    "storage_bucket": "cosmo-care-db4b9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:863362114183:android:7f7b51437c3452e903ce22",
+        "android_client_info": {
+          "package_name": "com.grad_project.cosmo_care"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7NIeFArQ_vBqNx5vTirVACVR3Lq_YPRE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
