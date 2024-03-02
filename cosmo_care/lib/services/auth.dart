@@ -13,7 +13,7 @@ class authService {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       return credential.user;
     }
-    on FirebaseAuthException catch (e) {
+    catch (e) {
       print(e.toString());
       return null;
     }
@@ -30,7 +30,7 @@ class authService {
       UserCredential credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
       return credential.user;
     }
-    on FirebaseAuthException catch (e) {
+    catch (e) {
       print(e.toString());
       return null;
     }
@@ -42,4 +42,15 @@ class authService {
     // }
     // return null;
   }
+
+  Future signOut() async {
+    try {
+      return await _auth.signOut();
+    }
+    catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
 }
