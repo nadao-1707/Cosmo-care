@@ -26,7 +26,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -55,14 +58,5 @@ class DefaultFirebaseOptions {
     messagingSenderId: '863362114183',
     projectId: 'cosmo-care-db4b9',
     storageBucket: 'cosmo-care-db4b9.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA6vKpD52G6hBRGXxmCshE4k2d3X-aW1lo',
-    appId: '1:863362114183:ios:c9f4d2a67a8a80d703ce22',
-    messagingSenderId: '863362114183',
-    projectId: 'cosmo-care-db4b9',
-    storageBucket: 'cosmo-care-db4b9.appspot.com',
-    iosBundleId: 'com.example.cosmoCare',
   );
 }
