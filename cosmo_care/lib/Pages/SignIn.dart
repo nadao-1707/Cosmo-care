@@ -1,6 +1,7 @@
 import 'package:cosmo_care/Services/AuthService.dart';
 import 'package:cosmo_care/Pages/Home.dart';
 import 'package:flutter/material.dart';
+import 'package:cosmo_care/Pages/AdminHome.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
@@ -71,7 +72,12 @@ class _SignInState extends State<SignIn> {
                         error = 'Could not sign in with those credentials';
                       });
                     } else {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+                      String? userId = await _auth.getUserId();
+                      if (userId == "qiVz5dEYVxM1z2LZBR4lGCQ3QnS2") {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => AdminHome()));
+                      } else {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+                      }
                     }
                   }
                 },

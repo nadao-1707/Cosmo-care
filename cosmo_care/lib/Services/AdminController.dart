@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cosmo_care/Services/AuthService.dart';
-import 'package:Entities/Product.dart';
+import 'package:cosmo_care/Entities/Product.dart';
 
 class AdminController {
 

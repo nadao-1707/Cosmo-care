@@ -2,7 +2,7 @@ import 'package:cosmo_care/Services/AuthService.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmo_care/Services/Authenticate.dart';
 
-class Home extends StatelessWidget {
+class AdminHome extends StatelessWidget {
   final AuthService _auth = AuthService();
 
   @override
@@ -11,7 +11,7 @@ class Home extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.brown[50],
       appBar: AppBar(
-        title: Text('Home'),
+        title: Text('AdminHome'),
         backgroundColor: Colors.brown[400],
         elevation: 0.0,
         actions: <Widget>[
