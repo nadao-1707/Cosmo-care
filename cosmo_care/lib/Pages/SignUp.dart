@@ -1,5 +1,4 @@
-import 'package:cosmo_care/Controllers/AuthService.dart';
-import 'package:cosmo_care/Pages/SignIn.dart';
+import 'package:cosmo_care/Services/AuthService.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {

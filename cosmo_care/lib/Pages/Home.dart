@@ -1,6 +1,6 @@
-import 'package:cosmo_care/Controllers/AuthService.dart';
+import 'package:cosmo_care/Services/AuthService.dart';
 import 'package:flutter/material.dart';
-import 'package:cosmo_care/Controllers/Authenticate.dart';
+import 'package:cosmo_care/Services/Authenticate.dart';
 
 class Home extends StatelessWidget {
   final AuthService _auth = AuthService();

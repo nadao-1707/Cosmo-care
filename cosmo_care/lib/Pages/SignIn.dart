@@ -1,4 +1,4 @@
-import 'package:cosmo_care/Controllers/AuthService.dart';
+import 'package:cosmo_care/Services/AuthService.dart';
 import 'package:cosmo_care/Pages/Home.dart';
 import 'package:flutter/material.dart';
 

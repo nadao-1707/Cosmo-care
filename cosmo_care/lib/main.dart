@@ -1,10 +1,9 @@
 import 'package:cosmo_care/Entities/Client.dart';
-import 'package:cosmo_care/Controllers/Wrapper.dart';
-import 'package:cosmo_care/Controllers/AuthService.dart';
+import 'package:cosmo_care/Services/Wrapper.dart';
+import 'package:cosmo_care/Services/AuthService.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cosmo_care/firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
