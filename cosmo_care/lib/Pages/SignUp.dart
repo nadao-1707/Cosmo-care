@@ -45,7 +45,7 @@ class _SignUpState extends State<SignUp> {
               TextFormField(
                 validator: (val) => val!.isEmpty ? 'Enter an email' : null,
                 onChanged: (val) {
-                  setState(() => email = val!);
+                  setState(() => email = val);
                 },
               ),
               const SizedBox(height: 20.0),
@@ -54,7 +54,7 @@ class _SignUpState extends State<SignUp> {
                 validator: (val) =>
                 val!.length < 6 ? 'Enter a password 6+ chars long' : null,
                 onChanged: (val) {
-                  setState(() => password = val!);
+                  setState(() => password = val);
                 },
               ),
               const SizedBox(height: 20.0),
