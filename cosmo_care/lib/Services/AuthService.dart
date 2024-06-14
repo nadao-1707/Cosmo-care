@@ -59,7 +59,7 @@ class AuthService {
         .collection('clients')
         .doc(user?.uid)
         .withConverter<Client>(
-          fromFirestore: Client.fromFirestore,
+          fromFirestore: (snapshot, _) => Client.fromFirestore(snapshot),
           toFirestore: (client, _) => client.toFirestore(),
         )
         .set(newClient);
@@ -68,7 +68,7 @@ class AuthService {
     print(error.toString());
     return null;
   }
-}
+  }
 
 
   // sign out

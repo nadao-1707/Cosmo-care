@@ -9,18 +9,43 @@ class ClientController {
     _authService = AuthService();
   }
 
-  // to update client data
-  Future<void> updateClientData({required Client client}) async {
-    final uid = await _authService.getUserId();
-    if (uid != null) {
-      try {
-        await FirebaseFirestore.instance.collection('clients').doc(uid).update(client.toFirestore());
-      } catch (error) {
-        print(error.toString());
+  // update client data
+  Future<String> updateClientData({required Client client}) async {
+  final uid = await _authService.getUserId();
+  if (uid != null) {
+    try {
+      await FirebaseFirestore.instance.collection('clients').doc(uid).update(client.toFirestore());
+      return "Client data updated successfully.";
+    } catch (error) {
+      return "Failed to update client data.";
+    }
+  } else {
+    return "User ID not found.";
+  }
+  }
+
+  // get client data for the profile
+  Future<Client?> getClientData() async {
+    try {
+      final uid = await _authService.getUserId();
+      if (uid != null) {
+         DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore.instance.collection('clients').doc(uid).get();
+        if (doc.exists) {
+          Client client = Client.fromFirestore(doc);
+          return client;
+        } else {
+          print("Client data not found.");
+          return null;
+        }
+      } else {
+        print("User ID not found.");
+        return null;
       }
-    } else {
-      print('User ID not found');
+    } catch (error) {
+      print("Error getting client data: $error");
+      return null;
     }
   }
 
+  
 }

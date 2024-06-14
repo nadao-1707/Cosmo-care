@@ -14,7 +14,7 @@ class Client{
 
   factory Client.fromFirestore(
       DocumentSnapshot<Map<String, dynamic>> snapshot,
-      SnapshotOptions? options,) {
+      {SnapshotOptions? options}) {
     final data = snapshot.data();
     return Client (
       email: data?['email'],
