@@ -1,20 +1,23 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cosmo_care/Entities/Product.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class AdminController {
-
-  AdminController() {}
-
-  // add a new Product data
-  Future<String> addProduct({required Product product}) async {
-  try {
-    await FirebaseFirestore.instance.collection('Products').doc().set(product.toFirestore());
-    return "Product added successfully.";
-  } catch (error) {
-    return "Failed to add product.";
+  Future<String> addProduct({required Product product, required File imageFile}) async {
+    try {
+      DocumentReference docRef = await FirebaseFirestore.instance.collection('Products').add(product.toFirestore());
+      String fileName = '${docRef.id}.png';
+      Reference storageRef = FirebaseStorage.instance.ref().child('product_images').child(fileName);
+      await storageRef.putFile(imageFile);
+      String imageUrl = await storageRef.getDownloadURL();
+      await docRef.update({'imageUrl': imageUrl});
+      return docRef.id;
+    } catch (error) {
+      print("Failed to add product: $error");
+      return "Failed to add product.";
+    }
   }
-  }
-
 
   // delete a product using the product name
   Future<String> deleteProduct(String name) async {
