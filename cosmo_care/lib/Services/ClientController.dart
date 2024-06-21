@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cosmo_care/Entities/Cart.dart';
 import 'package:cosmo_care/Entities/Client.dart';
 import 'package:cosmo_care/Services/AuthService.dart';
 
@@ -46,6 +47,62 @@ class ClientController {
       return null;
     }
   }
+
+  // add to cart
+  Future<void> addToCart(String productId) async {
+  try {
+    final uid = await _authService.getUserId();
+    DocumentReference<Cart> cartRef = FirebaseFirestore.instance
+        .collection('carts')
+        .doc(uid)
+        .withConverter<Cart>(
+          fromFirestore: (snapshot, _) => Cart.fromFirestore(snapshot),
+          toFirestore: (cart, _) => cart.toFirestore(),
+        );
+
+    DocumentSnapshot<Cart> snapshot = await cartRef.get();
+
+    if (!snapshot.exists) {
+      Cart newCart = Cart(productIds: [productId]);
+      await cartRef.set(newCart);
+    } else {
+      Cart cart = snapshot.data()!;
+      if (!cart.productIds.contains(productId)) {
+        cart.productIds.add(productId);
+        await cartRef.set(cart);
+      }
+    }
+  } catch (error) {
+    print("Failed to add product to cart: $error");
+  }
+  }
+
+  // remove from cart
+  Future<void> removeFromCart(String productId) async {
+  try {
+    final uid = await _authService.getUserId();
+    DocumentReference<Cart> cartRef = FirebaseFirestore.instance
+        .collection('carts')
+        .doc(uid)
+        .withConverter<Cart>(
+          fromFirestore: (snapshot, _) => Cart.fromFirestore(snapshot),
+          toFirestore: (cart, _) => cart.toFirestore(),
+        );
+
+    DocumentSnapshot<Cart> snapshot = await cartRef.get();
+
+    if (snapshot.exists) {
+      Cart cart = snapshot.data()!;
+      if (cart.productIds.contains(productId)) {
+        cart.productIds.remove(productId);
+        await cartRef.set(cart);
+      }
+    }
+  } catch (error) {
+    print("Failed to remove product from cart: $error");
+  }
+}
+
 
   
 }

@@ -4,6 +4,7 @@ import 'package:cosmo_care/Entities/Product.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class AdminController {
+
   Future<String> addProduct({required Product product, required File imageFile}) async {
     try {
       DocumentReference docRef = await FirebaseFirestore.instance.collection('Products').add(product.toFirestore());
@@ -38,6 +39,5 @@ class AdminController {
     return "Failed to delete product.";
   }
   }
-
 
 }

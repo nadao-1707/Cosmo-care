@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cosmo_care/Entities/Cart.dart';
 import 'package:cosmo_care/Entities/Client.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -45,16 +46,15 @@ class AuthService {
     }
   }
 
-  // register with email and password
+  // register with email and password (create the client and his cart)
   Future<Client?> SignUpWithEmailAndPassword(String email, String password) async {
   try {
     UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
     User? user = result.user;
-    // Create a new client
+
     Client newClient = Client(
       email: email,
     );
-    // Write the client data to Firestore
     await FirebaseFirestore.instance
         .collection('clients')
         .doc(user?.uid)
@@ -63,13 +63,25 @@ class AuthService {
           toFirestore: (client, _) => client.toFirestore(),
         )
         .set(newClient);
+
+    Cart newCart = Cart(
+      productIds: [],
+    );
+    await FirebaseFirestore.instance
+        .collection('carts')
+        .doc(user?.uid)
+        .withConverter<Cart>(
+          fromFirestore: (snapshot, _) => Cart.fromFirestore(snapshot),
+          toFirestore: (cart, _) => cart.toFirestore(),
+        )
+        .set(newCart);
+
     return newClient;
   } catch (error) {
     print(error.toString());
     return null;
   }
   }
-
 
   // sign out
   Future<void> SignOut() async {
