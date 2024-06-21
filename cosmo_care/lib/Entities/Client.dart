@@ -10,7 +10,6 @@ class Client {
   final String? skinType;
   final int? telephone;
   final String? address;
-  final List<String>? recommendations;
 
   Client({
     this.email,
@@ -21,7 +20,6 @@ class Client {
     this.skinType,
     this.telephone,
     this.address,
-    this.recommendations
   });
 
   factory Client.fromFirestore(
@@ -38,7 +36,6 @@ class Client {
       skinType: data?['skinType'],
       telephone: data?['telephone'],
       address: data?['address'],
-      recommendations: List<String>.from(data?['recommendations'] ?? []),
     );
   }
   
@@ -52,7 +49,6 @@ class Client {
       if (skinType != null) "skinType": skinType,
       if (telephone != null) "telephone": telephone,
       if (address != null) "address": address,
-      if (recommendations != null) "recommendations": recommendations,
     };
   }
 }
