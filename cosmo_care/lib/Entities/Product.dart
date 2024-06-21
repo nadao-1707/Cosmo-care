@@ -10,6 +10,7 @@ class Product {
   int? totalRatings; // Total number of ratings
   List<String>? reviews; // List of reviews
 
+
   Product({
     required this.name,
     required this.price,
