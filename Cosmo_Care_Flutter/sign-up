@@ -5,327 +5,138 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final ValueNotifier<double> _widthFactor = ValueNotifier<double>(1.0);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: ValueListenableBuilder<double>(
-        valueListenable: _widthFactor,
-        builder: (context, factor, child) {
-          return Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(
-              child: Container(
-                width: MediaQuery.of(context).size.width * _widthFactor.value,
-                child: SingleChildScrollView(
-                  child: SignupPage(),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
+      debugShowCheckedModeBanner: false,
+      home: SignUpDemo(),
     );
   }
 }
 
-class SignupPage extends StatelessWidget {
+class SignUpDemo extends StatefulWidget {
+  @override
+  _SignUpDemoState createState() => _SignUpDemoState();
+}
+
+class _SignUpDemoState extends State<SignUpDemo> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey[200], //background color
-      child: Column(
-        children: [
-          Container(
-            width: 390,
-            height: 844,
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(color: Color(0xE5C8B0E9)),
-            child: Stack(
-              children: [
-                Positioned(
-                  left: 33,
-                  top: 331,
-                  child: Container(
-                    width: 325,
-                    height: 417,
-                    decoration: ShapeDecoration(
-                      color: Color(0x33EBD5DB),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(22),
-                      ),
-                    ),
-                  ),
+    return Scaffold(
+      backgroundColor: Color(0xFFCDB7EB), // Background color
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 60.0),
+              child: Center(
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  child: Image.asset('assets/images/login_image-removebg-preview.png'),
                 ),
-                Positioned(
-                  left: 127,
-                  top: 634,
-                  child: Text(
-                    'Signup\n\n\n',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black.withOpacity(0.6),
-                      fontSize: 32,
-                      fontFamily: 'Inter',
-                      height: 0,
-                      letterSpacing: 3.2,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 72,
-                  top: 702,
-                  child: SizedBox(
-                    width: 234,
-                    height: 28,
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'Do you already have an account?\n',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 12,
-                              fontStyle: FontStyle.italic,
-                              fontFamily: 'Inter',
-                              height: 0,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
-                          TextSpan(
-                            text: 'Login',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 12,
-                              fontFamily: 'Inter',
-                              height: 0,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 53,
-                  top: 434,
-                  child: Container(
-                    width: 270,
-                    height: 66,
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          left: 0,
-                          top: 0,
-                          child: Container(
-                            width: 57,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage("assets/icons/user-male-circle.png"),
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          left: 40,
-                          top: 49,
-                          child: Container(
-                            width: 230,
-                            decoration: ShapeDecoration(
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                  width: 1,
-                                  strokeAlign: BorderSide.strokeAlignCenter,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          left: 90,
-                          top: 24,
-                          child: SizedBox(
-                            width: 130,
-                            height: 42,
-                            child: Text(
-                              'user name\n',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.black.withOpacity(0.5),
-                                fontSize: 20,
-                                fontStyle: FontStyle.italic,
-                                fontFamily: 'Inter',
-                                height: 0,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 93,
-                  top: 372,
-                  child: Container(
-                    width: 230,
-                    height: 42,
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          left: 0,
-                          top: 25,
-                          child: Container(
-                            width: 230,
-                            decoration: ShapeDecoration(
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                  width: 1,
-                                  strokeAlign: BorderSide.strokeAlignCenter,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          left: 50,
-                          top: 0,
-                          child: SizedBox(
-                            width: 130,
-                            height: 42,
-                            child: Text(
-                              'email',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.black.withOpacity(0.5),
-                                fontSize: 20,
-                                fontStyle: FontStyle.italic,
-                                fontFamily: 'Inter',
-                                height: 0,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 47,
-                  top: 529,
-                  child: Container(
-                    width: 276,
-                    height: 50,
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          left: 0,
-                          top: 0,
-                          child: Container(
-                            width: 69,
-                            height: 49,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage("assets/icons/user-credentials.png"),
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          left: 46,
-                          top: 48,
-                          child: Container(
-                            width: 230.01,
-                            decoration: ShapeDecoration(
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                  width: 1,
-                                  strokeAlign: BorderSide.strokeAlignCenter,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          left: 103,
-                          top: 24,
-                          child: Text(
-                            'password',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.black.withOpacity(0.5),
-                              fontSize: 20,
-                              fontStyle: FontStyle.italic,
-                              fontFamily: 'Inter',
-                              height: 0,
-                              letterSpacing: 2,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 83,
-                  top: 43,
-                  child: Container(
-                    width: 224,
-                    height: 211,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage("assets/images/login_image-removebg-preview.png"),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 54,
-                  top: 354,
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage("assets/icons/email.png"),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 76,
-                  top: 245,
-                  child: SizedBox(
-                    width: 231,
-                    height: 31,
-                    child: Text(
-                      'Cosmo Care',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontStyle: FontStyle.italic,
-                        fontFamily: 'Inter',
-                        height: 0,
-                        letterSpacing: 2,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+            Text(
+              'Cosmo Care',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            SizedBox(height: 20),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 30),
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Color(0xFFFECDCDD), // Light rose color
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Email',
+                        hintText: 'Enter your email',
+                        prefixIcon: Icon(Icons.email),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'User name',
+                        hintText: 'Enter your user name',
+                        prefixIcon: Icon(Icons.person),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: TextField(
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Password',
+                        hintText: 'Enter your password',
+                        prefixIcon: Icon(Icons.lock),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFAE94D1), // Button color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                      ),
+                      child: Text(
+                        'Signup',
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      onPressed: () {
+                        print('Successfully signed up');
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Do you already have an account?'),
+                      SizedBox(height: 5),
+                      InkWell(
+                        onTap: () {
+                          print('Navigate to login page');
+                        },
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
