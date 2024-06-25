@@ -105,82 +105,18 @@ Future<List<Map<String, dynamic>>> fetchRecommendations() async {
     }
   }
   
-
 //update product info
-Future<String> updateProductName(String productId, String newName) async {
-  try {
-    DocumentReference productRef = FirebaseFirestore.instance.collection('Products').doc(productId);
-
-    await productRef.update({'name': newName});
-    return 'Product name updated successfully.';
-  } catch (e) {
-    return 'Failed to update product name: $e';
-  }
-}
-
-Future<String> updateProductCategory(String productId, String newCategory) async {
-  try {
-    DocumentReference productRef = FirebaseFirestore.instance.collection('Products').doc(productId);
-
-    await productRef.update({'category': newCategory});
-    return 'Product category updated successfully.';
-  } catch (e) {
-    return 'Failed to update product category: $e';
-  }
-}
-
-Future<String> updateRequiredSkinType(String productId, String newSkinType) async {
-  try {
-    DocumentReference productRef = FirebaseFirestore.instance.collection('Products').doc(productId);
-
-    await productRef.update({'requiredSkinType': newSkinType});
-    return 'Product required skin type updated successfully.';
-  } catch (e) {
-    return 'Failed to update product required skin type: $e';
-  }
-}
-
-Future<String> updateProductPrice(String productId, int newPrice) async {
-  try {
-    DocumentReference productRef = FirebaseFirestore.instance.collection('Products').doc(productId);
-
-    await productRef.update({'price': newPrice});
-    return 'Product price updated successfully.';
-  } catch (e) {
-    return 'Failed to update product price: $e';
-  }
-}
-
-Future<String> updateDescription(String productId, String newDescription) async {
+static Future<String> updateProduct(String documentId, Product newProduct) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
     try {
-      DocumentReference productRef = FirebaseFirestore.instance.collection('Products').doc(productId);
+      DocumentReference productRef = firestore.collection('Products').doc(documentId);
 
-      await productRef.update({'description': newDescription});
-      return 'Product description updated successfully.';
+      await productRef.update(newProduct.toFirestoreForE());
+
+      return 'Product updated successfully';
     } catch (e) {
-      return 'Failed to update product description: $e';
-    }
-}
-
-Future<String> updateProductCode(String productId, int newCode) async {
-  try {
-    DocumentReference productRef = FirebaseFirestore.instance.collection('Products').doc(productId);
-
-    await productRef.update({'code': newCode});
-    return 'Product code updated successfully.';
-  } catch (e) {
-    return 'Failed to update product code: $e';
-  }
-}
-
-Future<String> updateIngredients(String productId, List<String> newIngredients) async {
-    try {
-      DocumentReference productRef = FirebaseFirestore.instance.collection('Products').doc(productId);
-
-      await productRef.update({'ingredients': newIngredients});
-      return 'Ingredients updated successfully.';
-    } catch (e) {
-      return 'Failed to update ingredients: $e';
+      print('Error updating product: $e');
+      return 'Error updating product: $e';
     }
 }
 static Future<List<Product>> listAllProducts() async {
