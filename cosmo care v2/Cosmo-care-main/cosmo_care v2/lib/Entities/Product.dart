@@ -41,6 +41,17 @@ class Product {
       reviews: data?['reviews'] is List ? List<String>.from(data?['reviews']) : null,
     );
   }
+  Map<String, dynamic> toFirestoreForE() {
+    return {
+      if (name != null) "name": name,
+      if (category != null) "category": category,
+      if (requiredSkinType != null) "requiredSkinType": requiredSkinType,
+      if (price != null) "price": price,
+      if (description != null) "description": description,
+      if (code != null) "code": code,
+      if (ingredients != null) "ingredients": ingredients,
+    };
+  }
 
   Map<String, dynamic> toFirestore() {
     return {
