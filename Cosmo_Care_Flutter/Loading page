@@ -1,24 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-      theme: ThemeData(
-        primarySwatch: Colors.purple, // Example theme customization
-        hintColor: Colors.pink, // Example theme customization
-      ),
-    );
-  }
-}
+import 'package:flutter_application_2/Pages/LogIn.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -43,22 +24,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _startAutoSwipe() {
-    // Set up a timer to change the page every 2 seconds
-    void _startAutoSwipe() {
-  // Delay the first swipe and subsequent swipes using recursive function
-  Future.delayed(Duration(seconds: 3), () {
-    if (_currentPage < imagePaths.length - 1) {
-      _currentPage++;
-      _controller.animateToPage(
-        _currentPage,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
-      // Call _startAutoSwipe recursively for the next image
-      _startAutoSwipe();
-    }
-  });
-}
+    // Delay the first swipe and subsequent swipes using recursive function
+    Future.delayed(Duration(seconds: 2), () {
+      if (_currentPage < imagePaths.length - 1) {
+        _currentPage++;
+        _controller.animateToPage(
+          _currentPage,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+        // Call _startAutoSwipe recursively for the next image
+        _startAutoSwipe();
+      } else {
+        // Redirect to login page after swiping the last image
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LogIn()),
+        );
+      }
+    });
   }
 
   @override
@@ -69,9 +53,15 @@ class _HomePageState extends State<HomePage> {
         controller: _controller,
         itemCount: imagePaths.length,
         itemBuilder: (context, index) {
-          return Image.asset(
-            imagePaths[index],
-            fit: BoxFit.cover,
+          return Center(
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(imagePaths[index]),
+                  fit: BoxFit.fill, 
+                ),
+              ),
+            ),
           );
         },
         onPageChanged: (index) {
