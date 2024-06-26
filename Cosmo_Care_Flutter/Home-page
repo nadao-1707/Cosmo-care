@@ -1,25 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/Pages/BarCodeScanning.dart';
+import 'package:flutter_application_2/Pages/ChatBot.dart';
+import 'package:flutter_application_2/Pages/MyCart.dart';
+import 'package:flutter_application_2/Pages/MyProfile.dart';
+import 'package:flutter_application_2/Pages/Questionnaire.dart';
+import 'package:flutter_application_2/Pages/Search.dart';
 
-void main() {
-  runApp(MyApp());
-}
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
+class Home extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +22,10 @@ class _HomePageState extends State<HomePage> {
         leading: IconButton(
           icon: Icon(Icons.person),
           onPressed: () {
-            print('Profile icon tapped');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Myprofile()),
+            );
           },
         ),
         actions: [],
@@ -62,7 +58,10 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      print('Navigate to questionnaire page');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Questionnaire()),
+                      );
                     },
                     child: Stack(
                       alignment: Alignment.center,
@@ -89,7 +88,10 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(height: 30),
                   GestureDetector(
                     onTap: () {
-                      print('Navigate to scan \nproduct \nbar code');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => BarCodeScanning()),
+                      );
                     },
                     child: Stack(
                       alignment: Alignment.center,
@@ -145,8 +147,41 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.search),
             label: 'Search',
           ),
-          ),
         ],
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Home()),
+              );
+              break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatBot()),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => BarCodeScanning()),
+              );
+              break;
+            case 3:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyCart()),
+              );
+              break;
+            case 4:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Search()),
+              );
+              break;
+          }
+        },
       ),
     );
   }
