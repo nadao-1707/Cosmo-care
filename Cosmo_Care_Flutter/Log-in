@@ -1,25 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/Pages/Home.dart';
+import 'package:flutter_application_2/Pages/SignUp.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: LoginDemo(),
-    );
-  }
-}
-
-class LoginDemo extends StatefulWidget {
+class LogIn extends StatefulWidget {
   @override
   _LoginDemoState createState() => _LoginDemoState();
 }
 
-class _LoginDemoState extends State<LoginDemo> {
+class _LoginDemoState extends State<LogIn> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  // Function to navigate to the home page
+  void navigateToHome() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()),
+    );
+  }
+
+  // Function to navigate to the sign-up page
+  void navigateToSignUp() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SignUp()),
+    );
+  }
+
+  // Function to validate inputs and show alert if needed
+  void _validateAndLogin() {
+    String username = _usernameController.text;
+    String password = _passwordController.text;
+
+    if (username.isEmpty) {
+      _showAlertDialog('Alert', 'Please enter your username');
+    } else if (password.isEmpty) {
+      _showAlertDialog('Alert', 'Please enter your password');
+    } else {
+      navigateToHome();
+    }
+  }
+
+  // Function to show an alert dialog
+  void _showAlertDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: <Widget>[
+            ElevatedButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +100,7 @@ class _LoginDemoState extends State<LoginDemo> {
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
+                      controller: _usernameController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'User name',
@@ -69,6 +112,7 @@ class _LoginDemoState extends State<LoginDemo> {
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
+                      controller: _passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
@@ -95,9 +139,7 @@ class _LoginDemoState extends State<LoginDemo> {
                         'Login',
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
-                      onPressed: () {
-                        print('Successfully log in');
-                      },
+                      onPressed: _validateAndLogin,
                     ),
                   ),
                   SizedBox(height: 10),
@@ -107,9 +149,7 @@ class _LoginDemoState extends State<LoginDemo> {
                       Text('Create new account?'),
                       SizedBox(height: 5),
                       InkWell(
-                        onTap: () {
-                          print('Navigate to sign up page');
-                        },
+                        onTap: navigateToSignUp, // Call navigateToSignUp function
                         child: Text(
                           'Sign up',
                           style: TextStyle(
