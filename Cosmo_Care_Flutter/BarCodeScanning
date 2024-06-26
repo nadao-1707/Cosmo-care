@@ -1,27 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/Pages/ChatBot.dart';
+import 'package:flutter_application_2/Pages/Home.dart';
+import 'package:flutter_application_2/Pages/MyCart.dart';
+import 'package:flutter_application_2/Pages/Search.dart';
+import 'package:flutter_application_2/Pages/MyProfile.dart'; 
+import 'package:flutter_application_2/Pages/ProductDetails.dart'; 
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ScanPage(),
-    );
-  }
-}
-
-class ScanPage extends StatefulWidget {
+class BarCodeScanning extends StatefulWidget {
   @override
   _ScanPageState createState() => _ScanPageState();
 }
 
-class _ScanPageState extends State<ScanPage> {
+class _ScanPageState extends State<BarCodeScanning> {
   File? _image;
   int _selectedIndex = 2; // Set the initial selected index to 2 for the "Scan" item
 
@@ -41,7 +33,45 @@ class _ScanPageState extends State<ScanPage> {
     setState(() {
       _selectedIndex = index;
     });
-    // Add navigation logic based on the selected index here
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Home()),
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ChatBot()),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => BarCodeScanning()),
+        );
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MyCart()), 
+        );
+        break;
+      case 4:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Search()),
+        );
+        break;
+    }
+  }
+
+  void _navigateToProductDetails() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Productdetails()), // Navigate to ProductDetails page
+    );
   }
 
   @override
@@ -53,9 +83,20 @@ class _ScanPageState extends State<ScanPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            print('Back icon tapped');
+            Navigator.pop(context); // Go back to the previous page
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyProfile()),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -99,9 +140,7 @@ class _ScanPageState extends State<ScanPage> {
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      print('Submit button tapped');
-                    },
+                    onPressed: _navigateToProductDetails, // Navigate to ProductDetails page
                     child: Text('Submit'),
                   ),
                 ],
