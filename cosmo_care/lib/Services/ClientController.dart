@@ -4,6 +4,7 @@ import 'package:cosmo_care/Entities/Client.dart';
 import 'package:cosmo_care/Entities/Product.dart';
 import 'package:cosmo_care/Services/AuthService.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
 class ClientController {
   late AuthService _authService;
 
@@ -89,6 +90,20 @@ class ClientController {
   }
 }
 
+  Future<String> getProductID(String name) async {
+  try {
+    CollectionReference productsCollection = FirebaseFirestore.instance.collection('products');
+    QuerySnapshot querySnapshot = await productsCollection.where('name', isEqualTo: name).get();
+    if (querySnapshot.size == 1) {
+      return querySnapshot.docs[0].id;
+    } else {
+      throw 'Error: Found ${querySnapshot.size} documents with name $name';
+    }
+  } catch (error) {
+    print('Error getting product ID: $error');
+    throw error;
+  }
+}
 
   // add to cart
   Future<void> addToCart(String productId) async {

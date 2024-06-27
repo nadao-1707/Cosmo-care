@@ -7,16 +7,18 @@ import 'package:cosmo_care/Pages/ChatBot.dart';
 import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
-import 'package:cosmo_care/Services/AuthService.dart'; // Import your AuthService
+import 'package:cosmo_care/Services/AuthService.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class MyCart extends StatefulWidget {
-  const MyCart({super.key});
+  const MyCart({Key? key});
 
   @override
   _CartPageState createState() => _CartPageState();
 }
 
 class _CartPageState extends State<MyCart> {
+  ClientController _controller=new ClientController();
   int _selectedIndex = 3; // Set the initial selected index to 3 for the "Cart" item
   List<Product> _cartProducts = [];
   bool _isLoading = true;
@@ -79,6 +81,34 @@ class _CartPageState extends State<MyCart> {
     }
   }
 
+  void _removeFromCart(Product product) {
+  setState(() {
+    _cartProducts.remove(product); // Optimistically remove from UI
+  });
+
+  _controller.getProductID(product.name).then((docId) {
+    // Call the method to remove from Firestore cart using the docId
+    ClientController().removeFromCart(docId).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${product.name} removed from cart')),
+      );
+    }).catchError((error) {
+      print('Failed to remove from cart: $error');
+      // Revert UI change if removal fails
+      setState(() {
+        _cartProducts.add(product);
+      });
+    });
+  }).catchError((error) {
+    print('Error getting product ID: $error');
+    // Revert UI change if getProductID fails
+    setState(() {
+      _cartProducts.add(product);
+    });
+  });
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,15 +141,14 @@ class _CartPageState extends State<MyCart> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
+                  Flexible(
                     child: ListView.builder(
                       itemCount: _cartProducts.length,
                       itemBuilder: (context, index) {
                         final product = _cartProducts[index];
                         return ProductCheckoutCard(
-                          imagePath: product.imageURL,
-                          productName: product.name,
-                          price: 'EGP ${product.price}',
+                          product: product,
+                          onRemove: () => _removeFromCart(product),
                         );
                       },
                     ),
@@ -213,54 +242,77 @@ class _CartPageState extends State<MyCart> {
 }
 
 class ProductCheckoutCard extends StatelessWidget {
-  final String imagePath;
-  final String productName;
-  final String price;
+  final Product product;
+  final VoidCallback onRemove;
 
   const ProductCheckoutCard({
-    super.key,
-    required this.imagePath,
-    required this.productName,
-    required this.price,
-  });
+    Key? key,
+    required this.product,
+    required this.onRemove,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image.network(
-            imagePath,
-            width: 80,
-            height: 80,
-            fit: BoxFit.cover,
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  productName,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  price,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
+    return Card(
+      elevation: 3, // Add elevation for a slight shadow effect
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12), // Rounded corners for the card
+        side: BorderSide(color: Colors.grey.shade300, width: 1), // Border color and width
+      ),
+      color: Colors.white, // Change the background color of the card
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                product.imgURL,
+                width: 80,
+                height: 80,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'EGP ${product.price}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: onRemove,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple[200], // Change button color to redAccent
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Remove from Cart',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

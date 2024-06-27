@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Product {
   final String name;
-  final String? imgURL;
+  final String imgURL;
   final String? category;
   final String? requiredSkinType;
   final int price;
@@ -50,7 +50,7 @@ class Product {
   Map<String, dynamic> toFirestoreForE() {
     return {
       "name": name,
-      if (imgURL != null) "imgURL": imgURL,
+      "imgURL": imgURL,
       if (category != null) "category": category,
       if (requiredSkinType != null) "requiredSkinType": requiredSkinType,
       "price": price,
@@ -63,7 +63,7 @@ class Product {
   Map<String, dynamic> toFirestore() {
     return {
       "name": name,
-      if (imgURL != null) "imgURL": imgURL,
+      "imgURL": imgURL,
       if (category != null) "category": category,
       if (requiredSkinType != null) "requiredSkinType": requiredSkinType,
       "price": price,
