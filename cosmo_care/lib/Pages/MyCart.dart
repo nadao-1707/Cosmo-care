@@ -18,7 +18,7 @@ class MyCart extends StatefulWidget {
 }
 
 class _CartPageState extends State<MyCart> {
-  ClientController _controller=new ClientController();
+  late ClientController _controller;
   int _selectedIndex = 3; // Set the initial selected index to 3 for the "Cart" item
   List<Product> _cartProducts = [];
   bool _isLoading = true;
@@ -27,6 +27,7 @@ class _CartPageState extends State<MyCart> {
   void initState() {
     super.initState();
     _fetchCartContents();
+    _controller = ClientController();
   }
 
   Future<void> _fetchCartContents() async {

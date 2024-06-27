@@ -289,6 +289,7 @@ Future<List<List<String>>> SearchProductByName(String name) async {
   }
   return listOfsearchedProducts;
   }
+  
    // get product info
   Future<List<List<String>>> listProductInfoByName(String name) async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -333,83 +334,7 @@ Future<List<List<String>>> SearchProductByName(String name) async {
   }
   return listOfsearchedProducts;
 }
-// Future<String> addRecommendation(String recommendationText) async {
-//   FirebaseFirestore firestore = FirebaseFirestore.instance;
-//   final uid = await _authService.getUserId();
-//   if (uid != null) {
-//     try {
-//       String? username = await _authService.getUserUsername();
-
-//       CollectionReference recommendationsRef = firestore.collection('recommendations');
-
-//       recommendations recommendation = recommendations(
-//         recommendation: recommendationText,
-//         username: username,
-//         status: "pending",
-//       );
-
-//       // Use the toFirestore method to convert Recommendation object to Map
-//       await recommendationsRef.add(recommendation.toFirestore());
-
-//       return 'Recommendation added successfully for $username';
-//     } catch (e) {
-//       return 'Error adding recommendation: $e';
-//     }
-//   } else {
-//     return "No user signed in.";
-//   }
-// }
-  //list client's recommendations
-  Future<List<String>> listRecommendationsByUsername() async {
-    List<String> recommendations = [];
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    final uid = await _authService.getUserId();
-    if (uid != null) {
-    try {
-      String? username = await _authService.getUserUsername();
-      QuerySnapshot querySnapshot = await firestore
-          .collection('recommendations')
-          .where('username', isEqualTo: username)
-          .get();
-
-      // Iterate through the documents and collect recommendationName
-      for (var doc in querySnapshot.docs) {
-        String recommendationName = doc['recommendationName'];
-        recommendations.add(recommendationName);
-      }
-
-      return recommendations;
-    } catch (e) {
-      print('Error fetching recommendations: $e');
-      return recommendations; // Return empty list or handle error as needed
-    }}else {return recommendations;}
-  }
-  //delete pending recommendation
-  Future<String> deleteRecommendation(String docId) async {
-    final uid = await _authService.getUserId();
-    if (uid != null) {
-    try {
-    String? username = await _authService.getUserUsername();
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    DocumentReference docRef =firestore.collection('recommendations').doc(docId);
-    DocumentSnapshot docSnapshot = await docRef.get();
-    if (docSnapshot.exists) {
-        String documentUsername = docSnapshot['username'];
-
-        if (documentUsername == username&&docSnapshot['status']=="pending") {
-          // Delete the document
-          await docRef.delete();
-          return 'Document deleted successfully for docId: $docId and username: $username';
-        } else {
-         return'Document found but username does not match.';
-        }
-      } else {
-        return'No document found with docId: $docId';
-      }
-    } catch (e) {
-      return'Error deleting document: $e';
-    }}else{return "no signed in user";}
-}
+  
 //get by barcode
 Future<List<List<String>>> listProductInfoByCode(String code) async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;

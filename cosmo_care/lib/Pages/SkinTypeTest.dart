@@ -1,25 +1,37 @@
+import 'package:cosmo_care/Entities/Client.dart';
+import 'package:cosmo_care/Services/AuthService.dart';
 import 'package:flutter/material.dart';
-import 'package:cosmo_care/Pages/BarCodeScanning.dart';
-import 'package:cosmo_care/Pages/ChatBot.dart';
-import 'package:cosmo_care/Pages/Home.dart';
-import 'package:cosmo_care/Pages/MyCart.dart';
+import 'package:cosmo_care/Services/ClientController.dart';
 import 'package:cosmo_care/Pages/Recommendation.dart';
+import 'package:cosmo_care/Pages/Home.dart';
+import 'package:cosmo_care/Pages/ChatBot.dart';
+import 'package:cosmo_care/Pages/BarCodeScanning.dart';
+import 'package:cosmo_care/Pages/MyCart.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 
 class SkinTypeTest extends StatefulWidget {
-  const SkinTypeTest({super.key});
+  const SkinTypeTest({Key? key}) : super(key: key);
 
   @override
   _SkinTypeTestState createState() => _SkinTypeTestState();
 }
 
 class _SkinTypeTestState extends State<SkinTypeTest> {
+  late ClientController _clientController;
+  late AuthService _authService;
   bool isDry = false;
   bool isOily = false;
   bool isNormal = false;
   bool isCombination = false;
   bool isSensitive = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _clientController = ClientController();
+    _authService = AuthService();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +80,12 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
               onChanged: (bool? value) {
                 setState(() {
                   isDry = value!;
+                  if (isDry) {
+                    isOily = false;
+                    isNormal = false;
+                    isCombination = false;
+                    isSensitive = false;
+                  }
                 });
               },
             ),
@@ -77,6 +95,12 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
               onChanged: (bool? value) {
                 setState(() {
                   isOily = value!;
+                  if (isOily) {
+                    isDry = false;
+                    isNormal = false;
+                    isCombination = false;
+                    isSensitive = false;
+                  }
                 });
               },
             ),
@@ -86,6 +110,12 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
               onChanged: (bool? value) {
                 setState(() {
                   isNormal = value!;
+                  if (isNormal) {
+                    isDry = false;
+                    isOily = false;
+                    isCombination = false;
+                    isSensitive = false;
+                  }
                 });
               },
             ),
@@ -95,6 +125,12 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
               onChanged: (bool? value) {
                 setState(() {
                   isCombination = value!;
+                  if (isCombination) {
+                    isDry = false;
+                    isOily = false;
+                    isNormal = false;
+                    isSensitive = false;
+                  }
                 });
               },
             ),
@@ -104,12 +140,40 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
               onChanged: (bool? value) {
                 setState(() {
                   isSensitive = value!;
+                  if (isSensitive) {
+                    isDry = false;
+                    isOily = false;
+                    isNormal = false;
+                    isCombination = false;
+                  }
                 });
               },
             ),
             Center(
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  // Determine selected skin type
+                  String? skinType;
+                  if (isDry) {
+                    skinType = "dry";
+                  } else if (isOily) {
+                    skinType = "oily";
+                  } else if (isNormal) {
+                    skinType = "normal";
+                  } else if (isCombination) {
+                    skinType = "combination";
+                  } else if (isSensitive) {
+                    skinType = "sensitive";
+                  }
+
+                  // Update client data
+                  var userId = await _authService.getUserId();
+                  if (userId?.isNotEmpty ?? false) {
+                    await _clientController.updateClientData(
+                      client: Client(skinType: skinType),
+                    );
+                  }
+
                   // Navigate to Recommendations page
                   Navigator.push(
                     context,

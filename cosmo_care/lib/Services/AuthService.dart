@@ -11,11 +11,6 @@ class AuthService {
     return user != null ? Client(email: user.email) : null;
   }
 
-  // auth change user stream
-  Stream<Client?> get user {
-    return _auth.authStateChanges().map(_clientFromFirebaseUser);
-  }
-
   // to get currently signed in user id
   Future<String?> getUserId() async {
     User? user = _auth.currentUser;
