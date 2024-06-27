@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Pages/LogIn.dart';
+import 'package:cosmo_care/Pages/LogIn.dart';
 
 class Loading extends StatefulWidget {
   @override

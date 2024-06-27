@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Pages/Home.dart';
-import 'package:flutter_application_2/Pages/SignUp.dart';
+import 'package:cosmo_care/Pages/Home.dart';
+import 'package:cosmo_care/Pages/SignUp.dart';
 
 class LogIn extends StatefulWidget {
   @override

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Pages/ChatBot.dart';
-import 'package:flutter_application_2/Pages/Home.dart';
-import 'package:flutter_application_2/Pages/MyCart.dart';
-import 'package:flutter_application_2/Pages/Search.dart';
-import 'package:flutter_application_2/Pages/MyProfile.dart'; 
-import 'package:flutter_application_2/Pages/ProductDetails.dart'; 
+import 'package:cosmo_care/Pages/ChatBot.dart';
+import 'package:cosmo_care/Pages/Home.dart';
+import 'package:cosmo_care/Pages/MyCart.dart';
+import 'package:cosmo_care/Pages/Search.dart';
+import 'package:cosmo_care/Pages/MyProfile.dart'; 
+import 'package:cosmo_care/Pages/ProductDetails.dart'; 
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
