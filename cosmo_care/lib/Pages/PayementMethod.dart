@@ -8,6 +8,8 @@ import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 
 class PaymentMethod extends StatefulWidget {
+  const PaymentMethod({super.key});
+
   @override
   _PaymentPageState createState() => _PaymentPageState();
 }
@@ -29,31 +31,31 @@ class _PaymentPageState extends State<PaymentMethod> {
       case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Home()),
+          MaterialPageRoute(builder: (context) => const Home()),
         );
         break;
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ChatBot()),
+          MaterialPageRoute(builder: (context) => const ChatBot()),
         );
         break;
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => BarCodeScanning()),
+          MaterialPageRoute(builder: (context) => const BarCodeScanning()),
         );
         break;
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyCart()), 
+          MaterialPageRoute(builder: (context) => const MyCart()), 
         );
         break;
       case 4:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Search()),
+          MaterialPageRoute(builder: (context) => const Search()),
         );
         break;
     }
@@ -67,11 +69,11 @@ class _PaymentPageState extends State<PaymentMethod> {
             (cardController.text.isNotEmpty && cvvController.text.isNotEmpty))) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Final()),
+        MaterialPageRoute(builder: (context) => const Final()),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill in all required fields')),
+        const SnackBar(content: Text('Please fill in all required fields')),
       );
     }
   }
@@ -89,7 +91,7 @@ class _PaymentPageState extends State<PaymentMethod> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
+                const Text(
                   'ENTER YOUR ADDRESS',
                   style: TextStyle(
                     fontSize: 14,
@@ -101,15 +103,15 @@ class _PaymentPageState extends State<PaymentMethod> {
                   controller: addressController,
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Color(0xFFD9D9D9),
+                    fillColor: const Color(0xFFD9D9D9),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'ENTER YOUR MOBILE NUMBER',
                   style: TextStyle(
                     fontSize: 14,
@@ -121,7 +123,7 @@ class _PaymentPageState extends State<PaymentMethod> {
                   controller: mobileController,
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Color(0xFFD9D9D9),
+                    fillColor: const Color(0xFFD9D9D9),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
@@ -142,7 +144,7 @@ class _PaymentPageState extends State<PaymentMethod> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
+                const Text(
                   'ENTER YOUR ADDRESS',
                   style: TextStyle(
                     fontSize: 14,
@@ -154,15 +156,15 @@ class _PaymentPageState extends State<PaymentMethod> {
                   controller: addressController,
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Color(0xFFD9D9D9),
+                    fillColor: const Color(0xFFD9D9D9),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'ENTER YOUR MOBILE NUMBER',
                   style: TextStyle(
                     fontSize: 14,
@@ -174,15 +176,15 @@ class _PaymentPageState extends State<PaymentMethod> {
                   controller: mobileController,
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Color(0xFFD9D9D9),
+                    fillColor: const Color(0xFFD9D9D9),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'ENTER YOUR CARD NUMBER',
                   style: TextStyle(
                     fontSize: 14,
@@ -194,15 +196,15 @@ class _PaymentPageState extends State<PaymentMethod> {
                   controller: cardController,
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Color(0xFFD9D9D9),
+                    fillColor: const Color(0xFFD9D9D9),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'ENTER YOUR CVV',
                   style: TextStyle(
                     fontSize: 14,
@@ -215,7 +217,7 @@ class _PaymentPageState extends State<PaymentMethod> {
                   obscureText: true,
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Color(0xFFD9D9D9),
+                    fillColor: const Color(0xFFD9D9D9),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
@@ -232,23 +234,23 @@ class _PaymentPageState extends State<PaymentMethod> {
     }
 
     return Scaffold(
-      backgroundColor: Color(0xFFCDB7EB), // Background color
+      backgroundColor: const Color(0xFFCDB7EB), // Background color
       appBar: AppBar(
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
-        title: Text('Choose a payment method', style: TextStyle(color: Colors.black)),
+        title: const Text('Choose a payment method', style: TextStyle(color: Colors.black)),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyProfile()),
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
             },
           ),
@@ -263,7 +265,7 @@ class _PaymentPageState extends State<PaymentMethod> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
+                  const Text(
                     'Choose a payment method',
                     style: TextStyle(
                       fontSize: 18,
@@ -271,9 +273,9 @@ class _PaymentPageState extends State<PaymentMethod> {
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   SwitchListTile(
-                    title: Text("Cash"),
+                    title: const Text("Cash"),
                     value: isCashSelected,
                     onChanged: (bool value) {
                       setState(() {
@@ -285,7 +287,7 @@ class _PaymentPageState extends State<PaymentMethod> {
                     },
                   ),
                   SwitchListTile(
-                    title: Text("Visa"),
+                    title: const Text("Visa"),
                     value: isVisaSelected,
                     onChanged: (bool value) {
                       setState(() {
@@ -306,10 +308,10 @@ class _PaymentPageState extends State<PaymentMethod> {
                 child: ElevatedButton(
                   onPressed: _checkout,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFD9D9D9),
-                    padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                    backgroundColor: const Color(0xFFD9D9D9),
+                    padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
                   ),
-                  child: Text('CHECK OUT'),
+                  child: const Text('CHECK OUT'),
                 ),
               ),
             ),
@@ -320,7 +322,7 @@ class _PaymentPageState extends State<PaymentMethod> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black54,
         unselectedItemColor: Colors.black54,
-        backgroundColor: Color(0xFFE3CCE1),
+        backgroundColor: const Color(0xFFE3CCE1),
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const <BottomNavigationBarItem>[

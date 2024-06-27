@@ -7,6 +7,8 @@ import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 
 class Final extends StatefulWidget {
+  const Final({super.key});
+
   @override
   _FinalPageState createState() => _FinalPageState();
 }
@@ -22,31 +24,31 @@ class _FinalPageState extends State<Final> {
       case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Home()),
+          MaterialPageRoute(builder: (context) => const Home()),
         );
         break;
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ChatBot()),
+          MaterialPageRoute(builder: (context) => const ChatBot()),
         );
         break;
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => BarCodeScanning()),
+          MaterialPageRoute(builder: (context) => const BarCodeScanning()),
         );
         break;
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyCart()),
+          MaterialPageRoute(builder: (context) => const MyCart()),
         );
         break;
       case 4:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Search()),
+          MaterialPageRoute(builder: (context) => const Search()),
         );
         break;
     }
@@ -55,26 +57,26 @@ class _FinalPageState extends State<Final> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFCDB7EB),
+      backgroundColor: const Color(0xFFCDB7EB),
       appBar: AppBar(
-        backgroundColor: Color(0xFFE1BEE7),
-        title: Text('Order Confirmation', style: TextStyle(color: Colors.black)),
+        backgroundColor: const Color(0xFFE1BEE7),
+        title: const Text('Order Confirmation', style: TextStyle(color: Colors.black)),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Home()),
+              MaterialPageRoute(builder: (context) => const Home()),
             );
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyProfile()),
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
             },
           ),
@@ -84,13 +86,13 @@ class _FinalPageState extends State<Final> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(
+            const Icon(
               Icons.check_circle,
               size: 80,
               color: Colors.black,
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Your order is confirmed',
               style: TextStyle(
                 fontSize: 24,
@@ -99,15 +101,15 @@ class _FinalPageState extends State<Final> {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Home()),
+                  MaterialPageRoute(builder: (context) => const Home()),
                 );
               },
-              child: Text(
+              child: const Text(
                 'IF you like to go to home page again please\nCLICK HERE',
                 style: TextStyle(
                   fontSize: 16,
@@ -125,7 +127,7 @@ class _FinalPageState extends State<Final> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black54,
         unselectedItemColor: Colors.black54,
-        backgroundColor: Color(0xFFE3CCE1),
+        backgroundColor: const Color(0xFFE3CCE1),
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const <BottomNavigationBarItem>[

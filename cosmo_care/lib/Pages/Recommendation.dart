@@ -7,26 +7,28 @@ import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 
 class Recommendation extends StatelessWidget {
+  const Recommendation({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFD1C4E9), // Background color
+      backgroundColor: const Color(0xFFD1C4E9), // Background color
       appBar: AppBar(
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
-        title: Text('Suggested Products'),
+        title: const Text('Suggested Products'),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyProfile()),
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
             },
           ),
@@ -37,7 +39,7 @@ class Recommendation extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Suggested products for you',
               style: TextStyle(
                 fontSize: 20,
@@ -45,13 +47,13 @@ class Recommendation extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Expanded(
               child: GridView.count(
                 crossAxisCount: 2,
                 crossAxisSpacing: 3,
                 mainAxisSpacing: 3,
-                children: [
+                children: const [
                   ProductCard(
                     imagePath: 'assets/images/RecommendedProduct1.png',
                     productName: 'CeraVe Antiseptic and Cleanser',
@@ -92,7 +94,7 @@ class Recommendation extends StatelessWidget {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black54,
         unselectedItemColor: Colors.black54,
-        backgroundColor: Color(0xFFE3CCE1),
+        backgroundColor: const Color(0xFFE3CCE1),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -120,37 +122,37 @@ class Recommendation extends StatelessWidget {
             case 0:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => const Home()),
               );
               break;
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatBot()),
+                MaterialPageRoute(builder: (context) => const ChatBot()),
               );
               break;
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => BarCodeScanning()),
+                MaterialPageRoute(builder: (context) => const BarCodeScanning()),
               );
               break;
             case 3:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyCart()),
+                MaterialPageRoute(builder: (context) => const MyCart()),
               );
               break;
             case 4:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Search()),
+                MaterialPageRoute(builder: (context) => const Search()),
               );
               break;
             case 5:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyProfile()),
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
               break;
           }
@@ -165,7 +167,7 @@ class ProductCard extends StatelessWidget {
   final String productName;
   final String price;
 
-  ProductCard({
+  const ProductCard({super.key, 
     required this.imagePath,
     required this.productName,
     required this.price,
@@ -192,27 +194,27 @@ class ProductCard extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 4), // Reduced spacing
+            const SizedBox(height: 4), // Reduced spacing
             Text(
               productName,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 2), // Reduced spacing
+            const SizedBox(height: 2), // Reduced spacing
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   price,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
                     color: Colors.grey,
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.shopping_cart),
+                  icon: const Icon(Icons.shopping_cart),
                   onPressed: () {
                     print('Add to cart tapped');
                   },

@@ -7,6 +7,8 @@ import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 
 class MyCart extends StatefulWidget {
+  const MyCart({super.key});
+
   @override
   _CartPageState createState() => _CartPageState();
 }
@@ -22,19 +24,19 @@ class _CartPageState extends State<MyCart> {
       case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Home()),
+          MaterialPageRoute(builder: (context) => const Home()),
         );
         break;
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ChatBot()),
+          MaterialPageRoute(builder: (context) => const ChatBot()),
         );
         break;
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => BarCodeScanning()),
+          MaterialPageRoute(builder: (context) => const BarCodeScanning()),
         );
         break;
       case 3:
@@ -43,7 +45,7 @@ class _CartPageState extends State<MyCart> {
       case 4:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Search()),
+          MaterialPageRoute(builder: (context) => const Search()),
         );
         break;
     }
@@ -52,23 +54,23 @@ class _CartPageState extends State<MyCart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFD1C4E9), // Background color
+      backgroundColor: const Color(0xFFD1C4E9), // Background color
       appBar: AppBar(
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
-        title: Text('Checkout'),
+        title: const Text('Checkout'),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyProfile()),
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
             },
           ),
@@ -81,7 +83,7 @@ class _CartPageState extends State<MyCart> {
           children: [
             Expanded(
               child: ListView(
-                children: [
+                children: const [
                   ProductCheckoutCard(
                     imagePath: 'assets/images/RecommendedProduct1.png',
                     productName: 'Yunnisa Face Oil',
@@ -100,11 +102,11 @@ class _CartPageState extends State<MyCart> {
                 ],
               ),
             ),
-            Divider(
+            const Divider(
               color: Colors.black,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -130,17 +132,17 @@ class _CartPageState extends State<MyCart> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PaymentMethod()),
+                    MaterialPageRoute(builder: (context) => const PaymentMethod()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFB39DDB), // Button color
+                  backgroundColor: const Color(0xFFB39DDB), // Button color
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
                   child: Text(
                     'CHECK OUT',
                     style: TextStyle(
@@ -158,7 +160,7 @@ class _CartPageState extends State<MyCart> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.black54,
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         currentIndex: _selectedIndex, // Set the selected index to Cart
         onTap: _onItemTapped, // Handle item tap
         items: const <BottomNavigationBarItem>[
@@ -193,7 +195,7 @@ class ProductCheckoutCard extends StatelessWidget {
   final String productName;
   final String price;
 
-  ProductCheckoutCard({
+  const ProductCheckoutCard({super.key, 
     required this.imagePath,
     required this.productName,
     required this.price,
@@ -212,22 +214,22 @@ class ProductCheckoutCard extends StatelessWidget {
             height: 80,
             fit: BoxFit.cover,
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   productName,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   price,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     color: Colors.grey,
                   ),

@@ -132,13 +132,13 @@ class ClientController {
   // add review and rating (update average and total rating)
   Future<void> addRatingAndReview(String productId, int rating, String review) async {
     try {
-      final CollectionReference<Product> _productsRef = FirebaseFirestore.instance
+      final CollectionReference<Product> productsRef = FirebaseFirestore.instance
       .collection('products')
       .withConverter<Product>(
       fromFirestore: (snapshot, _) => Product.fromFirestore(snapshot),
       toFirestore: (product, _) => product.toFirestore(),
       );
-      DocumentReference<Product> productDocRef = _productsRef.doc(productId);
+      DocumentReference<Product> productDocRef = productsRef.doc(productId);
 
       DocumentSnapshot<Product> snapshot = await productDocRef.get();
 
@@ -168,12 +168,12 @@ class ClientController {
   // retrieve all the product info
   Future<Product?> getProduct(String productId) async {
     try {
-      final CollectionReference<Product> _productsRef =
+      final CollectionReference<Product> productsRef =
       FirebaseFirestore.instance.collection('products').withConverter<Product>(
             fromFirestore: (snapshot, _) => Product.fromFirestore(snapshot),
             toFirestore: (product, _) => product.toFirestore(),
           );
-      DocumentReference<Product> productDocRef = _productsRef.doc(productId);
+      DocumentReference<Product> productDocRef = productsRef.doc(productId);
       DocumentSnapshot<Product> snapshot = await productDocRef.get();
       if (snapshot.exists) {
         return snapshot.data();

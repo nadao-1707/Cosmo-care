@@ -9,6 +9,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class UploadImage extends StatefulWidget {
+  const UploadImage({super.key});
+
   @override
   _ScanPageState createState() => _ScanPageState();
 }
@@ -37,13 +39,13 @@ class _ScanPageState extends State<UploadImage> {
       case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Home()),
+          MaterialPageRoute(builder: (context) => const Home()),
         );
         break;
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ChatBot()),
+          MaterialPageRoute(builder: (context) => const ChatBot()),
         );
         break;
       case 2:
@@ -52,13 +54,13 @@ class _ScanPageState extends State<UploadImage> {
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyCart()), 
+          MaterialPageRoute(builder: (context) => const MyCart()), 
         );
         break;
       case 4:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Search()),
+          MaterialPageRoute(builder: (context) => const Search()),
         );
         break;
     }
@@ -74,22 +76,22 @@ class _ScanPageState extends State<UploadImage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFD1C4E9), // Background color
+      backgroundColor: const Color(0xFFD1C4E9), // Background color
       appBar: AppBar(
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyProfile()),
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
             },
           ),
@@ -99,11 +101,11 @@ class _ScanPageState extends State<UploadImage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
-            SizedBox(height: 60),
+            const SizedBox(height: 60),
             Center(
               child: Column(
                 children: [
-                  Text(
+                  const Text(
                     'Upload your picture here...',
                     style: TextStyle(
                       fontSize: 18,
@@ -112,7 +114,7 @@ class _ScanPageState extends State<UploadImage> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   GestureDetector(
                     onTap: _pickImage,
                     child: Container(
@@ -124,7 +126,7 @@ class _ScanPageState extends State<UploadImage> {
                         border: Border.all(color: Colors.black54),
                       ),
                       child: _image == null
-                          ? Icon(
+                          ? const Icon(
                               Icons.add_a_photo,
                               size: 50,
                               color: Colors.black54,
@@ -135,10 +137,10 @@ class _ScanPageState extends State<UploadImage> {
                             ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed:_navigateToDetectingImage, // Navigate to ProductDetails page
-                    child: Text('Submit'),
+                    child: const Text('Submit'),
                   ),
                 ],
               ),
@@ -150,7 +152,7 @@ class _ScanPageState extends State<UploadImage> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.black54,
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         currentIndex: _selectedIndex, // Set the selected index
         onTap: _onItemTapped, // Handle item tap
         items: const <BottomNavigationBarItem>[

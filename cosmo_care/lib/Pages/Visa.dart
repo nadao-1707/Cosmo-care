@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PaymentPage extends StatefulWidget {
+  const PaymentPage({super.key});
+
   @override
   _PaymentPageState createState() => _PaymentPageState();
 }
@@ -12,16 +14,16 @@ class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFCDB7EB), // Background color
+      backgroundColor: const Color(0xFFCDB7EB), // Background color
       appBar: AppBar(
-        backgroundColor: Color(0xFFE3CCE1),
+        backgroundColor: const Color(0xFFE3CCE1),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             print('Back icon tapped');
           },
         ),
-        title: Text('Choose a payment method', style: TextStyle(color: Colors.black)),
+        title: const Text('Choose a payment method', style: TextStyle(color: Colors.black)),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -31,7 +33,7 @@ class _PaymentPageState extends State<PaymentPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
+                const Text(
                   'Choose a payment method',
                   style: TextStyle(
                     fontSize: 18,
@@ -39,9 +41,9 @@ class _PaymentPageState extends State<PaymentPage> {
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 SwitchListTile(
-                  title: Text("Cash"),
+                  title: const Text("Cash"),
                   value: isCashSelected,
                   onChanged: (bool value) {
                     setState(() {
@@ -53,7 +55,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   },
                 ),
                 SwitchListTile(
-                  title: Text("Visa"),
+                  title: const Text("Visa"),
                   value: isVisaSelected,
                   onChanged: (bool value) {
                     setState(() {
@@ -64,8 +66,8 @@ class _PaymentPageState extends State<PaymentPage> {
                     });
                   },
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'ENTER YOUR ADDRESS',
                   style: TextStyle(
                     fontSize: 14,
@@ -76,15 +78,15 @@ class _PaymentPageState extends State<PaymentPage> {
                 TextField(
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Color(0xFFD9D9D9),
+                    fillColor: const Color(0xFFD9D9D9),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'ENTER YOUR MOBILE NUMBER',
                   style: TextStyle(
                     fontSize: 14,
@@ -95,15 +97,15 @@ class _PaymentPageState extends State<PaymentPage> {
                 TextField(
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Color(0xFFD9D9D9),
+                    fillColor: const Color(0xFFD9D9D9),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'ENTER YOUR CARD NUMBER',
                   style: TextStyle(
                     fontSize: 14,
@@ -114,15 +116,15 @@ class _PaymentPageState extends State<PaymentPage> {
                 TextField(
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Color(0xFFD9D9D9),
+                    fillColor: const Color(0xFFD9D9D9),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'ENTER YOUR CVV',
                   style: TextStyle(
                     fontSize: 14,
@@ -134,7 +136,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   obscureText: true,
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Color(0xFFD9D9D9),
+                    fillColor: const Color(0xFFD9D9D9),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
@@ -144,7 +146,7 @@ class _PaymentPageState extends State<PaymentPage> {
               ],
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Center(
@@ -153,10 +155,10 @@ class _PaymentPageState extends State<PaymentPage> {
                   print('Check out tapped');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFD9D9D9),
-                  padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                  backgroundColor: const Color(0xFFD9D9D9),
+                  padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
                 ),
-                child: Text('CHECK OUT'),
+                child: const Text('CHECK OUT'),
               ),
             ),
           ),
@@ -166,7 +168,7 @@ class _PaymentPageState extends State<PaymentPage> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black54,
         unselectedItemColor: Colors.black54,
-        backgroundColor: Color(0xFFE3CCE1),
+        backgroundColor: const Color(0xFFE3CCE1),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

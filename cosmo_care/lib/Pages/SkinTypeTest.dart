@@ -8,6 +8,8 @@ import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 
 class SkinTypeTest extends StatefulWidget {
+  const SkinTypeTest({super.key});
+
   @override
   _SkinTypeTestState createState() => _SkinTypeTestState();
 }
@@ -22,23 +24,23 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFCDB7EB), // Background color
+      backgroundColor: const Color(0xFFCDB7EB), // Background color
       appBar: AppBar(
-        backgroundColor: Color(0xFFE3CCE1),
+        backgroundColor: const Color(0xFFE3CCE1),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
-        title: Text('Skin Type Test', style: TextStyle(color: Colors.black)),
+        title: const Text('Skin Type Test', style: TextStyle(color: Colors.black)),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyProfile()),
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
             },
           ),
@@ -48,8 +50,8 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
               child: Text(
                 'SKIN TYPE TEST',
                 style: TextStyle(
@@ -61,7 +63,7 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
               ),
             ),
             CheckboxListTile(
-              title: Text("DRY"),
+              title: const Text("DRY"),
               value: isDry,
               onChanged: (bool? value) {
                 setState(() {
@@ -70,7 +72,7 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
               },
             ),
             CheckboxListTile(
-              title: Text("OILY"),
+              title: const Text("OILY"),
               value: isOily,
               onChanged: (bool? value) {
                 setState(() {
@@ -79,7 +81,7 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
               },
             ),
             CheckboxListTile(
-              title: Text("NORMAL"),
+              title: const Text("NORMAL"),
               value: isNormal,
               onChanged: (bool? value) {
                 setState(() {
@@ -88,7 +90,7 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
               },
             ),
             CheckboxListTile(
-              title: Text("COMBINATION"),
+              title: const Text("COMBINATION"),
               value: isCombination,
               onChanged: (bool? value) {
                 setState(() {
@@ -97,7 +99,7 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
               },
             ),
             CheckboxListTile(
-              title: Text("SENSITIVE"),
+              title: const Text("SENSITIVE"),
               value: isSensitive,
               onChanged: (bool? value) {
                 setState(() {
@@ -111,14 +113,14 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
                   // Navigate to Recommendations page
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Recommendation()),
+                    MaterialPageRoute(builder: (context) => const Recommendation()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFD9D9D9),
-                  padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                  backgroundColor: const Color(0xFFD9D9D9),
+                  padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
                 ),
-                child: Text('NEXT'),
+                child: const Text('NEXT'),
               ),
             ),
           ],
@@ -128,7 +130,7 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black54,
         unselectedItemColor: Colors.black54,
-        backgroundColor: Color(0xFFE3CCE1),
+        backgroundColor: const Color(0xFFE3CCE1),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -156,31 +158,31 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
             case 0:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => const Home()),
               );
               break;
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatBot()),
+                MaterialPageRoute(builder: (context) => const ChatBot()),
               );
               break;
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => BarCodeScanning()),
+                MaterialPageRoute(builder: (context) => const BarCodeScanning()),
               );
               break;
             case 3:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyCart()),
+                MaterialPageRoute(builder: (context) => const MyCart()),
               );
               break;
             case 4:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Search()),
+                MaterialPageRoute(builder: (context) => const Search()),
               );
               break;
           }

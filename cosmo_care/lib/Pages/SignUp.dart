@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cosmo_care/Services/AuthService.dart';
 
 class SignUp extends StatefulWidget {
+  const SignUp({super.key});
+
   @override
   _SignUpDemoState createState() => _SignUpDemoState();
 }
@@ -18,7 +20,7 @@ class _SignUpDemoState extends State<SignUp> {
   void navigateToLogIn() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => LogIn()),
+      MaterialPageRoute(builder: (context) => const LogIn()),
     );
   }
 
@@ -32,8 +34,8 @@ class _SignUpDemoState extends State<SignUp> {
           content: Text(message),
           actions: <Widget>[
             ElevatedButton(
-              child: Text('OK'),
               onPressed: onPressed ?? () => Navigator.of(context).pop(),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -74,21 +76,21 @@ class _SignUpDemoState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFCDB7EB), // Background color
+      backgroundColor: const Color(0xFFCDB7EB), // Background color
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 60.0),
               child: Center(
-                child: Container(
+                child: SizedBox(
                   width: 200,
                   height: 200,
                   child: Image.asset('assets/images/login_image-removebg-preview.png'),
                 ),
               ),
             ),
-            Text(
+            const Text(
               'Cosmo Care',
               style: TextStyle(
                 fontSize: 24,
@@ -96,21 +98,21 @@ class _SignUpDemoState extends State<SignUp> {
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 30),
-              padding: EdgeInsets.all(20),
+              margin: const EdgeInsets.symmetric(horizontal: 30),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Color(0xFFFECDCDD), // Light rose color
+                color: const Color(0xfffecdcdd), // Light rose color
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
                       controller: _emailController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Email',
                         hintText: 'Enter your email',
@@ -119,10 +121,10 @@ class _SignUpDemoState extends State<SignUp> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
                       controller: _usernameController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'User name',
                         hintText: 'Enter your user name',
@@ -131,11 +133,11 @@ class _SignUpDemoState extends State<SignUp> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
                       controller: _passwordController,
                       obscureText: true,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Password',
                         hintText: 'Enter your password',
@@ -143,7 +145,7 @@ class _SignUpDemoState extends State<SignUp> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   SizedBox(
@@ -151,27 +153,27 @@ class _SignUpDemoState extends State<SignUp> {
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFFAE94D1), // Button color
+                        backgroundColor: const Color(0xFFAE94D1), // Button color
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0),
                         ),
                       ),
-                      child: Text(
+                      onPressed: _validateAndSignUp,
+                      child: const Text(
                         'SignUp',
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
-                      onPressed: _validateAndSignUp,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Do you already have an account?'),
-                      SizedBox(height: 5),
+                      const Text('Do you already have an account?'),
+                      const SizedBox(height: 5),
                       InkWell(
                         onTap: navigateToLogIn, // Call navigateToLogIn function
-                        child: Text(
+                        child: const Text(
                           'LogIn',
                           style: TextStyle(
                             fontSize: 16,

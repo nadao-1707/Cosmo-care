@@ -6,6 +6,8 @@ import 'package:cosmo_care/Pages/MyCart.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 
 class Search extends StatefulWidget {
+  const Search({super.key});
+
   @override
   _SearchState createState() => _SearchState();
 }
@@ -21,25 +23,25 @@ class _SearchState extends State<Search> {
       case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Home()),
+          MaterialPageRoute(builder: (context) => const Home()),
         );
         break;
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ChatBot()),
+          MaterialPageRoute(builder: (context) => const ChatBot()),
         );
         break;
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => BarCodeScanning()),
+          MaterialPageRoute(builder: (context) => const BarCodeScanning()),
         );
         break;
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyCart()), 
+          MaterialPageRoute(builder: (context) => const MyCart()), 
         );
         break;
       case 4:
@@ -51,23 +53,23 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFCDB7EB), // Background color
+      backgroundColor: const Color(0xFFCDB7EB), // Background color
       appBar: AppBar(
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
-        title: Text('Search', style: TextStyle(color: Colors.black)),
+        title: const Text('Search', style: TextStyle(color: Colors.black)),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyProfile()),
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
             },
           ),
@@ -80,11 +82,11 @@ class _SearchState extends State<Search> {
           children: <Widget>[
             Container(
               decoration: BoxDecoration(
-                color: Color(0xFFD9D9D9),
+                color: const Color(0xFFD9D9D9),
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              child: Row(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: const Row(
                 children: <Widget>[
                   Icon(Icons.search, color: Colors.black54),
                   SizedBox(width: 10),
@@ -99,11 +101,11 @@ class _SearchState extends State<Search> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(
+                const Text(
                   'Recent',
                   style: TextStyle(
                     fontSize: 18,
@@ -115,7 +117,7 @@ class _SearchState extends State<Search> {
                   onPressed: () {
                     print('See all tapped');
                   },
-                  child: Text('See all'),
+                  child: const Text('See all'),
                 ),
               ],
             ),
@@ -126,7 +128,7 @@ class _SearchState extends State<Search> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.black54,
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         currentIndex: _selectedIndex, // Set the selected index
         onTap: _onItemTapped, // Handle item tap
         items: const <BottomNavigationBarItem>[

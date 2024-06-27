@@ -8,6 +8,8 @@ import 'package:cosmo_care/Pages/Search.dart';
 
 
 class Home extends StatefulWidget {
+  const Home({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -16,16 +18,16 @@ class _HomePageState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFCDB7EB), // Background color
+      backgroundColor: const Color(0xFFCDB7EB), // Background color
       appBar: AppBar(
-        backgroundColor: Color(0xFFE3CCE1),
+        backgroundColor: const Color(0xFFE3CCE1),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyProfile()),
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
             },
           ),
@@ -34,8 +36,8 @@ class _HomePageState extends State<Home> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 60.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 60.0),
               child: Center(
                 child: Column(
                   children: [
@@ -52,7 +54,7 @@ class _HomePageState extends State<Home> {
                 ),
               ),
             ),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40.0),
               child: Column(
@@ -61,7 +63,7 @@ class _HomePageState extends State<Home> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Questionnaire()),
+                        MaterialPageRoute(builder: (context) => const Questionnaire()),
                       );
                     },
                     child: Stack(
@@ -74,7 +76,7 @@ class _HomePageState extends State<Home> {
                             child: Image.asset('assets/images/questionaire.png', width: 200, fit: BoxFit.cover),
                           ),
                         ),
-                        Text(
+                        const Text(
                           'click to go to \nquestionnaire \npage',
                           style: TextStyle(
                             fontSize: 16,
@@ -86,12 +88,12 @@ class _HomePageState extends State<Home> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => BarCodeScanning()),
+                        MaterialPageRoute(builder: (context) => const BarCodeScanning()),
                       );
                     },
                     child: Stack(
@@ -104,7 +106,7 @@ class _HomePageState extends State<Home> {
                             child: Image.asset('assets/images/QR-Code.png', width: 150, fit: BoxFit.cover),
                           ),
                         ),
-                        Text(
+                        const Text(
                           'click to scan \nproduct \nbar code',
                           style: TextStyle(
                             fontSize: 16,
@@ -126,7 +128,7 @@ class _HomePageState extends State<Home> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.black54,
-        backgroundColor: Color(0xFFE3CCE1),
+        backgroundColor: const Color(0xFFE3CCE1),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -154,31 +156,31 @@ class _HomePageState extends State<Home> {
             case 0:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => const Home()),
               );
               break;
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatBot()),
+                MaterialPageRoute(builder: (context) => const ChatBot()),
               );
               break;
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => BarCodeScanning()),
+                MaterialPageRoute(builder: (context) => const BarCodeScanning()),
               );
               break;
             case 3:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyCart()),
+                MaterialPageRoute(builder: (context) => const MyCart()),
               );
               break;
             case 4:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Search()),
+                MaterialPageRoute(builder: (context) => const Search()),
               );
               break;
           }

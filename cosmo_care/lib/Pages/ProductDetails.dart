@@ -7,29 +7,31 @@ import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 
 class Productdetails extends StatelessWidget {
+  const Productdetails({super.key});
+
   //final String qrText; // Define qrText parameter
   //const Productdetails({Key? key, required this.qrText}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFD1C4E9), // Background color
+      backgroundColor: const Color(0xFFD1C4E9), // Background color
       appBar: AppBar(
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
-        title: Text('Products Details'),
+        title: const Text('Products Details'),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyProfile()),
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
             },
           ),
@@ -42,7 +44,7 @@ class Productdetails extends StatelessWidget {
           children: [
             Expanded(
               child: ListView(
-                children: [
+                children: const [
                   ProductDetailCard(
                     imagePath: 'assets/images/RecommendedProduct3.png',
                     productName: 'Ginger Mud Clay Mask',
@@ -67,13 +69,13 @@ class Productdetails extends StatelessWidget {
                   print('Add to Cart button tapped');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFB39DDB), // Button color
+                  backgroundColor: const Color(0xFFB39DDB), // Button color
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
                   child: Text(
                     'ADD TO CART',
                     style: TextStyle(
@@ -91,7 +93,7 @@ class Productdetails extends StatelessWidget {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.black54,
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         currentIndex: 3, // Set the selected index to Cart
         onTap: (index) {
           // Add navigation logic based on the selected index here
@@ -99,31 +101,31 @@ class Productdetails extends StatelessWidget {
             case 0:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => const Home()),
               );
               break;
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatBot()),
+                MaterialPageRoute(builder: (context) => const ChatBot()),
               );
               break;
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => BarCodeScanning()),
+                MaterialPageRoute(builder: (context) => const BarCodeScanning()),
               );
               break;
             case 3:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyCart()),
+                MaterialPageRoute(builder: (context) => const MyCart()),
               );
               break;
             case 4:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Search()),
+                MaterialPageRoute(builder: (context) => const Search()),
               );
               break;
           }
@@ -163,7 +165,7 @@ class ProductDetailCard extends StatefulWidget {
   final String overview;
   final String concerns;
 
-  ProductDetailCard({
+  const ProductDetailCard({super.key, 
     required this.imagePath,
     required this.productName,
     required this.ingredients,
@@ -217,17 +219,17 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Center(
               child: Text(
                 widget.productName,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -289,7 +291,7 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
                 ),
               ],
             ),
-            Divider(),
+            const Divider(),
             getContent(),
           ],
         ),

@@ -6,6 +6,8 @@ import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 
 class ChatBot extends StatefulWidget {
+  const ChatBot({super.key});
+
   @override
   _ChatPageState createState() => _ChatPageState();
 }
@@ -21,7 +23,7 @@ class _ChatPageState extends State<ChatBot> {
       case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Home()),
+          MaterialPageRoute(builder: (context) => const Home()),
         );
         break;
       case 1:
@@ -29,19 +31,19 @@ class _ChatPageState extends State<ChatBot> {
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => BarCodeScanning()),
+          MaterialPageRoute(builder: (context) => const BarCodeScanning()),
         );
         break;
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyCart()), 
+          MaterialPageRoute(builder: (context) => const MyCart()), 
         );
         break;
       case 4:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Search()),
+          MaterialPageRoute(builder: (context) => const Search()),
         );
         break;
     }
@@ -50,23 +52,23 @@ class _ChatPageState extends State<ChatBot> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFCDB7EB), // Background color
+      backgroundColor: const Color(0xFFCDB7EB), // Background color
       appBar: AppBar(
-        backgroundColor: Color(0xFFE3CCE1),
+        backgroundColor: const Color(0xFFE3CCE1),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
-        title: Text('Chat with Cosmo Care', style: TextStyle(color: Colors.black)),
+        title: const Text('Chat with Cosmo Care', style: TextStyle(color: Colors.black)),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyProfile()),
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
             },
           ),
@@ -85,10 +87,10 @@ class _ChatPageState extends State<ChatBot> {
                       alignment: Alignment.centerLeft,
                       padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
-                        color: Color(0xFFE3CCE1),
+                        color: const Color(0xFFE3CCE1),
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      child: Text(
+                      child: const Text(
                         'Hello, how can I help you?',
                         style: TextStyle(color: Colors.black),
                       ),
@@ -116,7 +118,7 @@ class _ChatPageState extends State<ChatBot> {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.send),
+                  icon: const Icon(Icons.send),
                   onPressed: () {
                     print('Send icon tapped');
                   },
@@ -130,7 +132,7 @@ class _ChatPageState extends State<ChatBot> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.black54,
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         currentIndex: _selectedIndex, // Set the selected index
         onTap: _onItemTapped, // Handle item tap
         items: const <BottomNavigationBarItem>[

@@ -57,12 +57,12 @@ class Client {
   try {
     QuerySnapshot<Map<String, dynamic>> snapshot = await firestore.collection('Clients').get();
 
-    snapshot.docs.forEach((doc) {
+    for (var doc in snapshot.docs) {
       final client = Client.fromFirestore(doc);
       if (client.username != null) {
         usernames.add(client.username!);
       }
-    });
+    }
 
     return usernames;
   } catch (e) {
