@@ -55,7 +55,7 @@ class ClientController {
 
   try {
     DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
-        .collection('Carts')
+        .collection('carts')
         .doc(userId)
         .get();
 
@@ -66,7 +66,7 @@ class ClientController {
 
       for (String productId in productIds) {
         DocumentSnapshot<Map<String, dynamic>> productSnapshot = await firestore
-            .collection('Products')
+            .collection('products')
             .doc(productId)
             .get();
 
@@ -80,7 +80,7 @@ class ClientController {
 
       return products;
     } else {
-      print('Cart document with ID $userId does not exist.');
+      print('Cart document with ID does not exist.');
       return [];
     }
   } catch (e) {

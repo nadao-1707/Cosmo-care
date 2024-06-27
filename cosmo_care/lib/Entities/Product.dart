@@ -7,7 +7,7 @@ class Product {
   final String? requiredSkinType;
   final int price;
   final String? description;
-  final int? code;
+  final String? code;
   final List<String>? ingredients;
   double? averageRating; // Average rating of the product
   int? totalRatings; // Total number of ratings
@@ -49,11 +49,11 @@ class Product {
 
   Map<String, dynamic> toFirestoreForE() {
     return {
-      if (name != null) "name": name,
+      "name": name,
       if (imgURL != null) "imgURL": imgURL,
       if (category != null) "category": category,
       if (requiredSkinType != null) "requiredSkinType": requiredSkinType,
-      if (price != null) "price": price,
+      "price": price,
       if (description != null) "description": description,
       if (code != null) "code": code,
       if (ingredients != null) "ingredients": ingredients,
@@ -62,11 +62,11 @@ class Product {
 
   Map<String, dynamic> toFirestore() {
     return {
-      if (name != null) "name": name,
+      "name": name,
       if (imgURL != null) "imgURL": imgURL,
       if (category != null) "category": category,
       if (requiredSkinType != null) "requiredSkinType": requiredSkinType,
-      if (price != null) "price": price,
+      "price": price,
       if (description != null) "description": description,
       if (code != null) "code": code,
       if (ingredients != null) "ingredients": ingredients,
