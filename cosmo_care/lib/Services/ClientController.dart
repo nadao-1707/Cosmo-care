@@ -1,8 +1,5 @@
-// ignore_for_file: prefer_conditional_assignment
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cosmo_care/Entities/Cart.dart';
-import 'package:cosmo_care/Entities/recommendations.dart';
 import 'package:cosmo_care/Entities/Client.dart';
 import 'package:cosmo_care/Entities/Product.dart';
 import 'package:cosmo_care/Services/AuthService.dart';
@@ -51,14 +48,15 @@ class ClientController {
       return null;
     }
   }
+
   //list cart contents
-  static Future<List<String>> listCartContents(String cartDocumentId) async {
+  static Future<List<String>> listCartContents(String userId) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     try {
       DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
           .collection('Carts')
-          .doc(cartDocumentId)
+          .doc(userId)
           .get();
 
       if (snapshot.exists) {
@@ -66,7 +64,7 @@ class ClientController {
         List<String> productIds = cart.productIds;
         return productIds;
       } else {
-        print('Cart document with ID $cartDocumentId does not exist.');
+        print('Cart document with ID $userId does not exist.');
         return [];
       }
     } catch (e) {
@@ -74,6 +72,7 @@ class ClientController {
       return [];
     }
   }
+  
   // add to cart
   Future<void> addToCart(String productId) async {
   try {
@@ -301,32 +300,32 @@ Future<List<List<String>>> SearchProductByName(String name) async {
   }
   return listOfsearchedProducts;
 }
-Future<String> addRecommendation(String recommendationText) async {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final uid = await _authService.getUserId();
-  if (uid != null) {
-    try {
-      String? username = await _authService.getUserUsername();
+// Future<String> addRecommendation(String recommendationText) async {
+//   FirebaseFirestore firestore = FirebaseFirestore.instance;
+//   final uid = await _authService.getUserId();
+//   if (uid != null) {
+//     try {
+//       String? username = await _authService.getUserUsername();
 
-      CollectionReference recommendationsRef = firestore.collection('recommendations');
+//       CollectionReference recommendationsRef = firestore.collection('recommendations');
 
-      recommendations recommendation = recommendations(
-        recommendation: recommendationText,
-        username: username,
-        status: "pending",
-      );
+//       recommendations recommendation = recommendations(
+//         recommendation: recommendationText,
+//         username: username,
+//         status: "pending",
+//       );
 
-      // Use the toFirestore method to convert Recommendation object to Map
-      await recommendationsRef.add(recommendation.toFirestore());
+//       // Use the toFirestore method to convert Recommendation object to Map
+//       await recommendationsRef.add(recommendation.toFirestore());
 
-      return 'Recommendation added successfully for $username';
-    } catch (e) {
-      return 'Error adding recommendation: $e';
-    }
-  } else {
-    return "No user signed in.";
-  }
-}
+//       return 'Recommendation added successfully for $username';
+//     } catch (e) {
+//       return 'Error adding recommendation: $e';
+//     }
+//   } else {
+//     return "No user signed in.";
+//   }
+// }
   //list client's recommendations
   Future<List<String>> listRecommendationsByUsername() async {
     List<String> recommendations = [];
