@@ -39,7 +39,7 @@ dependencies:
   cloud_firestore: ^4.15.9
   provider: ^6.1.2
   image_picker: ^1.1.2
-  qr_code_scanner: ^0.6.0
+  # qr_code_scanner: ^0.6.1
   
 
 dev_dependencies:
@@ -71,10 +71,10 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets:
-    - assets/icons/email.png
+    # - assets/icons/email.png
     - assets/images/login_image-removebg-preview.png
-    - assets/icons/user-credentials.png
-    - assets/icons/user-male-circle.png
+    # - assets/icons/user-credentials.png
+    # - assets/icons/user-male-circle.png
     - assets/images/QR-Code.png
     - assets/images/questionaire.png
     - assets/images/woman face.jpeg
