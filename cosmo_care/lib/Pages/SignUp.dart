@@ -1,48 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Pages/Home.dart';
-import 'package:flutter_application_2/Pages/SignUp.dart';
 
-class LogIn extends StatefulWidget {
+class SignUp extends StatefulWidget {
   @override
-  _LoginDemoState createState() => _LoginDemoState();
+  _SignUpDemoState createState() => _SignUpDemoState();
 }
 
-class _LoginDemoState extends State<LogIn> {
+class _SignUpDemoState extends State<SignUp> {
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  // Function to navigate to the home page
-  void navigateToHome() {
+  // Function to navigate to the login page
+  void navigateToLogIn() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(builder: (context) => LogIn()),
     );
-  }
-
-  // Function to navigate to the sign-up page
-  void navigateToSignUp() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SignUp()),
-    );
-  }
-
-  // Function to validate inputs and show alert if needed
-  void _validateAndLogin() {
-    String username = _usernameController.text;
-    String password = _passwordController.text;
-
-    if (username.isEmpty) {
-      _showAlertDialog('Alert', 'Please enter your username');
-    } else if (password.isEmpty) {
-      _showAlertDialog('Alert', 'Please enter your password');
-    } else {
-      navigateToHome();
-    }
   }
 
   // Function to show an alert dialog
-  void _showAlertDialog(String title, String message) {
+  void _showAlertDialog(String title, String message, [VoidCallback? onPressed]) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -52,14 +29,36 @@ class _LoginDemoState extends State<LogIn> {
           actions: <Widget>[
             ElevatedButton(
               child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: onPressed ?? () => Navigator.of(context).pop(),
             ),
           ],
         );
       },
     );
+  }
+
+  // Function to validate inputs and show alert if needed
+  void _validateAndSignUp() {
+    String email = _emailController.text;
+    String username = _usernameController.text;
+    String password = _passwordController.text;
+
+    if (email.isEmpty) {
+      _showAlertDialog('Alert', 'Please enter your Email');
+    } else if (username.isEmpty) {
+      _showAlertDialog('Alert', 'Please enter your Username');
+    } else if (password.isEmpty) {
+      _showAlertDialog('Alert', 'Please enter your Password');
+    } else {
+      _showAlertDialog(
+        'Success',
+        'You have successfully signed up! You can now log in with your email.',
+        () {
+          Navigator.of(context).pop(); // Close the alert dialog
+          navigateToLogIn(); // Navigate to the login page
+        },
+      );
+    }
   }
 
   @override
@@ -100,6 +99,18 @@ class _LoginDemoState extends State<LogIn> {
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Email',
+                        hintText: 'Enter your email',
+                        prefixIcon: Icon(Icons.email),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: TextField(
                       controller: _usernameController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
@@ -136,22 +147,22 @@ class _LoginDemoState extends State<LogIn> {
                         ),
                       ),
                       child: Text(
-                        'Login',
+                        'SignUp',
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
-                      onPressed: _validateAndLogin,
+                      onPressed: _validateAndSignUp,
                     ),
                   ),
                   SizedBox(height: 10),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Create new account?'),
+                      Text('Do you already have an account?'),
                       SizedBox(height: 5),
                       InkWell(
-                        onTap: navigateToSignUp, // Call navigateToSignUp function
+                        onTap: navigateToLogIn, // Call navigateToLogIn function
                         child: Text(
-                          'Sign up',
+                          'LogIn',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black,
