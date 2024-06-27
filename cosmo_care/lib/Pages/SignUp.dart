@@ -1,5 +1,6 @@
 import 'package:cosmo_care/Pages/LogIn.dart';
 import 'package:flutter/material.dart';
+import 'package:cosmo_care/Services/AuthService.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -10,6 +11,8 @@ class _SignUpDemoState extends State<SignUp> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  final AuthService _authService = AuthService();
 
   // Function to navigate to the login page
   void navigateToLogIn() {
@@ -39,7 +42,7 @@ class _SignUpDemoState extends State<SignUp> {
   }
 
   // Function to validate inputs and show alert if needed
-  void _validateAndSignUp() {
+  void _validateAndSignUp() async {
     String email = _emailController.text;
     String username = _usernameController.text;
     String password = _passwordController.text;
@@ -51,14 +54,20 @@ class _SignUpDemoState extends State<SignUp> {
     } else if (password.isEmpty) {
       _showAlertDialog('Alert', 'Please enter your Password');
     } else {
-      _showAlertDialog(
-        'Success',
-        'You have successfully signed up! You can now log in with your email.',
-        () {
-          Navigator.of(context).pop(); // Close the alert dialog
-          navigateToLogIn(); // Navigate to the login page
-        },
-      );
+      // Call the sign-up method from AuthService
+      var result = await _authService.SignUpWithEmailAndPassword(email, password);
+      if (result != null) {
+        _showAlertDialog(
+          'Success',
+          'You have successfully signed up! You can now log in with your email.',
+          () {
+            Navigator.of(context).pop(); // Close the alert dialog
+            navigateToLogIn(); // Navigate to the login page
+          },
+        );
+      } else {
+        _showAlertDialog('Error', 'Failed to sign up. Please try again.');
+      }
     }
   }
 

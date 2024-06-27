@@ -1,9 +1,9 @@
-import 'package:cosmo_care/Entities/Client.dart';
-import 'package:cosmo_care/Services/Wrapper.dart';
-import 'package:cosmo_care/Services/AuthService.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:cosmo_care/Pages/Loading.dart';
+import 'package:cosmo_care/Pages/Questionnaire.dart'; 
+import 'package:cosmo_care/Pages/SkinTypeTest.dart';
+import 'package:cosmo_care/Pages/UploadImage.dart'; 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,12 +21,20 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<Client?>.value(
-      value: AuthService().user, 
-      initialData: null,
-      child: MaterialApp(
-        home: Wrapper(),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/loading', // Set the initial route to the loading screen
+      routes: {
+        '/loading': (context) => Loading(), // Define loading screen route
+        '/': (context) => Questionnaire(), // Define root route
+        '/skinTypeTest': (context) => SkinTypeTest(), // Define SkinTypeTest route
+        '/uploadImage': (context) => UploadImage(), // Define UploadImage route
+      },
+      theme: ThemeData(
+        primarySwatch: Colors.purple, // Example theme customization
+        hintColor: Colors.pink, // Example theme customization
       ),
     );
   }
 }
+
