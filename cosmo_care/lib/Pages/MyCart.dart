@@ -1,10 +1,13 @@
+import 'package:cosmo_care/Entities/Product.dart';
+import 'package:cosmo_care/Pages/PayementMethod.dart';
+import 'package:cosmo_care/Services/ClientController.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
 import 'package:cosmo_care/Pages/Home.dart';
-import 'package:cosmo_care/Pages/PayementMethod.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
+import 'package:cosmo_care/Services/AuthService.dart'; // Import your AuthService
 
 class MyCart extends StatefulWidget {
   const MyCart({super.key});
@@ -15,6 +18,31 @@ class MyCart extends StatefulWidget {
 
 class _CartPageState extends State<MyCart> {
   int _selectedIndex = 3; // Set the initial selected index to 3 for the "Cart" item
+  List<Product> _cartProducts = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCartContents();
+  }
+
+  Future<void> _fetchCartContents() async {
+    String? userId = await AuthService().getUserId();
+
+    if (userId != null) {
+      List<Product> products = await ClientController.listCartContents(userId);
+      setState(() {
+        _cartProducts = products;
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      print('User ID is null. Unable to fetch cart contents.');
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -76,86 +104,80 @@ class _CartPageState extends State<MyCart> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ListView(
-                children: const [
-                  ProductCheckoutCard(
-                    imagePath: 'assets/images/RecommendedProduct1.png',
-                    productName: 'Yunnisa Face Oil',
-                    price: 'EGP 420',
-                  ),
-                  ProductCheckoutCard(
-                    imagePath: 'assets/images/RecommendedProduct2.png',
-                    productName: 'Ginger Mud Clay Mask',
-                    price: 'EGP 500',
-                  ),
-                  ProductCheckoutCard(
-                    imagePath: 'assets/images/RecommendedProduct3.png',
-                    productName: 'CeraVe Antiseptic and Cleanser',
-                    price: 'EGP 637',
-                  ),
-                ],
-              ),
-            ),
-            const Divider(
-              color: Colors.black,
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Total:',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: _cartProducts.length,
+                      itemBuilder: (context, index) {
+                        final product = _cartProducts[index];
+                        return ProductCheckoutCard(
+                          imagePath: product.imageURL,
+                          productName: product.name,
+                          price: 'EGP ${product.price}',
+                        );
+                      },
                     ),
                   ),
-                  Text(
-                    'EGP 1,557',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  const Divider(
+                    color: Colors.black,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Total:',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'EGP ${_cartProducts.fold(0, (total, current) => total + current.price)}',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const PaymentMethod()),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFB39DDB), // Button color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                        child: Text(
+                          'CHECK OUT',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const PaymentMethod()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFB39DDB), // Button color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-                  child: Text(
-                    'CHECK OUT',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black,
@@ -195,7 +217,8 @@ class ProductCheckoutCard extends StatelessWidget {
   final String productName;
   final String price;
 
-  const ProductCheckoutCard({super.key, 
+  const ProductCheckoutCard({
+    super.key,
     required this.imagePath,
     required this.productName,
     required this.price,
@@ -208,7 +231,7 @@ class ProductCheckoutCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
+          Image.network(
             imagePath,
             width: 80,
             height: 80,

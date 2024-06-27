@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Product {
-  final String? name;
+  final String name;
+  final String? imgURL;
   final String? category;
   final String? requiredSkinType;
-  final int? price;
+  final int price;
   final String? description;
   final int? code;
   final List<String>? ingredients;
@@ -15,6 +16,7 @@ class Product {
 
   Product({
     required this.name,
+    required this.imgURL,
     required this.category,
     required this.requiredSkinType,
     required this.price,
@@ -30,6 +32,7 @@ class Product {
     final data = snapshot.data();
     return Product(
       name: data?['name'],
+      imgURL: data?['imgURL'],
       category : data?['category'],
       requiredSkinType : data?['requiredSkinType'],
       price: data?['price'],
@@ -41,9 +44,13 @@ class Product {
       reviews: data?['reviews'] is List ? List<String>.from(data?['reviews']) : null,
     );
   }
+
+  get imageURL => null;
+
   Map<String, dynamic> toFirestoreForE() {
     return {
       if (name != null) "name": name,
+      if (imgURL != null) "imgURL": imgURL,
       if (category != null) "category": category,
       if (requiredSkinType != null) "requiredSkinType": requiredSkinType,
       if (price != null) "price": price,
@@ -56,6 +63,7 @@ class Product {
   Map<String, dynamic> toFirestore() {
     return {
       if (name != null) "name": name,
+      if (imgURL != null) "imgURL": imgURL,
       if (category != null) "category": category,
       if (requiredSkinType != null) "requiredSkinType": requiredSkinType,
       if (price != null) "price": price,

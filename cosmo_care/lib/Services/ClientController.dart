@@ -50,29 +50,46 @@ class ClientController {
   }
 
   //list cart contents
-  static Future<List<String>> listCartContents(String userId) async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
+  static Future<List<Product>> listCartContents(String userId) async {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-    try {
-      DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
-          .collection('Carts')
-          .doc(userId)
-          .get();
+  try {
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
+        .collection('Carts')
+        .doc(userId)
+        .get();
 
-      if (snapshot.exists) {
-        Cart cart = Cart.fromFirestore(snapshot);
-        List<String> productIds = cart.productIds;
-        return productIds;
-      } else {
-        print('Cart document with ID $userId does not exist.');
-        return [];
+    if (snapshot.exists) {
+      Cart cart = Cart.fromFirestore(snapshot);
+      List<String> productIds = cart.productIds;
+      List<Product> products = [];
+
+      for (String productId in productIds) {
+        DocumentSnapshot<Map<String, dynamic>> productSnapshot = await firestore
+            .collection('Products')
+            .doc(productId)
+            .get();
+
+        if (productSnapshot.exists) {
+          Product product = Product.fromFirestore(productSnapshot);
+          products.add(product);
+        } else {
+          print('Product document with ID $productId does not exist.');
+        }
       }
-    } catch (e) {
-      print('Error fetching cart: $e');
+
+      return products;
+    } else {
+      print('Cart document with ID $userId does not exist.');
       return [];
     }
+  } catch (e) {
+    print('Error fetching cart: $e');
+    return [];
   }
-  
+}
+
+
   // add to cart
   Future<void> addToCart(String productId) async {
   try {
@@ -227,6 +244,7 @@ class ClientController {
   }
   return products;
 }
+
 Future<List<List<String>>> SearchProductByName(String name) async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseStorage storage = FirebaseStorage.instance;
