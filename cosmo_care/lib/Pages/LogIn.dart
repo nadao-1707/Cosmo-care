@@ -1,6 +1,8 @@
+import 'package:cosmo_care/Entities/Client.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/SignUp.dart';
+import 'package:cosmo_care/Services/AuthService.dart'; // Import your AuthService
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -12,6 +14,7 @@ class LogIn extends StatefulWidget {
 class _LoginDemoState extends State<LogIn> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService(); // Instance of AuthService
 
   // Function to navigate to the home page
   void navigateToHome() {
@@ -30,16 +33,23 @@ class _LoginDemoState extends State<LogIn> {
   }
 
   // Function to validate inputs and show alert if needed
-  void _validateAndLogin() {
-    String username = _usernameController.text;
+  void _validateAndLogin() async {
+    String email = _usernameController.text;
     String password = _passwordController.text;
 
-    if (username.isEmpty) {
-      _showAlertDialog('Alert', 'Please enter your username');
+    if (email.isEmpty) {
+      _showAlertDialog('Alert', 'Please enter your email');
     } else if (password.isEmpty) {
       _showAlertDialog('Alert', 'Please enter your password');
     } else {
-      navigateToHome();
+      // Call sign in method from AuthService
+      Client? client = await _authService.SignInWithEmailAndPassword(email, password);
+
+      if (client != null) {
+        navigateToHome();
+      } else {
+        _showAlertDialog('Error', 'Failed to sign in. Please check your credentials.');
+      }
     }
   }
 
@@ -105,9 +115,9 @@ class _LoginDemoState extends State<LogIn> {
                       controller: _usernameController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        labelText: 'User name',
-                        hintText: 'Enter your user name',
-                        prefixIcon: Icon(Icons.person),
+                        labelText: 'Email',
+                        hintText: 'Enter your email',
+                        prefixIcon: Icon(Icons.email),
                       ),
                     ),
                   ),

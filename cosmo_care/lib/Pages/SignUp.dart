@@ -1,5 +1,5 @@
-import 'package:cosmo_care/Pages/LogIn.dart';
 import 'package:flutter/material.dart';
+import 'package:cosmo_care/Pages/LogIn.dart';
 import 'package:cosmo_care/Services/AuthService.dart';
 
 class SignUp extends StatefulWidget {
@@ -55,9 +55,11 @@ class _SignUpDemoState extends State<SignUp> {
       _showAlertDialog('Alert', 'Please enter your Username');
     } else if (password.isEmpty) {
       _showAlertDialog('Alert', 'Please enter your Password');
+    } else if (password.length < 6) {
+      _showAlertDialog('Alert', 'Password must be at least 6 characters long');
     } else {
       // Call the sign-up method from AuthService
-      var result = await _authService.SignUpWithEmailAndPassword(email, password);
+      var result = await _authService.SignUp(email, password, username);
       if (result != null) {
         _showAlertDialog(
           'Success',

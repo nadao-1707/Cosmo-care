@@ -65,18 +65,6 @@ Future<String?> getUserUsername() async {
   }
 }
 
-  // sign in anon
-  // Future<Client?> SignInAnon() async {
-  //   try {
-  //     UserCredential result = await _auth.signInAnonymously();
-  //     User? user = result.user;
-  //     return _clientFromFirebaseUser(user);
-  //   } catch (e) {
-  //     print(e.toString());
-  //     return null;
-  //   }
-  // }
-
   // sign in with email and password
   Future<Client?> SignInWithEmailAndPassword(String email, String password) async {
     try {
@@ -90,14 +78,17 @@ Future<String?> getUserUsername() async {
   }
 
   // register with email and password (create the client and his cart)
-  Future<Client?> SignUpWithEmailAndPassword(String email, String password) async {
+  Future<Client?> SignUp(String email, String password, String username) async {
   try {
     UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
     User? user = result.user;
 
     Client newClient = Client(
       email: email,
+      username: username, // Add username parameter
     );
+
+    // Save client data to Firestore
     await FirebaseFirestore.instance
         .collection('clients')
         .doc(user?.uid)
@@ -107,9 +98,12 @@ Future<String?> getUserUsername() async {
         )
         .set(newClient);
 
+    // Initialize a new cart for the user
     Cart newCart = Cart(
       productIds: [],
     );
+
+    // Save cart data to Firestore
     await FirebaseFirestore.instance
         .collection('carts')
         .doc(user?.uid)
@@ -125,6 +119,7 @@ Future<String?> getUserUsername() async {
     return null;
   }
   }
+
 
   // sign out
   Future<void> SignOut() async {
