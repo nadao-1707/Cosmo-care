@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Product {
-  final String name;
-  final String imgURL;
+  final String? name;
   final String? category;
   final String? requiredSkinType;
-  final int price;
+  final int? price;
   final String? description;
-  final String? code;
+  final String? howToUse;
+  final int? code;
   final List<String>? ingredients;
   double? averageRating; // Average rating of the product
   int? totalRatings; // Total number of ratings
@@ -16,8 +16,8 @@ class Product {
 
   Product({
     required this.name,
-    required this.imgURL,
     required this.category,
+    required this.howToUse,
     required this.requiredSkinType,
     required this.price,
     required this.description,
@@ -32,7 +32,7 @@ class Product {
     final data = snapshot.data();
     return Product(
       name: data?['name'],
-      imgURL: data?['imgURL'],
+      howToUse: data?['howToUse'],
       category : data?['category'],
       requiredSkinType : data?['requiredSkinType'],
       price: data?['price'],
@@ -44,16 +44,13 @@ class Product {
       reviews: data?['reviews'] is List ? List<String>.from(data?['reviews']) : null,
     );
   }
-
-  get imageURL => null;
-
   Map<String, dynamic> toFirestoreForE() {
     return {
-      "name": name,
-      "imgURL": imgURL,
+      if (name != null) "name": name,
+      if (howToUse != null) "howToUse": howToUse,
       if (category != null) "category": category,
       if (requiredSkinType != null) "requiredSkinType": requiredSkinType,
-      "price": price,
+      if (price != null) "price": price,
       if (description != null) "description": description,
       if (code != null) "code": code,
       if (ingredients != null) "ingredients": ingredients,
@@ -62,11 +59,11 @@ class Product {
 
   Map<String, dynamic> toFirestore() {
     return {
-      "name": name,
-      "imgURL": imgURL,
+      if (name != null) "name": name,
+      if (howToUse != null) "howToUse": howToUse,
       if (category != null) "category": category,
       if (requiredSkinType != null) "requiredSkinType": requiredSkinType,
-      "price": price,
+      if (price != null) "price": price,
       if (description != null) "description": description,
       if (code != null) "code": code,
       if (ingredients != null) "ingredients": ingredients,
