@@ -1,3 +1,4 @@
+import 'package:cosmo_care/Entities/Product.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
@@ -7,7 +8,9 @@ import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 
 class Productdetails extends StatelessWidget {
-  const Productdetails({super.key});
+  final Product product;
+
+  const Productdetails({super.key, required this.product});
 
   //final String qrText; // Define qrText parameter
   //const Productdetails({Key? key, required this.qrText}) : super(key: key);
@@ -53,12 +56,8 @@ class Productdetails extends StatelessWidget {
                       'Hyaluronic acid',
                       'Niacinamide',
                     ],
-                    howToUse:
-                        'Use twice daily, in the morning and at night. Apply to wet skin and massage gently. Rinse thoroughly.',
-                    overview:
-                        'Ginger Mud Clay Mask is a gentle facial cleanser that helps remove dirt, oil, and impurities.',
-                    concerns:
-                        'Suitable for all skin types. If irritation occurs, discontinue use and consult a physician.',
+                    category: ,
+
                   ),
                 ],
               ),
@@ -157,45 +156,70 @@ class Productdetails extends StatelessWidget {
   }
 }
 
-class ProductDetailCard extends StatefulWidget {
-  final String imagePath;
-  final String productName;
-  final List<String> ingredients;
-  final String howToUse;
-  final String overview;
-  final String concerns;
 
-  const ProductDetailCard({super.key, 
-    required this.imagePath,
-    required this.productName,
-    required this.ingredients,
-    required this.howToUse,
-    required this.overview,
-    required this.concerns,
-  });
+class ProductDetailCard extends StatefulWidget {
+  final String name;
+  final String imgURL;
+  final String? category;
+  final String? requiredSkinType;
+  final int price;
+  final String? description;
+  final List<String>? ingredients;
+  final double? averageRating; // Average rating of the product
+  final int? totalRatings; // Total number of ratings
+  final List<String>? reviews; // List of reviews
+
+  ProductDetailCard({
+    Key? key,
+    required this.name,
+    required this.imgURL,
+    this.category,
+    this.requiredSkinType,
+    required this.price,
+    this.description,
+    this.ingredients,
+    this.averageRating,
+    this.totalRatings,
+    this.reviews,
+  }) : super(key: key);
 
   @override
   _ProductDetailCardState createState() => _ProductDetailCardState();
 }
 
 class _ProductDetailCardState extends State<ProductDetailCard> {
-  int selectedIndex = 1;
+  int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     Widget getContent() {
       switch (selectedIndex) {
         case 0:
-          return Text(widget.howToUse);
+          return Text(
+            widget.description ?? 'No description available',
+            textAlign: TextAlign.justify,
+          );
         case 1:
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: widget.ingredients.map((ingredient) => Text(ingredient)).toList(),
+            children: widget.ingredients?.map((ingredient) => Text(ingredient)).toList() ?? [Text('No ingredients available')],
           );
         case 2:
-          return Text(widget.overview);
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Category: ${widget.category ?? 'N/A'}'),
+              Text('Required Skin Type: ${widget.requiredSkinType ?? 'N/A'}'),
+              Text('Price: \$${widget.price}'),
+              if (widget.averageRating != null && widget.totalRatings != null)
+                Text('Rating: ${widget.averageRating} (${widget.totalRatings} reviews)'),
+            ],
+          );
         case 3:
-          return Text(widget.concerns);
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: widget.reviews?.map((review) => Text('- $review')).toList() ?? [Text('No reviews available')],
+          );
         default:
           return Container();
       }
@@ -212,8 +236,8 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: Image.asset(
-                widget.imagePath,
+              child: Image.network(
+                widget.imgURL,
                 width: 200,
                 height: 200,
                 fit: BoxFit.cover,
@@ -222,7 +246,7 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
             const SizedBox(height: 16),
             Center(
               child: Text(
-                widget.productName,
+                widget.name,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -240,7 +264,7 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
                     });
                   },
                   child: Text(
-                    'How to use',
+                    'Description',
                     style: TextStyle(
                       color: selectedIndex == 0 ? Colors.green : Colors.grey,
                       fontWeight: selectedIndex == 0 ? FontWeight.bold : FontWeight.normal,
@@ -268,7 +292,7 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
                     });
                   },
                   child: Text(
-                    'Overview',
+                    'Details',
                     style: TextStyle(
                       color: selectedIndex == 2 ? Colors.green : Colors.grey,
                       fontWeight: selectedIndex == 2 ? FontWeight.bold : FontWeight.normal,
@@ -282,7 +306,7 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
                     });
                   },
                   child: Text(
-                    'Concerns',
+                    'Reviews',
                     style: TextStyle(
                       color: selectedIndex == 3 ? Colors.green : Colors.grey,
                       fontWeight: selectedIndex == 3 ? FontWeight.bold : FontWeight.normal,

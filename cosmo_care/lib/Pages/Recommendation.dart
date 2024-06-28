@@ -1,5 +1,5 @@
-import 'package:cosmo_care/Services/ClientController.dart';
 import 'package:flutter/material.dart';
+import 'package:cosmo_care/Services/ClientController.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
 import 'package:cosmo_care/Pages/Home.dart';
@@ -7,9 +7,10 @@ import 'package:cosmo_care/Pages/MyCart.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 import 'package:cosmo_care/Entities/Product.dart';
+import 'ProductDetails.dart';
 
 class Recommendation extends StatefulWidget {
-  const Recommendation({super.key});
+  const Recommendation({Key? key}) : super(key: key);
 
   @override
   _RecommendationState createState() => _RecommendationState();
@@ -45,18 +46,17 @@ class _RecommendationState extends State<Recommendation> {
   }
 
   void _addToCart(Product product) async {
-  try {
-    final productId = await _clientController.getProductID(product.name);
-    await ClientController().addToCart(productId);
+    try {
+      final productId = await _clientController.getProductID(product.name);
+      await ClientController().addToCart(productId);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${product.name} added to cart')),
-    );
-  } catch (error) {
-    print('Failed to add to cart: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${product.name} added to cart')),
+      );
+    } catch (error) {
+      print('Failed to add to cart: $error');
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +115,14 @@ class _RecommendationState extends State<Recommendation> {
                           price: 'EGP ${product.price.toString()}',
                           onAddToCart: () {
                             _addToCart(product); // Call addToCart with product ID
+                          },
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Productdetails(product: product),
+                              ),
+                            );
                           },
                         );
                       },
@@ -200,6 +208,7 @@ class ProductCard extends StatelessWidget {
   final String productName;
   final String price;
   final VoidCallback onAddToCart;
+  final VoidCallback onTap;
 
   const ProductCard({
     Key? key,
@@ -207,6 +216,7 @@ class ProductCard extends StatelessWidget {
     required this.productName,
     required this.price,
     required this.onAddToCart,
+    required this.onTap,
   }) : super(key: key);
 
   @override
@@ -215,47 +225,50 @@ class ProductCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(4.0), // Reduced padding size
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  imagePath,
-                  width: double.infinity,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-            const SizedBox(height: 4), // Reduced spacing
-            Text(
-              productName,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 2), // Reduced spacing
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  price,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(4.0), // Adjust padding size
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    imagePath,
+                    width: double.infinity,
+                    fit: BoxFit.contain,
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.shopping_cart),
-                  onPressed: onAddToCart ,
+              ),
+              const SizedBox(height: 4), // Adjust spacing size
+              Text(
+                productName,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: 2), // Adjust spacing size
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    price,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.shopping_cart),
+                    onPressed: onAddToCart,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
