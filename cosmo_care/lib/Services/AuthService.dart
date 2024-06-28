@@ -17,8 +17,8 @@ class AuthService {
     return user?.uid;
   }
   
-// to get currently signed in user's email
-Future<String?> getUserEmail() async {
+  // to get currently signed in user's email
+  Future<String?> getUserEmail() async {
   try {
     String? uid = await getUserId();
     if (uid != null) {
@@ -37,9 +37,33 @@ Future<String?> getUserEmail() async {
     print(error.toString());
     return null;
   }
+  }
+
+  Future<String?> getUserSkinType() async {
+  try {
+    String? uid = await getUserId();
+
+    if (uid != null) {
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+          .collection('clients')
+          .doc(uid)
+          .get();
+
+      if (snapshot.exists) {
+        Client client = Client.fromFirestore(snapshot);
+        return client.skinType;
+      }
+    }
+    return null;
+  } catch (error) {
+    print('Error fetching user skin type: $error');
+    return null;
+  }
 }
-// to get currently signed in user's username
-Future<String?> getUserUsername() async {
+
+
+  // to get currently signed in user's username
+  Future<String?> getUserUsername() async {
   try {
     String? uid = await getUserId();
     if (uid != null) {
@@ -58,7 +82,29 @@ Future<String?> getUserUsername() async {
     print(error.toString());
     return null;
   }
-}
+  }
+  
+
+  // get current user
+  Future<Client?> getCurrentUser() async {
+    try {
+      String? uid = await getUserId();
+      if (uid != null) {
+        DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+            .collection('clients')
+            .doc(uid)
+            .get();
+
+        if (snapshot.exists) {
+          return Client.fromFirestore(snapshot);
+        }
+      }
+      return null;
+    } catch (error) {
+      print(error.toString());
+      return null;
+    }
+  }
 
   // sign in with email and password
   Future<Client?> SignInWithEmailAndPassword(String email, String password) async {
@@ -115,7 +161,6 @@ Future<String?> getUserUsername() async {
   }
   }
 
-
   // sign out
   Future<void> SignOut() async {
     try {
@@ -124,4 +169,5 @@ Future<String?> getUserUsername() async {
       print(error.toString());
     }
   }
+
 }

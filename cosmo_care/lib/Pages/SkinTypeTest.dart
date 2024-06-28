@@ -11,7 +11,7 @@ import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 
 class SkinTypeTest extends StatefulWidget {
-  const SkinTypeTest({Key? key}) : super(key: key);
+  const SkinTypeTest({super.key});
 
   @override
   _SkinTypeTestState createState() => _SkinTypeTestState();

@@ -1,3 +1,4 @@
+import 'package:cosmo_care/Services/ClientController.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
@@ -5,9 +6,57 @@ import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/MyCart.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
+import 'package:cosmo_care/Entities/Product.dart';
 
-class Recommendation extends StatelessWidget {
+class Recommendation extends StatefulWidget {
   const Recommendation({super.key});
+
+  @override
+  _RecommendationState createState() => _RecommendationState();
+}
+
+class _RecommendationState extends State<Recommendation> {
+  final ClientController _clientController = ClientController();
+  List<Product> _products = [];
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchProducts();
+  }
+
+  Future<void> _fetchProducts() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      List<Product> products = await _clientController.fetchProductsBySkinType();
+      setState(() {
+        _products = products;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching products: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _addToCart(Product product) async {
+  try {
+    final productId = await _clientController.getProductID(product.name);
+    await ClientController().addToCart(productId);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('${product.name} added to cart')),
+    );
+  } catch (error) {
+    print('Failed to add to cart: $error');
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,43 +98,27 @@ class Recommendation extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 3,
-                mainAxisSpacing: 3,
-                children: const [
-                  ProductCard(
-                    imagePath: 'assets/images/RecommendedProduct1.png',
-                    productName: 'CeraVe Antiseptic and Cleanser',
-                    price: 'EGP 637',
-                  ),
-                  ProductCard(
-                    imagePath: 'assets/images/RecommendedProduct2.png',
-                    productName: 'Yunnisa Face Oil',
-                    price: 'EGP 420',
-                  ),
-                  ProductCard(
-                    imagePath: 'assets/images/RecommendedProduct3.png',
-                    productName: 'Ginger Mud Clay',
-                    price: 'EGP 500',
-                  ),
-                  ProductCard(
-                    imagePath: 'assets/images/RecommendedProduct4.png',
-                    productName: 'Garnier Exfoliating Scrub',
-                    price: 'EGP 200',
-                  ),
-                  ProductCard(
-                    imagePath: 'assets/images/RecommendedProduct5.png',
-                    productName: 'Laneige Water Sleeping Mask',
-                    price: 'EGP 300',
-                  ),
-                  ProductCard(
-                    imagePath: 'assets/images/RecommendedProduct6.png',
-                    productName: 'L\'Oréal Night Cream',
-                    price: 'EGP 280',
-                  ),
-                ],
-              ),
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 3,
+                        mainAxisSpacing: 3,
+                      ),
+                      itemCount: _products.length,
+                      itemBuilder: (context, index) {
+                        Product product = _products[index];
+                        return ProductCard(
+                          imagePath: product.imgURL,
+                          productName: product.name,
+                          price: 'EGP ${product.price.toString()}',
+                          onAddToCart: () {
+                            _addToCart(product); // Call addToCart with product ID
+                          },
+                        );
+                      },
+                    ),
             ),
           ],
         ),
@@ -166,12 +199,15 @@ class ProductCard extends StatelessWidget {
   final String imagePath;
   final String productName;
   final String price;
+  final VoidCallback onAddToCart;
 
-  const ProductCard({super.key, 
+  const ProductCard({
+    Key? key,
     required this.imagePath,
     required this.productName,
     required this.price,
-  });
+    required this.onAddToCart,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +223,7 @@ class ProductCard extends StatelessWidget {
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
+                child: Image.network(
                   imagePath,
                   width: double.infinity,
                   fit: BoxFit.contain,
@@ -215,9 +251,7 @@ class ProductCard extends StatelessWidget {
                 ),
                 IconButton(
                   icon: const Icon(Icons.shopping_cart),
-                  onPressed: () {
-                    print('Add to cart tapped');
-                  },
+                  onPressed: onAddToCart ,
                 ),
               ],
             ),

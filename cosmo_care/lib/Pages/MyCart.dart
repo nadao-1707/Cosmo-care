@@ -8,10 +8,9 @@ import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 import 'package:cosmo_care/Services/AuthService.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class MyCart extends StatefulWidget {
-  const MyCart({Key? key});
+  const MyCart({super.key});
 
   @override
   _CartPageState createState() => _CartPageState();
@@ -182,10 +181,31 @@ class _CartPageState extends State<MyCart> {
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const PaymentMethod()),
-                        );
+                        if (_cartProducts.isEmpty) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Cart is Empty'),
+                              content: const Text('Please add products to your cart before checkout.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                          );
+                        }
+                        else{
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const PaymentMethod()),
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFB39DDB), // Button color
@@ -247,10 +267,10 @@ class ProductCheckoutCard extends StatelessWidget {
   final VoidCallback onRemove;
 
   const ProductCheckoutCard({
-    Key? key,
+    super.key,
     required this.product,
     required this.onRemove,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

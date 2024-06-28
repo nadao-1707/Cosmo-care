@@ -2,13 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Client {
   final String? email;
-  final String? password;
-  final String? username;
+  String? password;
+  String? username;
   final String? first_name;
   final String? last_name;
-  final String? skinType;
-  final int? telephone;
-  final String? address;
+  String? skinType;
+  int? phoneNumber;
+  String? address;
+  String? cardNumber;
+  int? CVV;
 
   Client({
     this.email,
@@ -17,8 +19,10 @@ class Client {
     this.first_name,
     this.last_name,
     this.skinType,
-    this.telephone,
+    this.phoneNumber,
     this.address,
+    this.cardNumber,
+    this.CVV,
   });
 
   factory Client.fromFirestore(
@@ -32,9 +36,11 @@ class Client {
       username: data?['username'],
       first_name: data?['first_name'],
       last_name: data?['last_name'],
-      skinType: data?['skinType'],
-      telephone: data?['telephone'],
+      skinType: data?['skinType'] as String,
+      phoneNumber: data?['phoneNumber'],
       address: data?['address'],
+      cardNumber: data?['cardNumber'],
+      CVV: data?['CVV']
     );
   }
   
@@ -46,10 +52,14 @@ class Client {
       if (first_name != null) "first_name": first_name,
       if (last_name != null) "last_name": last_name,
       if (skinType != null) "skinType": skinType,
-      if (telephone != null) "telephone": telephone,
+      if (phoneNumber != null) "phoneNumber": phoneNumber,
       if (address != null) "address": address,
+      if (cardNumber != null) "cardNumber": cardNumber,
+      if (CVV != null) "CVV": CVV
     };
   }
+
+
   Future<List<String>> getClientUsernames() async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   List<String> usernames = [];

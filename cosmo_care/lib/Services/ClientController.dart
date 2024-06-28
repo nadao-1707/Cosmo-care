@@ -50,7 +50,7 @@ class ClientController {
     }
   }
 
-  //list cart contents
+  //list cart contents by user id
   static Future<List<Product>> listCartContents(String userId) async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -101,7 +101,7 @@ class ClientController {
     }
   } catch (error) {
     print('Error getting product ID: $error');
-    throw error;
+    rethrow;
   }
 }
 
@@ -160,6 +160,63 @@ class ClientController {
   }
   }
 
+  Future<void> emptyCart() async {
+    try {
+      String? userId = await _authService.getUserId();
+      if (userId != null) {
+        // Create an empty cart object
+        Cart emptyCart = Cart(
+          productIds: [],
+        );
+
+        // Update Firestore with the empty cart
+        await FirebaseFirestore.instance
+            .collection('carts')
+            .doc(userId)
+            .withConverter<Cart>(
+              fromFirestore: (snapshot, _) => Cart.fromFirestore(snapshot),
+              toFirestore: (cart, _) => cart.toFirestore(),
+            )
+            .set(emptyCart);
+      } else {
+        throw Exception('User ID is null');
+      }
+    } catch (error) {
+      print('Error emptying cart: $error');
+      rethrow; // Propagate the error to handle it in UI if needed
+    }
+  }
+
+  Future<List<Product>> fetchProductsBySkinType() async {
+  try {
+    String? skinType = await _authService.getUserSkinType();
+
+    // Fetch products from Firestore where skinType matches
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection('products')
+        .where('requiredSkinType', isEqualTo: skinType)
+        .get();
+
+    QuerySnapshot<Map<String, dynamic>> snapshotAll = await FirebaseFirestore.instance
+        .collection('products')
+        .where('requiredSkinType', isEqualTo: 'All')
+        .get();
+
+    // Combine both snapshots into a single list of DocumentSnapshot
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> combinedList =
+        [...snapshot.docs, ...snapshotAll.docs];
+
+    // Convert QueryDocumentSnapshot to a list of Product objects
+    List<Product> products = combinedList.map((doc) => Product.fromFirestore(doc)).toList();
+
+    return products;
+  } catch (e) {
+    print('Error fetching products: $e');
+    return [];
+  }
+}
+
+
   // add review and rating (update average and total rating)
   Future<void> addRatingAndReview(String productId, int rating, String review) async {
     try {
@@ -175,9 +232,7 @@ class ClientController {
 
       if (snapshot.exists) {
         Product product = snapshot.data()!;
-        if (product.reviews == null) {
-          product.reviews = [];
-        }
+        product.reviews ??= [];
         product.reviews!.add(review);
 
         double newAverageRating = ((product.averageRating ?? 0) * (product.totalRatings ?? 0) + rating) /
@@ -217,8 +272,9 @@ class ClientController {
       return null;
     }
   }
+
   //client controller
- //return products pictures from storage
+  //return products pictures from storage
   Future<List<String>> listPhotosByCategory(String category) async {
     final FirebaseStorage storage = FirebaseStorage.instance;
     List<String> photoUrls = [];
@@ -232,8 +288,9 @@ class ClientController {
     }
     return photoUrls;
   }
- //get products by category
- Future<List<Map<String, dynamic>>> listProductsByCategory(String category) async {
+
+  //get products by category
+  Future<List<Map<String, dynamic>>> listProductsByCategory(String category) async {
   FirebaseFirestore firestore = FirebaseFirestore.instance; 
   List<String> photos = listPhotosByCategory(category) as List<String>;
   List<Map<String, dynamic>> products = [];
@@ -382,6 +439,7 @@ Future<List<List<String>>> listProductInfoByCode(String code) async {
   }
   return listOfsearchedProducts;
 }
+
 //filter by categories
  static Future<List<List<String>>> feltirProductsByCategories(List<String> categories) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -397,7 +455,7 @@ Future<List<List<String>>> listProductInfoByCode(String code) async {
           product.name ?? '',
           product.category ?? '',
           product.requiredSkinType ?? '',
-          product.price?.toString() ?? '',
+          product.price.toString() ?? '',
           product.description ?? '',
           product.code?.toString() ?? '',
           product.ingredients?.join(', ') ?? '',

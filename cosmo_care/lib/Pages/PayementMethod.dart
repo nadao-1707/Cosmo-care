@@ -1,4 +1,7 @@
+import 'package:cosmo_care/Services/AuthService.dart';
+import 'package:cosmo_care/Services/ClientController.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
 import 'package:cosmo_care/Pages/Final.dart';
@@ -15,6 +18,7 @@ class PaymentMethod extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentMethod> {
+  late ClientController _controller;
   bool isCashSelected = false;
   bool isVisaSelected = false;
   int _selectedIndex = 0; // Initial selected index
@@ -22,6 +26,12 @@ class _PaymentPageState extends State<PaymentMethod> {
   TextEditingController mobileController = TextEditingController();
   TextEditingController cardController = TextEditingController();
   TextEditingController cvvController = TextEditingController();
+
+  @override
+  void initState(){
+    super.initState();
+    _controller = ClientController();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -49,7 +59,7 @@ class _PaymentPageState extends State<PaymentMethod> {
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const MyCart()), 
+          MaterialPageRoute(builder: (context) => const MyCart()),
         );
         break;
       case 4:
@@ -61,27 +71,58 @@ class _PaymentPageState extends State<PaymentMethod> {
     }
   }
 
-  void _checkout() {
-    if ((isCashSelected || isVisaSelected) &&
-        addressController.text.isNotEmpty &&
-        mobileController.text.isNotEmpty &&
-        (!isVisaSelected ||
-            (cardController.text.isNotEmpty && cvvController.text.isNotEmpty))) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Final()),
-      );
-    } else {
+void _checkout() async {
+  if ((isCashSelected || isVisaSelected) &&
+      addressController.text.isNotEmpty &&
+      mobileController.text.isNotEmpty &&
+      (!isVisaSelected ||
+          (cardController.text.isNotEmpty && cvvController.text.isNotEmpty))) {
+    // Update Firestore with user information
+    try {
+      AuthService authService = AuthService();
+      String? userId = await authService.getUserId();
+      if (userId != null) {
+        Map<String, dynamic> userData = {
+          'address': addressController.text,
+          'mobile': mobileController.text,
+        };
+
+        if (isVisaSelected) {
+          userData.addAll({
+            'cardNumber': cardController.text,
+            'cvv': cvvController.text,
+          });
+        }
+
+        await FirebaseFirestore.instance.collection('clients').doc(userId).update(userData);
+        
+        _controller.emptyCart();
+
+        // Navigate to final checkout page
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Final()),
+        );
+      } else {
+        throw Exception('User ID is null');
+      }
+    } catch (e) {
+      print('Error updating user info: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in all required fields')),
+        const SnackBar(content: Text('Failed to update user information')),
       );
     }
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please fill in all required fields')),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
     Widget paymentDetails;
-    
+
     if (isCashSelected) {
       paymentDetails = Column(
         mainAxisAlignment: MainAxisAlignment.start,
