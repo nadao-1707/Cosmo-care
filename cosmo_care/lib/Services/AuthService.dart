@@ -62,26 +62,30 @@ class AuthService {
 }
 
 
-  // to get currently signed in user's username
   Future<String?> getUserUsername() async {
-  try {
-    String? uid = await getUserId();
-    if (uid != null) {
-      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
-          .collection('clients')
-          .doc(uid)
-          .get();
+    try {
+      String? uid = await getUserId();
+      if (uid != null) {
+        DocumentSnapshot<Map<String, dynamic>> snapshot =
+            await FirebaseFirestore.instance.collection('clients').doc(uid).get();
 
-      if (snapshot.exists) {
-        Client client = Client.fromFirestore(snapshot);
-        return client.username;
+        if (snapshot.exists) {
+          Client client = Client.fromFirestore(snapshot);
+          String? username = client.username;
+          if (username != null) {
+            return username;
+          } else {
+            throw Exception('Username not found for user ID: $uid');
+          }
+        } else {
+          throw Exception('Snapshot does not exist for user ID: $uid');
+        }
+      } else {
+        throw Exception('User ID is null');
       }
+    } catch (error) {
+      throw Exception('Failed to fetch username');
     }
-    return null;
-  } catch (error) {
-    print(error.toString());
-    return null;
-  }
   }
   
 
