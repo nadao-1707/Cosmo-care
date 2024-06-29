@@ -403,8 +403,8 @@ Future<List<List<String>>> listProductInfoByCode(String code) async {
   return listOfsearchedProducts;
 }
 
-//filter by categories
- static Future<List<List<String>>> feltirProductsByCategories(List<String> categories) async {
+// Filter products by categories
+   Future<List<List<Product>>> filterProductsByCategories(List<String> categories) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     try {
       QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
@@ -412,26 +412,39 @@ Future<List<List<String>>> listProductInfoByCode(String code) async {
           .where('category', whereIn: categories)
           .get();
 
-      List<List<String>> productsArray = snapshot.docs.map((doc) {
-        Product product = Product.fromFirestore(doc);
-        return [
-          product.name ?? '',
-          product.category ?? '',
-          product.requiredSkinType ?? '',
-          product.price.toString() ?? '',
-          product.description ?? '',
-          product.code?.toString() ?? '',
-          product.ingredients?.join(', ') ?? '',
-          product.averageRating?.toString() ?? '',
-          product.totalRatings?.toString() ?? '',
-          product.reviews?.join(', ') ?? '',
-        ];
-      }).toList();
+      List<List<Product>> productsArray = [];
+      for (var category in categories) {
+        List<Product> categoryProducts = snapshot.docs
+            .where((doc) => doc.data()['category'] == category)
+            .map((doc) => Product.fromFirestore(doc))
+            .toList();
+        productsArray.add(categoryProducts);
+      }
 
       return productsArray;
     } catch (e) {
       // Handle error if any
+      print('Error fetching products by categories: $e');
       return [];
     }
   }
+  // Get product by name
+  Future<Product> getProductByName(String productName) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+          .collection('products')
+          .where('name', isEqualTo: productName)
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        return Product.fromFirestore(snapshot.docs.first);
+      } else {
+        throw Exception('Product not found with name: $productName');
+      }
+    } catch (e) {
+      throw Exception('Error fetching product: $e');
+    }
+  }
+
 }
