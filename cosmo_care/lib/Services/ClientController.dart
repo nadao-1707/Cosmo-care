@@ -317,35 +317,32 @@ class ClientController {
   return products;
 }
 
-Future<List<List<String>>> SearchProductByName(String name) async {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  FirebaseStorage storage = FirebaseStorage.instance;
-  List<List<String>> listOfsearchedProducts = [];
+Future<List<Map<String, dynamic>>> searchByName(String productName) async {
+  try {
+    final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection('products')
+        .get();
 
-  // Fetch products with the specified name from Firestore
-  QuerySnapshot querySnapshot = await firestore
-      .collection('products')
-      .where('name', isEqualTo: name)
-      .get();
-
-  // Fetch all items (photos) from the specified folder in Firebase Storage
-  final ListResult result = await storage.ref('/product_images').listAll();
-
-  // Loop over each product from Firestore
-  for (var doc in querySnapshot.docs) {
-    String productName = doc['name'];
-    String productPrice = doc['price'].toString(); 
-
-    // Loop over each photo from Firebase Storage
-    for (var item in result.items) {
-      if (item.name.contains(productName)) {
-        final String downloadUrl = await item.getDownloadURL();
-        listOfsearchedProducts.add([productName, productPrice, downloadUrl]);
+    List<Map<String, dynamic>> products = [];
+    snapshot.docs.forEach((DocumentSnapshot<Map<String, dynamic>> doc) {
+      final data = doc.data();
+      if (data != null) {
+        final name = data['name'] ?? '';
+        if (name.toString().toLowerCase().contains(productName.toLowerCase())) {
+          print('Product found: $data'); // Logging the data
+          products.add({
+            'name': data['name'],
+            'imgURL': data['imgURL'] ?? '',
+            'price': data['price']?.toString() ?? '', // Ensure price is converted to string and no null values
+          });
+        }
       }
-    }
+    });
+    return products;
+  } catch (e) {
+    return [];
   }
-  return listOfsearchedProducts;
-  }
+}
   
    // get product info
   Future<List<List<String>>> listProductInfoByName(String name) async {
