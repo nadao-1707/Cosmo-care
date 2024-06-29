@@ -4,7 +4,7 @@ class Product {
   final String name;
   final String imgURL;
   final String? category;
-  final String? requiredSkinType;
+  final List<String>? requiredSkinType;
   final int price;
   final String? description;
   final String? howToUse;
@@ -13,6 +13,7 @@ class Product {
   double? averageRating; // Average rating of the product
   int? totalRatings; // Total number of ratings
   List<String>? reviews; // List of reviews
+  final List<String>? problems;
 
 
   Product({
@@ -25,6 +26,7 @@ class Product {
     required this.description,
     required this.code,
     required this.ingredients,
+    required this.problems,
     this.averageRating,
     this.totalRatings,
     this.reviews,
@@ -37,11 +39,12 @@ class Product {
       imgURL: data?['imgURL'],
       howToUse: data?['howToUse'],
       category : data?['category'],
-      requiredSkinType : data?['requiredSkinType'],
+      requiredSkinType: data?['requiredSkinType'] is List ? List<String>.from(data?['requiredSkinType']) : null,
       price: data?['price'],
       description: data?['description'],
       code: data?['code'],
       ingredients: data?['ingredients'] is List ? List<String>.from(data?['ingredients']) : null,
+      problems: data?['problems'] is List ? List<String>.from(data?['problems']) : null,
       averageRating: (data?['averageRating'] ?? 0.0).toDouble(),
       totalRatings: data?['totalRatings'],
       reviews: data?['reviews'] is List ? List<String>.from(data?['reviews']) : null,
@@ -58,6 +61,7 @@ class Product {
       if (description != null) "description": description,
       if (code != null) "code": code,
       if (ingredients != null) "ingredients": ingredients,
+      if (problems != null) "problems": problems,
     };
   }
 
@@ -75,6 +79,7 @@ class Product {
       "averageRating": averageRating ?? 0.0, 
       "totalRatings": totalRatings ?? 0,
       if (reviews != null) "reviews": reviews,
+      if (problems != null) "problems": problems,
     };
   }
   
