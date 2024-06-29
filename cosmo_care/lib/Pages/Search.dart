@@ -1,12 +1,15 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
 import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/MyCart.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
+import 'package:cosmo_care/Services/ClientController.dart';
 
 class Search extends StatefulWidget {
-  const Search({super.key});
+  const Search({Key? key}) : super(key: key);
 
   @override
   _SearchState createState() => _SearchState();
@@ -14,6 +17,16 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   int _selectedIndex = 4; // Set the initial selected index to 4 for the "Search" item
+  ClientController c = ClientController();
+  final TextEditingController _controller = TextEditingController();
+  String _searchText = ''; // Store the entered search text
+  Future<List<Map<String, dynamic>>> result = Future.value([]);
+  
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -41,7 +54,7 @@ class _SearchState extends State<Search> {
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const MyCart()), 
+          MaterialPageRoute(builder: (context) => const MyCart()),
         );
         break;
       case 4:
@@ -86,12 +99,19 @@ class _SearchState extends State<Search> {
                 borderRadius: BorderRadius.circular(10.0),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: const Row(
+              child: Row(
                 children: <Widget>[
                   Icon(Icons.search, color: Colors.black54),
                   SizedBox(width: 10),
                   Expanded(
                     child: TextField(
+                      controller: _controller,
+                      onChanged: (value) {
+                        setState(() {
+                          _searchText = value;
+                          if(_searchText!=""){result = c.searchByName(_searchText);}
+                        });
+                      },
                       decoration: InputDecoration(
                         hintText: 'Search',
                         border: InputBorder.none,
@@ -121,6 +141,39 @@ class _SearchState extends State<Search> {
                 ),
               ],
             ),
+            const SizedBox(height: 20),
+            FutureBuilder<List<Map<String, dynamic>>>(
+            future: result,
+            builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+               return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+               return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+               return Center(child: Text('No results found'));
+            } else {
+          return Expanded(
+          child: ListView.builder(
+          itemCount: snapshot.data!.length,
+          itemBuilder: (context, index) {
+            final item = snapshot.data![index];
+            return ListTile(
+              leading: item['imgURL'] != ''
+                ? Image.network(item['imgURL'], width: 50, height: 50)
+                : null, // Display image if imgURL is not empty
+              title: Text(' ${item['name'] ?? 'Unknown'}'),
+              subtitle: Text(' ${item['price'] ?? '£'}'),
+              onTap: () {// Handle tap on search result item
+                },
+              );
+           },
+         ),
+       );
+     }
+   },
+ ),
+            
+
           ],
         ),
       ),
