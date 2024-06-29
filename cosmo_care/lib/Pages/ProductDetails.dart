@@ -1,4 +1,7 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:cosmo_care/Entities/Product.dart';
+import 'package:cosmo_care/Services/ClientController.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
@@ -7,24 +10,26 @@ import 'package:cosmo_care/Pages/MyCart.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 
+Future<void> addProductToCart(String productName) async {
+  ClientController controller = ClientController();
+  String id = await controller.fetchProductIdByName(productName); 
+  await controller.addToCart(id);
+}
+
 class Productdetails extends StatelessWidget {
   final Product product;
-
-  const Productdetails({super.key, required this.product});
-
-  //final String qrText; // Define qrText parameter
-  //const Productdetails({Key? key, required this.qrText}) : super(key: key);
+  const Productdetails({Key? key, required this.product});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFD1C4E9), // Background color
+      backgroundColor: const Color(0xFFD1C4E9),
       appBar: AppBar(
         backgroundColor: const Color(0xFFE1BEE7),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); // Go back to the previous page
+            Navigator.pop(context); 
           },
         ),
         title: const Text('Products Details'),
@@ -45,30 +50,25 @@ class Productdetails extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: ListView(
-                children: const [
-                  ProductDetailCard(
-                    imagePath: 'assets/images/RecommendedProduct3.png',
-                    productName: 'Ginger Mud Clay Mask',
-                    ingredients: [
-                      'Ceramides',
-                      'Hyaluronic acid',
-                      'Niacinamide',
-                    ],
-                    category: ,
-
-                  ),
-                ],
-              ),
+            ProductDetailCard(
+              name: product.name,
+              imgURL: product.imgURL,
+              category: product.category,
+              requiredSkinType: product.requiredSkinType?.join(", "),
+              price: product.price,
+              description: product.description,
+              ingredients: product.ingredients,
+              averageRating: product.averageRating,
+              totalRatings: product.totalRatings,
+              reviews: product.reviews,
             ),
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  print('Add to Cart button tapped');
+               onPressed: () async {
+                  await addProductToCart(product.name);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFB39DDB), // Button color
+                  backgroundColor: const Color(0xFFB39DDB), 
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -156,7 +156,6 @@ class Productdetails extends StatelessWidget {
   }
 }
 
-
 class ProductDetailCard extends StatefulWidget {
   final String name;
   final String imgURL;
@@ -164,10 +163,10 @@ class ProductDetailCard extends StatefulWidget {
   final String? requiredSkinType;
   final int price;
   final String? description;
-  final List<String>? ingredients;
-  final double? averageRating; // Average rating of the product
-  final int? totalRatings; // Total number of ratings
-  final List<String>? reviews; // List of reviews
+  final String? ingredients; // Updated to String
+  final double? averageRating;
+  final int? totalRatings;
+  final List<String>? reviews;
 
   ProductDetailCard({
     Key? key,
@@ -177,7 +176,7 @@ class ProductDetailCard extends StatefulWidget {
     this.requiredSkinType,
     required this.price,
     this.description,
-    this.ingredients,
+    this.ingredients, // Updated to String
     this.averageRating,
     this.totalRatings,
     this.reviews,
@@ -200,9 +199,9 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
             textAlign: TextAlign.justify,
           );
         case 1:
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: widget.ingredients?.map((ingredient) => Text(ingredient)).toList() ?? [Text('No ingredients available')],
+          return Text(
+            widget.ingredients ?? 'No ingredients available', // Display ingredients as text
+            textAlign: TextAlign.justify,
           );
         case 2:
           return Column(
