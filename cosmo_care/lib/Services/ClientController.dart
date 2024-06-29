@@ -274,20 +274,23 @@ class ClientController {
   }
 
   //client controller
-  //return products pictures from storage
-  Future<List<String>> listPhotosByCategory(String category) async {
-    final FirebaseStorage storage = FirebaseStorage.instance;
-    List<String> photoUrls = [];
-    final ListResult result = await storage.ref('/product_images').listAll();
-    
-    for (var item in result.items) {
-      if (item.name.contains(category)) {
-        final String downloadUrl = await item.getDownloadURL();
-        photoUrls.add(downloadUrl);
-      }
-    }
-    return photoUrls;
-  }
+ Future<List<Map<String, dynamic>>> listProductsByCategory(String category) async {
+  final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection('products')
+        .where('category', isEqualTo: category)
+        .get();
+
+    List<Map<String, dynamic>> products = [];
+    snapshot.docs.forEach((DocumentSnapshot<Map<String, dynamic>> doc) {
+        final data = doc.data();
+        if (data != null) {
+            products.add({
+                'name': data['name'] ?? '', 
+                'imgURL': data['imgURL'] ?? '',
+                'price': data['price']?.toString() ?? '', 
+            });
+        }
+    });
 
   //get products by category
   Future<List<Map<String, dynamic>>> listProductsByCategory(String category) async {
@@ -344,49 +347,38 @@ Future<List<Map<String, dynamic>>> searchByName(String productName) async {
   }
 }
   
-   // get product info
-  Future<List<List<String>>> listProductInfoByName(String name) async {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  FirebaseStorage storage = FirebaseStorage.instance;
-  List<List<String>> listOfsearchedProducts = [];
+Future<List<String>> getProductInfoByName(String productName) async {
+  List<String> productInfo = [];
+  try {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
+        .collection('products')
+        .where('name', isEqualTo: productName)
+        .get();
 
-  QuerySnapshot querySnapshot = await firestore
-      .collection('products')
-      .where('name', isEqualTo: name)
-      .get();
-
-  final ListResult result = await storage.ref('/product_images').listAll();
-
-  for (var doc in querySnapshot.docs) {
-    String productName = doc['name'];
-    String productPrice = doc['price'].toString();
-    String category = doc['category'];
-    String requiredSkinType = doc['requiredSkinType'];
-    String description = doc['description'];
-    String code = doc['code'];
-    String ingredients = doc['ingredients'];
-    String reviews = doc['reviews'];
-    String averageRating = doc['averageRating'].toString();
-
-    for (var item in result.items) {
-      if (item.name.contains(productName)) {
-        final String downloadUrl = await item.getDownloadURL();
-        listOfsearchedProducts.add([
-          productName,
-          productPrice,
-          category,
-          requiredSkinType,
-          description,
-          code,
-          ingredients,
-          reviews,
-          averageRating,
-          downloadUrl
-        ]);
-      }
+    if (querySnapshot.docs.isNotEmpty) {
+      querySnapshot.docs.forEach((document) {
+        Product product = Product.fromFirestore(document);
+        productInfo.add('Name: ${product.name}');
+        productInfo.add('Image URL: ${product.imgURL}');
+        productInfo.add('Category: ${product.category}');
+        productInfo.add('How to Use: ${product.howToUse}');
+        productInfo.add('Required Skin Type: ${product.requiredSkinType}');
+        productInfo.add('Price: \$${product.price}');
+        productInfo.add('Description: ${product.description}');
+        productInfo.add('Code: ${product.code}');
+        productInfo.add('Ingredients: ${product.ingredients}');
+        productInfo.add('Average Rating: ${product.averageRating}');
+        productInfo.add('Total Ratings: ${product.totalRatings}');
+        productInfo.add('Reviews: ${product.reviews}');
+      });
+    } else {
+      productInfo.add('Product not found.');
     }
+  } catch (e) {
+    productInfo.add('Error retrieving product information: $e');
   }
-  return listOfsearchedProducts;
+
+  return productInfo;
 }
   
 //get by barcode
