@@ -9,7 +9,7 @@ class Product {
   final String? description;
   final String? howToUse;
   final String? code;
-  final List<String>? ingredients;
+  final String? ingredients;
   double? averageRating; // Average rating of the product
   int? totalRatings; // Total number of ratings
   List<String>? reviews; // List of reviews
@@ -43,7 +43,7 @@ class Product {
       price: data?['price'],
       description: data?['description'],
       code: data?['code'],
-      ingredients: data?['ingredients'] is List ? List<String>.from(data?['ingredients']) : null,
+      ingredients: data?['ingredients'] ,
       problems: data?['problems'] is List ? List<String>.from(data?['problems']) : null,
       averageRating: (data?['averageRating'] ?? 0.0).toDouble(),
       totalRatings: data?['totalRatings'],
