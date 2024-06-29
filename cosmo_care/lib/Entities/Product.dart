@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Product {
-  final String? name;
-  final String? imgURL;
+  final String name;
+  final String imgURL;
   final String? category;
   final String? requiredSkinType;
-  final int? price;
+  final int price;
   final String? description;
   final String? howToUse;
   final int? code;

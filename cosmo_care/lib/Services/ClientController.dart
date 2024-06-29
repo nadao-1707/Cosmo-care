@@ -291,34 +291,8 @@ class ClientController {
             });
         }
     });
-
-  //get products by category
-  Future<List<Map<String, dynamic>>> listProductsByCategory(String category) async {
-  FirebaseFirestore firestore = FirebaseFirestore.instance; 
-  List<String> photos = listPhotosByCategory(category) as List<String>;
-  List<Map<String, dynamic>> products = [];
-
-  QuerySnapshot querySnapshot = await firestore
-      .collection('products')
-      .where('category', isEqualTo: category)
-      .get();
-
-  for (var doc in querySnapshot.docs) {
-    String productName = doc['name'];
-    // Find a photo that matches the product name (assuming photo file names are product names)
-    String? productPhoto = photos.firstWhere(
-      (photo) => photo.contains(productName),
-      orElse: () => "null",
-    );
-    
-    products.add({
-      'name': productName,
-      'price': doc['price'],
-      'photo': productPhoto, // Add a default photo URL if no match is found
-    });
-  }
-  return products;
-}
+    return products;
+ }
 
 Future<List<Map<String, dynamic>>> searchByName(String productName) async {
   try {
