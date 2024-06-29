@@ -1,5 +1,5 @@
-// ignore_for_file: prefer_const_constructors
-
+import 'package:cosmo_care/Entities/Product.dart';
+import 'package:cosmo_care/Pages/ProductDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
@@ -21,7 +21,7 @@ class _SearchState extends State<Search> {
   final TextEditingController _controller = TextEditingController();
   String _searchText = ''; // Store the entered search text
   Future<List<Map<String, dynamic>>> result = Future.value([]);
-  
+
   @override
   void dispose() {
     _controller.dispose();
@@ -109,7 +109,11 @@ class _SearchState extends State<Search> {
                       onChanged: (value) {
                         setState(() {
                           _searchText = value;
-                          if(_searchText!=""){result = c.searchByName(_searchText);}
+                          if (_searchText.isNotEmpty) {
+                            result = c.searchByName(_searchText);
+                          } else {
+                            result = Future.value([]); // Reset result to empty when search text is empty
+                          }
                         });
                       },
                       decoration: InputDecoration(
@@ -142,38 +146,62 @@ class _SearchState extends State<Search> {
               ],
             ),
             const SizedBox(height: 20),
-            FutureBuilder<List<Map<String, dynamic>>>(
-            future: result,
-            builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-               return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-               return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-               return Center(child: Text('No results found'));
-            } else {
-          return Expanded(
-          child: ListView.builder(
-          itemCount: snapshot.data!.length,
-          itemBuilder: (context, index) {
-            final item = snapshot.data![index];
-            return ListTile(
-              leading: item['imgURL'] != ''
-                ? Image.network(item['imgURL'], width: 50, height: 50)
-                : null, // Display image if imgURL is not empty
-              title: Text(' ${item['name'] ?? 'Unknown'}'),
-              subtitle: Text(' ${item['price'] ?? '£'}'),
-              onTap: () {// Handle tap on search result item
+            Expanded(
+              child: FutureBuilder<List<Map<String, dynamic>>>(
+                future: result,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    // Display CircularProgressIndicator while waiting for initial data
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    // Show error message if there's an error in fetching data
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    // Display message when no results are found
+                    return Center(child: Text('No results found'));
+                  } else {
+                    // Fetching products and displaying them
+                    return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        final item = snapshot.data![index];
+                        return FutureBuilder<Product?>(
+                          future: c.getProductByName(item['name']),
+                          builder: (context, productSnapshot) {
+                            if (productSnapshot.connectionState == ConnectionState.waiting) {
+                              // Display CircularProgressIndicator while waiting for product data
+                              return Center(child: CircularProgressIndicator());
+                            } else if (productSnapshot.hasError) {
+                              // Show error message if there's an error fetching product data
+                              return Center(child: Text('Error: ${productSnapshot.error}'));
+                            } else if (!productSnapshot.hasData || productSnapshot.data == null) {
+                              // Placeholder for handling loading state or error
+                              return SizedBox(); // Alternatively, you can display an error message or retry option
+                            } else {
+                              // Product data is fetched, display ListTile with product details
+                              Product product = productSnapshot.data!;
+                              return ListTile(
+                                leading: item['imgURL'] != ''
+                                  ? Image.network(item['imgURL'], width: 50, height: 50)
+                                  : null,
+                                title: Text(product.name),
+                                subtitle: Text('${product.price}'),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => Productdetails(product: product)),
+                                  );
+                                },
+                              );
+                            }
+                          },
+                        );
+                      },
+                    );
+                  }
                 },
-              );
-           },
-         ),
-       );
-     }
-   },
- ),
-            
-
+              ),
+            ),
           ],
         ),
       ),
