@@ -105,11 +105,30 @@ class ClientController {
   }
 }
 
-  // add to cart
+   //return product id by name
+   Future<String> fetchProductIdByName(String productName) async {
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('products')
+        .where('name', isEqualTo: productName)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+      return documentSnapshot.id; // Return the document ID
+    } else {
+      print('No product found with the name $productName');
+      return ''; // Return an empty string if no product is found
+    }
+  } catch (e) {
+    print('Error fetching product ID: $e');
+    return ''; // Return an empty string in case of error
+  }
+}
   Future<void> addToCart(String productId) async {
   try {
-    final uid = await _authService.getUserId();
-    DocumentReference<Cart> cartRef = FirebaseFirestore.instance
+    final uid = await _authService.getUserId();  // Ensure this method is correct and returns a valid UID
+    final cartRef = FirebaseFirestore.instance
         .collection('carts')
         .doc(uid)
         .withConverter<Cart>(
@@ -117,13 +136,17 @@ class ClientController {
           toFirestore: (cart, _) => cart.toFirestore(),
         );
 
-    DocumentSnapshot<Cart> snapshot = await cartRef.get();
+    final snapshot = await cartRef.get();
 
     if (!snapshot.exists) {
-      Cart newCart = Cart(productIds: [productId]);
+      final newCart = Cart(productIds: [productId]);
       await cartRef.set(newCart);
     } else {
-      Cart cart = snapshot.data()!;
+      final cart = snapshot.data();
+      if (cart == null) {
+        print("Failed to retrieve cart data");
+        return;
+      }
       if (!cart.productIds.contains(productId)) {
         cart.productIds.add(productId);
         await cartRef.set(cart);
@@ -131,8 +154,9 @@ class ClientController {
     }
   } catch (error) {
     print("Failed to add product to cart: $error");
+    rethrow;  // Optionally rethrow the error to handle it higher up
   }
-  }
+}
 
   // remove from cart
   Future<void> removeFromCart(String productId) async {
