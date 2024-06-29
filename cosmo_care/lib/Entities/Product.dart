@@ -8,7 +8,7 @@ class Product {
   final int price;
   final String? description;
   final String? howToUse;
-  final int? code;
+  final String? code;
   final List<String>? ingredients;
   double? averageRating; // Average rating of the product
   int? totalRatings; // Total number of ratings
