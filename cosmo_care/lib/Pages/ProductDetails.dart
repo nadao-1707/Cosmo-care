@@ -54,7 +54,7 @@ class Productdetails extends StatelessWidget {
               name: product.name,
               imgURL: product.imgURL,
               category: product.category,
-              requiredSkinType: product.requiredSkinType?.join(", "),
+              requiredSkinType: product.requiredSkinType,
               price: product.price,
               description: product.description,
               ingredients: product.ingredients,
@@ -162,7 +162,7 @@ class ProductDetailCard extends StatefulWidget {
   final String name;
   final String imgURL;
   final String? category;
-  final String? requiredSkinType;
+  final List<String>? requiredSkinType;
   final int price;
   final String? description;
   final String? ingredients; // Updated to String
@@ -213,21 +213,84 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Category: ${widget.category ?? 'N/A'}'),
+              Text(
+                'Category:',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
               const SizedBox(height: 1),
-              Text('Required Skin Type: ${widget.requiredSkinType ?? 'N/A'}'),
+              Text(
+              widget.category ?? 'N/A',
+                textAlign: TextAlign.justify,
+              ),
               const SizedBox(height: 1),
-              Text('Price: \$${widget.price}'),
+
+              Text(
+                'Required Skin Type:',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: widget.requiredSkinType?.map((SkinType) => Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Text('- $SkinType'),
+                )).toList() ?? [Text('N/A')],
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Price:',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  SizedBox(width: 3), 
+                  Text(
+                    '${widget.price} EGP',
+                    textAlign: TextAlign.justify,
+                  ),
+                ],
+              ),
+
+              Text(
+                'Rating:',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
               const SizedBox(height: 1),
-              if (widget.averageRating != null && widget.totalRatings != null)
-                Text('Rating: ${widget.averageRating} (${widget.totalRatings} reviews)'),
+              Text(
+                '${widget.averageRating} (${widget.totalRatings} reviews)',
+                textAlign: TextAlign.justify,
+              ),
               const SizedBox(height: 1),
-              Text('How To Use: ${widget.howToUse ?? 'No usage instructions available'}'),
+
+              Text(
+                'How To Use:',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
               const SizedBox(height: 1),
+              Text(
+                widget.howToUse ?? 'No usage instructions available',
+                textAlign: TextAlign.justify,
+              ),
+              const SizedBox(height: 1),
+
               Text(
                 'Problems:',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
                 ),
               ),
               Row(
