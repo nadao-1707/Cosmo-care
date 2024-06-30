@@ -66,12 +66,12 @@ class _ScanPageState extends State<BarCodeScanning> {
     }
   }
 
-  void _navigateToProductDetails() {
+ /* void _navigateToProductDetails() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const Productdetails()), // Navigate to ProductDetails page
+      MaterialPageRoute(builder: (context) => const Productdetails(product: product)), // Navigate to ProductDetails page
     );
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -138,10 +138,10 @@ class _ScanPageState extends State<BarCodeScanning> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _navigateToProductDetails, // Navigate to ProductDetails page
+                  /*ElevatedButton(
+                    //onPressed: _navigateToProductDetails, // Navigate to ProductDetails page
                     child: const Text('Submit'),
-                  ),
+                  ),*/
                 ],
               ),
             ),

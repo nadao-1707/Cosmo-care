@@ -185,7 +185,7 @@ class _SearchState extends State<Search> {
                                   ? Image.network(item['imgURL'], width: 50, height: 50)
                                   : null,
                                 title: Text(product.name),
-                                subtitle: Text('${product.price}'),
+                                subtitle: Text('${product.price} EGP'),
                                 onTap: () {
                                   Navigator.push(
                                     context,

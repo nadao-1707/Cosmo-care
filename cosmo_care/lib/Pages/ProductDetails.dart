@@ -1,8 +1,8 @@
-// ignore_for_file: use_key_in_widget_constructors
+// ignore_for_file: prefer_const_constructors
 
+import 'package:flutter/material.dart';
 import 'package:cosmo_care/Entities/Product.dart';
 import 'package:cosmo_care/Services/ClientController.dart';
-import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
 import 'package:cosmo_care/Pages/Home.dart';
@@ -61,10 +61,12 @@ class Productdetails extends StatelessWidget {
               averageRating: product.averageRating,
               totalRatings: product.totalRatings,
               reviews: product.reviews,
+              howToUse: product.howToUse,
+              problems: product.problems,
             ),
             Center(
               child: ElevatedButton(
-               onPressed: () async {
+                onPressed: () async {
                   await addProductToCart(product.name);
                 },
                 style: ElevatedButton.styleFrom(
@@ -167,6 +169,8 @@ class ProductDetailCard extends StatefulWidget {
   final double? averageRating;
   final int? totalRatings;
   final List<String>? reviews;
+  final String? howToUse;
+  final List<String>? problems;
 
   ProductDetailCard({
     Key? key,
@@ -180,6 +184,8 @@ class ProductDetailCard extends StatefulWidget {
     this.averageRating,
     this.totalRatings,
     this.reviews,
+    this.howToUse,
+    this.problems,
   }) : super(key: key);
 
   @override
@@ -200,7 +206,7 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
           );
         case 1:
           return Text(
-            widget.ingredients ?? 'No ingredients available', // Display ingredients as text
+            widget.ingredients ?? 'No ingredients available',
             textAlign: TextAlign.justify,
           );
         case 2:
@@ -208,16 +214,35 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Category: ${widget.category ?? 'N/A'}'),
+              const SizedBox(height: 1),
               Text('Required Skin Type: ${widget.requiredSkinType ?? 'N/A'}'),
+              const SizedBox(height: 1),
               Text('Price: \$${widget.price}'),
+              const SizedBox(height: 1),
               if (widget.averageRating != null && widget.totalRatings != null)
                 Text('Rating: ${widget.averageRating} (${widget.totalRatings} reviews)'),
+              const SizedBox(height: 1),
+              Text('How To Use: ${widget.howToUse ?? 'No usage instructions available'}'),
+              const SizedBox(height: 1),
+              Text(
+                'Problems:',
+                style: TextStyle(
+                  fontSize: 12,
+                ),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: widget.problems?.map((problem) => Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Text('- $problem'),
+                )).toList() ?? [Text('No problems listed')],
+              ),
             ],
           );
         case 3:
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: widget.reviews?.map((review) => Text('- $review')).toList() ?? [Text('No reviews available')],
+          return ListView(
+            children: widget.reviews?.map((review) => ListTile(title: Text(review))).toList() ??
+                [Text('No reviews available')],
           );
         default:
           return Container();

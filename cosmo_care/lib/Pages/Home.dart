@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:cosmo_care/services/AuthService.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
 import 'package:cosmo_care/Pages/MyCart.dart';
@@ -6,15 +9,32 @@ import 'package:cosmo_care/Pages/MyProfile.dart';
 import 'package:cosmo_care/Pages/Questionnaire.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 
-
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<Home> {
+  late Future<String?> _userNameFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _userNameFuture = _fetchUsername();
+  }
+
+  Future<String?> _fetchUsername() async {
+    try {
+      AuthService auth = AuthService();
+      return await auth.getUserUsername();
+    } catch (e) {
+      print('Error fetching username: $e');
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,25 +56,33 @@ class _HomePageState extends State<Home> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.only(top: 60.0),
-              child: Center(
-                child: Column(
-                  children: [
-                    Text(
-                      'Hello user, Welcome to your home page',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+            Padding(
+              padding: const EdgeInsets.only(top: 60.0),
+              child: FutureBuilder<String?>(
+                future: _userNameFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    String? userName = snapshot.data ?? 'User';
+                    return Center(
+                      child: Text(
+                        'Hello $userName, Welcome to your Home page',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
+                    );
+                  }
+                },
               ),
             ),
-            const SizedBox(height: 50),
+            SizedBox(height: 50),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40.0),
               child: Column(
@@ -88,7 +116,7 @@ class _HomePageState extends State<Home> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  SizedBox(height: 30),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
