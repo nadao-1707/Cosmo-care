@@ -7,24 +7,6 @@ import 'package:flutter_application_2/Pages/Search.dart';
 import 'package:flutter_application_2/Pages/MyProfile.dart';
 import 'package:flutter_application_2/Pages/Recommendation.dart';
 
-class RecommendationPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Recommendations'),
-        backgroundColor: Color(0xFFE1BEE7),
-      ),
-      body: Center(
-        child: Text(
-          'Your recommendations will appear here!',
-          style: TextStyle(fontSize: 20),
-        ),
-      ),
-    );
-  }
-}
-
 class SkinProblem extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
