@@ -6,11 +6,12 @@ import 'package:cosmo_care/Pages/MyCart.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
+import 'package:cosmo_care/Pages/SkinProblem.dart';
 
 class Detectingimage extends StatelessWidget {
-  final File image;
+  final File? image;
 
-  const Detectingimage({super.key, required this.image});
+  const Detectingimage({Key? key, required this.image}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,18 +55,29 @@ class Detectingimage extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Image.file(
-                      image,
-                      width: 300,
-                      height: 300,
-                      fit: BoxFit.cover,
+                  if (image != null)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.file(
+                        image!,
+                        width: 300,
+                        height: 300,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  else
+                    const Text(
+                      'No image uploaded',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
                   const SizedBox(height: 20),
                   const Text(
-                    'your problem is dark circles and dark spots',
+                    'Your Skin Type Is Normal',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -76,7 +88,30 @@ class Detectingimage extends StatelessWidget {
                   const SizedBox(height: 10),
                   GestureDetector(
                     onTap: () {
-                      print('Navigate to suggested products page');
+                      if (image != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const SkinProblem()),
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Upload Image'),
+                              content: const Text('Please upload your picture first.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
                     },
                     child: const Text(
                       'CLICK HERE',
@@ -179,3 +214,4 @@ class Detectingimage extends StatelessWidget {
     );
   }
 }
+

@@ -88,66 +88,55 @@ class _SearchState extends State<Search> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFD9D9D9),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Row(
-                children: <Widget>[
-                  Icon(Icons.search, color: Colors.black54),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      onChanged: (value) {
-                        setState(() {
-                          _searchText = value;
-                          if (_searchText.isNotEmpty) {
-                            result = c.searchByName(_searchText);
-                          } else {
-                            result = Future.value([]); // Reset result to empty when search text is empty
-                          }
-                        });
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Search',
-                        border: InputBorder.none,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFFD9D9D9),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.search, color: Colors.black54),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: _controller,
+                        onChanged: (value) {
+                          setState(() {
+                            _searchText = value;
+                            if (_searchText.isNotEmpty) {
+                              result = c.searchByName(_searchText);
+                            } else {
+                              result = Future.value([]); // Reset result to empty when search text is empty
+                            }
+                          });
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Search',
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                const Text(
-                  'Recent',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+              const SizedBox(height: 20),
+              const Text(
+                'Recent',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
-                TextButton(
-                  onPressed: () {
-                    print('See all tapped');
-                  },
-                  child: const Text('See all'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: FutureBuilder<List<Map<String, dynamic>>>(
+              ),
+              const SizedBox(height: 20),
+              FutureBuilder<List<Map<String, dynamic>>>(
                 future: result,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -162,6 +151,8 @@ class _SearchState extends State<Search> {
                   } else {
                     // Fetching products and displaying them
                     return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         final item = snapshot.data![index];
@@ -201,8 +192,8 @@ class _SearchState extends State<Search> {
                   }
                 },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(

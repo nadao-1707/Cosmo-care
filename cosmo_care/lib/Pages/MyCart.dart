@@ -1,22 +1,22 @@
-import 'package:cosmo_care/Entities/Product.dart';
-import 'package:cosmo_care/Pages/PayementMethod.dart';
-import 'package:cosmo_care/Services/ClientController.dart';
 import 'package:flutter/material.dart';
+import 'package:cosmo_care/Entities/Product.dart';
+import 'package:cosmo_care/Services/ClientController.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
 import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 import 'package:cosmo_care/Services/AuthService.dart';
+import 'package:cosmo_care/Pages/PayementMethod.dart';
 
 class MyCart extends StatefulWidget {
-  const MyCart({super.key});
+  const MyCart({Key? key}) : super(key: key);
 
   @override
-  _CartPageState createState() => _CartPageState();
+  _MyCartState createState() => _MyCartState();
 }
 
-class _CartPageState extends State<MyCart> {
+class _MyCartState extends State<MyCart> {
   late ClientController _controller;
   int _selectedIndex = 3; // Set the initial selected index to 3 for the "Cart" item
   List<Product> _cartProducts = [];
@@ -82,32 +82,58 @@ class _CartPageState extends State<MyCart> {
   }
 
   void _removeFromCart(Product product) {
-  setState(() {
-    _cartProducts.remove(product); // Optimistically remove from UI
-  });
+    setState(() {
+      _cartProducts.remove(product); // Optimistically remove from UI
+    });
 
-  _controller.getProductID(product.name).then((docId) {
-    // Call the method to remove from Firestore cart using the docId
-    ClientController().removeFromCart(docId).then((_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${product.name} removed from cart')),
-      );
+    _controller.getProductID(product.name).then((docId) {
+      // Call the method to remove from Firestore cart using the docId
+      ClientController().removeFromCart(docId!).then((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${product.name} removed from cart')),
+        );
+      }).catchError((error) {
+        print('Failed to remove from cart: $error');
+        // Revert UI change if removal fails
+        setState(() {
+          _cartProducts.add(product);
+        });
+      });
     }).catchError((error) {
-      print('Failed to remove from cart: $error');
-      // Revert UI change if removal fails
+      print('Error getting product ID: $error');
+      // Revert UI change if getProductID fails
       setState(() {
         _cartProducts.add(product);
       });
     });
-  }).catchError((error) {
-    print('Error getting product ID: $error');
-    // Revert UI change if getProductID fails
-    setState(() {
-      _cartProducts.add(product);
-    });
-  });
-}
+  }
 
+  void _checkout() {
+    if (_cartProducts.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Cart is Empty'),
+            content: const Text('Please add products to your cart before checkout.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const PaymentMethod()),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -178,50 +204,16 @@ class _CartPageState extends State<MyCart> {
                       ],
                     ),
                   ),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_cartProducts.isEmpty) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Cart is Empty'),
-                              content: const Text('Please add products to your cart before checkout.'),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                          );
-                        }
-                        else{
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const PaymentMethod()),
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFB39DDB), // Button color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(
+                      child: ElevatedButton(
+                        onPressed: _checkout,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFD9D9D9),
+                          padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
                         ),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-                        child: Text(
-                          'CHECK OUT',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        child: const Text('CHECK OUT'),
                       ),
                     ),
                   ),
@@ -267,7 +259,6 @@ class ProductCheckoutCard extends StatelessWidget {
   final VoidCallback onRemove;
 
   const ProductCheckoutCard({
-    super.key,
     required this.product,
     required this.onRemove,
   });
@@ -316,21 +307,13 @@ class ProductCheckoutCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  ElevatedButton(
-                    onPressed: onRemove,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple[200], // Change button color to redAccent
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text(
-                      'Remove from Cart',
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ),
                 ],
               ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: onRemove,
+              color: const Color.fromARGB(255, 2, 2, 2),
             ),
           ],
         ),

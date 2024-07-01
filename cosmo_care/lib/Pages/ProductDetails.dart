@@ -198,6 +198,7 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
   @override
   Widget build(BuildContext context) {
     Widget getContent() {
+      print("Reviews: ${widget.reviews}"); // Debugging line
       switch (selectedIndex) {
         case 0:
           return Text(
@@ -303,10 +304,14 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
             ],
           );
         case 3:
-          return ListView(
-            children: widget.reviews?.map((review) => ListTile(title: Text(review))).toList() ??
-                [Text('No reviews available')],
-          );
+          if (widget.reviews != null && widget.reviews!.isNotEmpty) {
+            return ListView(
+              shrinkWrap: true,
+              children: widget.reviews!.map((review) => ListTile(title: Text(review))).toList(),
+            );
+          } else {
+            return Center(child: Text('No reviews available'));
+          }
         default:
           return Container();
       }
@@ -351,7 +356,7 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
                     });
                   },
                   child: Text(
-                    'Description',
+                    'OverView',
                     style: TextStyle(
                       color: selectedIndex == 0 ? Colors.green : Colors.grey,
                       fontWeight: selectedIndex == 0 ? FontWeight.bold : FontWeight.normal,

@@ -4,7 +4,7 @@ import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/MyCart.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart'; 
-import 'package:cosmo_care/Pages/ProductDetails.dart'; 
+//import 'package:cosmo_care/Pages/ProductDetails.dart'; 
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 

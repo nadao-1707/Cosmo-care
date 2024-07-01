@@ -1,13 +1,15 @@
+import 'package:cosmo_care/Pages/EditProfile.dart';
+import 'package:cosmo_care/Pages/LogIn.dart';
+import 'package:cosmo_care/Pages/MyCart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Pages/BarCodeScanning.dart';
-import 'package:flutter_application_2/Pages/ChatBot.dart';
-import 'package:flutter_application_2/Pages/Home.dart';
-import 'package:flutter_application_2/Pages/MyCart.dart';
-import 'package:flutter_application_2/Pages/Search.dart';
-import 'package:flutter_application_2/Pages/EditProfile.dart'; // Import the EditProfile page
-import 'package:flutter_application_2/Pages/LogIn.dart'; // Import the LogIn page
+import 'package:cosmo_care/Pages/BarCodeScanning.dart';
+import 'package:cosmo_care/Pages/ChatBot.dart';
+import 'package:cosmo_care/Pages/Home.dart';
+import 'package:cosmo_care/Pages/Search.dart';
 
 class MyProfile extends StatefulWidget {
+  const MyProfile({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }

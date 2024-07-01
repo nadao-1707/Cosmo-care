@@ -29,8 +29,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/loading': (context) => const Loading(), // Define loading screen route
         '/': (context) => const Questionnaire(), // Define root route
-        '/skinTypeTest': (context) => const SkinTypeTest(), // Define SkinTypeTest route
+        //'/skinTypeTest': (context) => const SkinTypeTest(), // Define SkinTypeTest route
         '/uploadImage': (context) => const UploadImage(), // Define UploadImage route
+        //'/Detectingimage': (context) => const Detectingimage(image:), 
       },
       theme: ThemeData(
         primarySwatch: Colors.purple, // Example theme customization
