@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:cosmo_care/Entities/Client.dart';
+import 'package:cosmo_care/Services/AuthService.dart';
+import 'package:cosmo_care/Services/ClientController.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
@@ -29,6 +32,8 @@ class Model extends StatefulWidget {
 }
 
 class _Model extends State<Model> {
+  AuthService _authService = AuthService();
+  ClientController _controller = ClientController();
   File? _imageFile;
   String _prediction = '';
   final String baseUrl = 'http://10.0.2.2:5001'; // Adjust for your server's IP and port
@@ -51,6 +56,12 @@ class _Model extends State<Model> {
 
     try {
       final prediction = await uploadImage(_imageFile!);
+      var userId = await _authService.getUserId();
+                  if (userId?.isNotEmpty ?? false) {
+                    await _controller.updateClientData(
+                      client: Client(skinType: prediction),
+                    );
+                  }
       setState(() {
         _prediction = 'Predicted Skin Type: $prediction';
       });
