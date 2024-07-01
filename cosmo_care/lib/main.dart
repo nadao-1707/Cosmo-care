@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/Loading.dart';
 import 'package:cosmo_care/Pages/Questionnaire.dart'; 
 import 'package:cosmo_care/Pages/SkinTypeTest.dart';
-import 'package:cosmo_care/Pages/UploadImage.dart'; 
+import 'package:cosmo_care/Pages/Model.dart'; 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
         '/loading': (context) => const Loading(), // Define loading screen route
         '/': (context) => const Questionnaire(), // Define root route
         //'/skinTypeTest': (context) => const SkinTypeTest(), // Define SkinTypeTest route
-        '/uploadImage': (context) => const UploadImage(), // Define UploadImage route
+        //'/uploadImage': (context) => const UploadImage(), // Define UploadImage route
+        '/Model': (context) => const Model(), 
         //'/Detectingimage': (context) => const Detectingimage(image:), 
       },
       theme: ThemeData(

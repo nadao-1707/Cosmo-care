@@ -77,7 +77,7 @@ class Questionnaire extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/uploadImage'); // Navigate to UploadImage page
+                      Navigator.pushNamed(context, '/Model'); // Navigate to UploadImage page
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xffD9D9D9),
