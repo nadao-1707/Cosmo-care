@@ -467,4 +467,22 @@ Future<List<List<String>>> listProductInfoByCode(String code) async {
     }
   }
 
+  
+  Future<List<Map<String, dynamic>>> fetchProductsByPriceRange(int lowerPrice, int upperPrice) async {
+  try {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection('products')
+        .where('price', isGreaterThanOrEqualTo: lowerPrice)
+        .where('price', isLessThanOrEqualTo: upperPrice)
+        .get();
+
+    List<Map<String, dynamic>> products = snapshot.docs.map((doc) => doc.data()).toList();
+    return products;
+  } catch (e) {
+    print('Error fetching products by price range: $e');
+    return [];
+  }
+}
+ 
+
 }
