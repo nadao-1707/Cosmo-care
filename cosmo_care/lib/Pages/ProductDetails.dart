@@ -45,7 +45,7 @@ class Productdetails extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,13 +294,13 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
                   fontSize: 14,
                 ),
               ),
-              Row(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: widget.problems?.map((problem) => Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Text('- $problem'),
+                padding: const EdgeInsets.only(bottom: 4.0), // Adjust spacing between items if needed
+                child: Text('- $problem'),
                 )).toList() ?? [Text('No problems listed')],
-              ),
+              )
             ],
           );
         case 3:
