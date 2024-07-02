@@ -19,7 +19,7 @@ class _SearchState extends State<Search> {
   int _selectedIndex = 4; // Set the initial selected index to 4 for the "Search" item
   ClientController c = ClientController();
   final TextEditingController _controller = TextEditingController();
-  String _searchText = ''; // Store the entered search text
+  //String _searchText = ''; // Store the entered search text
   Future<List<Map<String, dynamic>>> result = Future.value([]);
   double _minBudget = 0;
   double _maxBudget = 1000;
@@ -119,7 +119,7 @@ void _filterResults() {
                         controller: _controller,
                         onChanged: (value) {
                           setState(() {
-                            _searchText = value;
+                            //_searchText = value;
                             _filterResults();
                           });
                         },
