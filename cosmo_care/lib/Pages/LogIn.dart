@@ -1,5 +1,5 @@
-import 'package:cosmo_care/Entities/Client.dart';
 import 'package:flutter/material.dart';
+import 'package:cosmo_care/Entities/Client.dart';
 import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/SignUp.dart';
 import 'package:cosmo_care/Services/AuthService.dart'; // Import your AuthService
@@ -74,6 +74,37 @@ class _LoginDemoState extends State<LogIn> {
     );
   }
 
+  // Function to show a dialog for choosing the reset method
+  void _forgetPassword() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Forget Password'),
+          content: const Text('Choose your method to receive reset instructions'),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text('Email'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _showAlertDialog('Email Sent', 'Instructions have been sent to your email.');
+                // Implement your email sending logic here
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Mobile'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _showAlertDialog('SMS Sent', 'Instructions have been sent to your mobile number.');
+                // Implement your SMS sending logic here
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,9 +165,18 @@ class _LoginDemoState extends State<LogIn> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 30,
+                  const SizedBox(height: 10),
+                  InkWell(
+                    onTap: _forgetPassword,
+                    child: const Text(
+                      'Forget Password?',
+                      style: TextStyle(
+                        color: Colors.black,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
                   ),
+                  const SizedBox(height: 30),
                   SizedBox(
                     height: 50,
                     width: double.infinity,
