@@ -1,35 +1,51 @@
+import 'package:cosmo_care/Entities/Client.dart';
+import 'package:cosmo_care/Pages/SkinProblem.dart';
+import 'package:cosmo_care/Services/AuthService.dart';
 import 'package:flutter/material.dart';
-import 'package:cosmo_care/Pages/MyCart.dart';
-import 'package:cosmo_care/Pages/MyProfile.dart';
-import 'package:cosmo_care/Pages/Recommendation.dart';
-import 'package:cosmo_care/Pages/BarCodeScanning.dart';
-import 'package:cosmo_care/Pages/ChatBot.dart';
+import 'package:cosmo_care/Services/ClientController.dart';
 import 'package:cosmo_care/Pages/Home.dart';
+import 'package:cosmo_care/Pages/ChatBot.dart';
+import 'package:cosmo_care/Pages/BarCodeScanning.dart';
+import 'package:cosmo_care/Pages/MyCart.dart';
 import 'package:cosmo_care/Pages/Search.dart';
+import 'package:cosmo_care/Pages/MyProfile.dart';
 
-class SkinProblem extends StatefulWidget {
-  const SkinProblem({super.key});
+class SkinTypeTest extends StatefulWidget {
+  const SkinTypeTest({super.key});
 
   @override
-  _SkinProblemState createState() => _SkinProblemState();
+  _SkinTypeTestState createState() => _SkinTypeTestState();
 }
 
-class _SkinProblemState extends State<SkinProblem> {
-  final List<String> _selectedConcerns = [];
+class _SkinTypeTestState extends State<SkinTypeTest> {
+  late ClientController _clientController;
+  late AuthService _authService;
+  bool isDry = false;
+  bool isOily = false;
+  bool isNormal = false;
+  bool isCombination = false;
+  bool isSensitive = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _clientController = ClientController();
+    _authService = AuthService();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFD1C4E9),
+      backgroundColor: const Color(0xFFCDB7EB), // Background color
       appBar: AppBar(
-        backgroundColor: const Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE3CCE1),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // Go back to the previous page
           },
         ),
-        title: const Text('Select Your Concern', style: TextStyle(color: Colors.black)),
+        title: const Text('Skin Type Test', style: TextStyle(color: Colors.black)),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
@@ -42,84 +58,133 @@ class _SkinProblemState extends State<SkinProblem> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'Please, Select your Concern(s)',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'SKIN TYPE TEST',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView(
-                children: <Widget>[
-                  buildCheckboxListTile('Acne'),
-                  buildCheckboxListTile('Dark Spots'),
-                  buildCheckboxListTile('Pigment Spots'),
-                  buildCheckboxListTile('Under Eye Puffiness'),
-                  buildCheckboxListTile('Eye Bags'),
-                  buildCheckboxListTile('Dark Circles'),
-                  buildCheckboxListTile('Dry Skin'),
-                ],
-              ),
+            CheckboxListTile(
+              title: const Text("DRY"),
+              value: isDry,
+              onChanged: (bool? value) {
+                setState(() {
+                  isDry = value!;
+                  if (isDry) {
+                    isOily = false;
+                    isNormal = false;
+                    isCombination = false;
+                    isSensitive = false;
+                  }
+                });
+              },
             ),
-            const SizedBox(height: 10),
+            CheckboxListTile(
+              title: const Text("OILY"),
+              value: isOily,
+              onChanged: (bool? value) {
+                setState(() {
+                  isOily = value!;
+                  if (isOily) {
+                    isDry = false;
+                    isNormal = false;
+                    isCombination = false;
+                    isSensitive = false;
+                  }
+                });
+              },
+            ),
+            CheckboxListTile(
+              title: const Text("NORMAL"),
+              value: isNormal,
+              onChanged: (bool? value) {
+                setState(() {
+                  isNormal = value!;
+                  if (isNormal) {
+                    isDry = false;
+                    isOily = false;
+                    isCombination = false;
+                    isSensitive = false;
+                  }
+                });
+              },
+            ),
+            CheckboxListTile(
+              title: const Text("COMBINATION"),
+              value: isCombination,
+              onChanged: (bool? value) {
+                setState(() {
+                  isCombination = value!;
+                  if (isCombination) {
+                    isDry = false;
+                    isOily = false;
+                    isNormal = false;
+                    isSensitive = false;
+                  }
+                });
+              },
+            ),
+            CheckboxListTile(
+              title: const Text("SENSITIVE"),
+              value: isSensitive,
+              onChanged: (bool? value) {
+                setState(() {
+                  isSensitive = value!;
+                  if (isSensitive) {
+                    isDry = false;
+                    isOily = false;
+                    isNormal = false;
+                    isCombination = false;
+                  }
+                });
+              },
+            ),
             Center(
-              child: Column(
-                children: [
-                  const Text(
-                    'To See The Suggested Products For You',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextButton(
-                    onPressed: () {
-                      if (_selectedConcerns.isEmpty) {
-                        // Show alert if no concerns are selected
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Alert'),
-                              content: const Text('Please Choose Your Problem.'),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Recommendation(concerns: _selectedConcerns),
-                          ),
-                        );
-                      }
-                    },
-                    child: const Text(
-                      'CLICK HERE',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ],
+              child: ElevatedButton(
+                onPressed: () async {
+                  // Determine selected skin type
+                  String? skinType;
+                  if (isDry) {
+                    skinType = "dry";
+                  } else if (isOily) {
+                    skinType = "oily";
+                  } else if (isNormal) {
+                    skinType = "normal";
+                  } else if (isCombination) {
+                    skinType = "combination";
+                  } else if (isSensitive) {
+                    skinType = "sensitive";
+                  }
+
+                  // Update client data
+                  var userId = await _authService.getUserId();
+                  if (userId?.isNotEmpty ?? false) {
+                    await _clientController.updateClientData(
+                      client: Client(skinType: skinType),
+                    );
+                  }
+
+                  // Navigate to Recommendations page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SkinProblem()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFD9D9D9),
+                  padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                ),
+                child: const Text('NEXT'),
               ),
             ),
           ],
@@ -129,7 +194,7 @@ class _SkinProblemState extends State<SkinProblem> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black54,
         unselectedItemColor: Colors.black54,
-        backgroundColor: const Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE3CCE1),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -187,22 +252,6 @@ class _SkinProblemState extends State<SkinProblem> {
           }
         },
       ),
-    );
-  }
-
-  Widget buildCheckboxListTile(String title) {
-    return CheckboxListTile(
-      title: Text(title),
-      value: _selectedConcerns.contains(title.toLowerCase()),
-      onChanged: (value) {
-        setState(() {
-          if (value == true) {
-            _selectedConcerns.add(title.toLowerCase());
-          } else {
-            _selectedConcerns.remove(title.toLowerCase());
-          }
-        });
-      },
     );
   }
 }
