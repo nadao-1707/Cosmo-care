@@ -215,23 +215,23 @@ Future<List<Product>> fetchProductsBySkinTypeAndConcern(List<String> concerns) a
   AuthService authService = AuthService();
 
   try {
-    List<String> skinTypes = ['All'];
     String? userSkinType = await authService.getUserSkinType();
-    if (userSkinType != null) {
-      skinTypes.add(userSkinType);
-    }
-    print(skinTypes);
 
-    // Fetch products where skin type matches the user's skin type
+    // Fetch products where problems match concerns
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
         .collection('products')
-        .where('requiredSkinType', whereIn: skinTypes)
         .where('problems', arrayContainsAny: concerns)
         .get();
 
-    // Convert QueryDocumentSnapshot to a list of Product objects
-    List<Product> products = snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
-    print(products);
+    // Convert to list of Product objects and filter by requiredSkinType
+    List<Product> products = snapshot.docs
+      .where((doc) {
+        List<dynamic> requiredSkinTypes = doc.data()['requiredSkinType'];
+        return requiredSkinTypes.contains(userSkinType) || requiredSkinTypes.contains('All');
+      })
+      .map((doc) => Product.fromFirestore(doc))
+      .toList();
+
     return products;
   } catch (e) {
     print('Error fetching products: $e');
