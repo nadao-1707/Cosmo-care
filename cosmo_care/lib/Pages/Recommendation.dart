@@ -12,7 +12,7 @@ import 'ProductDetails.dart';
 class Recommendation extends StatefulWidget {
   final List<String> concerns;
 
-  const Recommendation({super.key, required this.concerns});
+  const Recommendation({super.key, required this.concerns, String? priceRange});
 
   @override
   _RecommendationState createState() => _RecommendationState();
