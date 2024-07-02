@@ -178,10 +178,6 @@ class _Model extends State<Model> {
             icon: Icon(Icons.search),
             label: 'Search',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
         ],
         onTap: (index) {
           switch (index) {
