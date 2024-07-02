@@ -10,7 +10,7 @@ import 'package:cosmo_care/Services/AuthService.dart';
 import 'package:cosmo_care/Pages/PayementMethod.dart';
 
 class MyCart extends StatefulWidget {
-  const MyCart({Key? key}) : super(key: key);
+  const MyCart({super.key});
 
   @override
   _MyCartState createState() => _MyCartState();
@@ -88,7 +88,7 @@ class _MyCartState extends State<MyCart> {
 
     _controller.getProductID(product.name).then((docId) {
       // Call the method to remove from Firestore cart using the docId
-      ClientController().removeFromCart(docId!).then((_) {
+      ClientController().removeFromCart(docId).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('${product.name} removed from cart')),
         );
@@ -258,7 +258,7 @@ class ProductCheckoutCard extends StatelessWidget {
   final Product product;
   final VoidCallback onRemove;
 
-  const ProductCheckoutCard({
+  const ProductCheckoutCard({super.key, 
     required this.product,
     required this.onRemove,
   });

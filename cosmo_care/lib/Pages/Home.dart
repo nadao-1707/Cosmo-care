@@ -10,7 +10,7 @@ import 'package:cosmo_care/Pages/Questionnaire.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();

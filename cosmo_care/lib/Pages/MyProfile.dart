@@ -20,22 +20,22 @@ class _HomePageState extends State<MyProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFD1C4E9), // Background color
+      backgroundColor: const Color(0xFFD1C4E9), // Background color
       appBar: AppBar(
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyProfile()),
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
             },
           ),
@@ -47,7 +47,7 @@ class _HomePageState extends State<MyProfile> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
+              const Text(
                 'Anna Albert',
                 style: TextStyle(
                   fontSize: 24,
@@ -55,16 +55,16 @@ class _HomePageState extends State<MyProfile> {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Container(
                 width: double.infinity,
                 height: 300, // Adjust height as needed
                 decoration: BoxDecoration(
-                  color: Color(0xFFEDE7F6),
+                  color: const Color(0xFFEDE7F6),
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                padding: EdgeInsets.all(24.0),
-                child: Column(
+                padding: const EdgeInsets.all(24.0),
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Row(
@@ -73,7 +73,7 @@ class _HomePageState extends State<MyProfile> {
                         SizedBox(width: 10),
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            padding: EdgeInsets.symmetric(vertical: 8.0),
                             child: Text(
                               'Anna Albert',
                               style: TextStyle(
@@ -92,7 +92,7 @@ class _HomePageState extends State<MyProfile> {
                         SizedBox(width: 10),
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            padding: EdgeInsets.symmetric(vertical: 8.0),
                             child: Text(
                               'info@yahoo.com',
                               style: TextStyle(
@@ -111,7 +111,7 @@ class _HomePageState extends State<MyProfile> {
                         SizedBox(width: 10),
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            padding: EdgeInsets.symmetric(vertical: 8.0),
                             child: Text(
                               '********',
                               style: TextStyle(
@@ -126,30 +126,30 @@ class _HomePageState extends State<MyProfile> {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => EditProfile()), // Navigate to EditProfile page
+                    MaterialPageRoute(builder: (context) => const EditProfile()), // Navigate to EditProfile page
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFD1C4E9),
+                  backgroundColor: const Color(0xFFD1C4E9),
                   foregroundColor: Colors.black,
                 ),
-                child: Text('Show Info'),
+                child: const Text('Show Info'),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () {
                   _showLogoutDialog(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFD1C4E9),
+                  backgroundColor: const Color(0xFFD1C4E9),
                   foregroundColor: Colors.black,
                 ),
-                child: Text('Log Out'),
+                child: const Text('Log Out'),
               ),
             ],
           ),
@@ -159,7 +159,7 @@ class _HomePageState extends State<MyProfile> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black54,
         unselectedItemColor: Colors.black54,
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -187,31 +187,31 @@ class _HomePageState extends State<MyProfile> {
             case 0:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => const Home()),
               );
               break;
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatBot()),
+                MaterialPageRoute(builder: (context) => const ChatBot()),
               );
               break;
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => BarCodeScanning()),
+                MaterialPageRoute(builder: (context) => const BarCodeScanning()),
               );
               break;
             case 3:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyCart()),
+                MaterialPageRoute(builder: (context) => const MyCart()),
               );
               break;
             case 4:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Search()),
+                MaterialPageRoute(builder: (context) => const Search()),
               );
               break;
           }
@@ -225,20 +225,20 @@ class _HomePageState extends State<MyProfile> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Log Out'),
-          content: Text('Are you sure you want to log out?'),
+          title: const Text('Log Out'),
+          content: const Text('Are you sure you want to log out?'),
           actions: <Widget>[
             TextButton(
-              child: Text('No'),
+              child: const Text('No'),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
             ),
             TextButton(
-              child: Text('Yes'),
+              child: const Text('Yes'),
               onPressed: () {
                 Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => LogIn()), // Navigate to LogIn page
+                  MaterialPageRoute(builder: (context) => const LogIn()), // Navigate to LogIn page
                   (Route<dynamic> route) => false,
                 );
               },

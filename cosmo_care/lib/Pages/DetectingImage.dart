@@ -11,7 +11,7 @@ import 'package:cosmo_care/Pages/SkinProblem.dart';
 class Detectingimage extends StatelessWidget {
   final File? image;
 
-  const Detectingimage({Key? key, required this.image}) : super(key: key);
+  const Detectingimage({super.key, required this.image});
 
   @override
   Widget build(BuildContext context) {

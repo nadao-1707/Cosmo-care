@@ -211,34 +211,34 @@ class ClientController {
     }
   }
 
-  Future<List<Product>> fetchProductsBySkinType() async {
-  try {
-    String? skinType = await _authService.getUserSkinType();
+Future<List<Product>> fetchProductsBySkinTypeAndConcern(List<String> concerns) async {
+  AuthService authService = AuthService();
 
-    // Fetch products from Firestore where skinType matches
+  try {
+    List<String> skinTypes = ['All'];
+    String? userSkinType = await authService.getUserSkinType();
+    if (userSkinType != null) {
+      skinTypes.add(userSkinType);
+    }
+    print(skinTypes);
+
+    // Fetch products where skin type matches the user's skin type
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
         .collection('products')
-        .where('requiredSkinType', isEqualTo: skinType)
+        .where('requiredSkinType', whereIn: skinTypes)
+        .where('problems', arrayContainsAny: concerns)
         .get();
-
-    QuerySnapshot<Map<String, dynamic>> snapshotAll = await FirebaseFirestore.instance
-        .collection('products')
-        .where('requiredSkinType', isEqualTo: 'All')
-        .get();
-
-    // Combine both snapshots into a single list of DocumentSnapshot
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> combinedList =
-        [...snapshot.docs, ...snapshotAll.docs];
 
     // Convert QueryDocumentSnapshot to a list of Product objects
-    List<Product> products = combinedList.map((doc) => Product.fromFirestore(doc)).toList();
-
+    List<Product> products = snapshot.docs.map((doc) => Product.fromFirestore(doc)).toList();
+    print(products);
     return products;
   } catch (e) {
     print('Error fetching products: $e');
     return [];
   }
 }
+
 
 
   // add review and rating (update average and total rating)
@@ -305,16 +305,14 @@ class ClientController {
         .get();
 
     List<Map<String, dynamic>> products = [];
-    snapshot.docs.forEach((DocumentSnapshot<Map<String, dynamic>> doc) {
+    for (var doc in snapshot.docs) {
         final data = doc.data();
-        if (data != null) {
-            products.add({
-                'name': data['name'] ?? '', 
-                'imgURL': data['imgURL'] ?? '',
-                'price': data['price']?.toString() ?? '', 
-            });
-        }
-    });
+          products.add({
+              'name': data['name'] ?? '', 
+              'imgURL': data['imgURL'] ?? '',
+              'price': data['price']?.toString() ?? '', 
+          });
+          }
     return products;
  }
 
@@ -325,20 +323,18 @@ Future<List<Map<String, dynamic>>> searchByName(String productName) async {
         .get();
 
     List<Map<String, dynamic>> products = [];
-    snapshot.docs.forEach((DocumentSnapshot<Map<String, dynamic>> doc) {
+    for (var doc in snapshot.docs) {
       final data = doc.data();
-      if (data != null) {
-        final name = data['name'] ?? '';
-        if (name.toString().toLowerCase().contains(productName.toLowerCase())) {
-          print('Product found: $data'); // Logging the data
-          products.add({
-            'name': data['name'],
-            'imgURL': data['imgURL'] ?? '',
-            'price': data['price']?.toString() ?? '', // Ensure price is converted to string and no null values
-          });
-        }
+      final name = data['name'] ?? '';
+      if (name.toString().toLowerCase().contains(productName.toLowerCase())) {
+        print('Product found: $data'); // Logging the data
+        products.add({
+          'name': data['name'],
+          'imgURL': data['imgURL'] ?? '',
+          'price': data['price']?.toString() ?? '', // Ensure price is converted to string and no null values
+        });
       }
-    });
+        }
     return products;
   } catch (e) {
     return [];
@@ -354,7 +350,7 @@ Future<List<String>> getProductInfoByName(String productName) async {
         .get();
 
     if (querySnapshot.docs.isNotEmpty) {
-      querySnapshot.docs.forEach((document) {
+      for (var document in querySnapshot.docs) {
         Product product = Product.fromFirestore(document);
         productInfo.add('Name: ${product.name}');
         productInfo.add('Image URL: ${product.imgURL}');
@@ -368,7 +364,7 @@ Future<List<String>> getProductInfoByName(String productName) async {
         productInfo.add('Average Rating: ${product.averageRating}');
         productInfo.add('Total Ratings: ${product.totalRatings}');
         productInfo.add('Reviews: ${product.reviews}');
-      });
+      }
     } else {
       productInfo.add('Product not found.');
     }

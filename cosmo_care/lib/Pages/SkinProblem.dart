@@ -1,43 +1,42 @@
+import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/MyCart.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 import 'package:cosmo_care/Pages/Recommendation.dart';
-import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
 import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 
-
 class SkinProblem extends StatefulWidget {
   const SkinProblem({super.key});
-  
+
   @override
-  _HomePageState createState() => _HomePageState();
+  _SkinProblemState createState() => _SkinProblemState();
 }
 
-class _HomePageState extends State<SkinProblem> {
-  List<String> _selectedConcerns = [];
+class _SkinProblemState extends State<SkinProblem> {
+  final List<String> _selectedConcerns = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFD1C4E9),
+      backgroundColor: const Color(0xFFD1C4E9),
       appBar: AppBar(
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text('Select Your Concern', style: TextStyle(color: Colors.black)),
+        title: const Text('Select Your Concern', style: TextStyle(color: Colors.black)),
         actions: [
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyProfile()),
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
             },
           ),
@@ -48,39 +47,39 @@ class _HomePageState extends State<SkinProblem> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
+            const Text(
               'Please, Select your Concern(s)',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 18,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Expanded(
               child: ListView(
                 children: <Widget>[
                   buildCheckboxListTile('Acne'),
                   buildCheckboxListTile('Dark Spots'),
-                  buildCheckboxListTile('Fine Lines'),
-                  buildCheckboxListTile('Dull Skin'),
-                  buildCheckboxListTile('Atopic Dermatitis'),
-                  buildCheckboxListTile('Alopecia Areata'),
-                  buildCheckboxListTile('Pemphigus'),
+                  buildCheckboxListTile('Pigment Spots'),
+                  buildCheckboxListTile('Under Eye Puffiness'),
+                  buildCheckboxListTile('Eye Bags'),
+                  buildCheckboxListTile('Dark Circles'),
+                  buildCheckboxListTile('Dry Skin'),
                 ],
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Center(
               child: Column(
                 children: [
-                  Text(
+                  const Text(
                     'To See The Suggested Products For You',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 16,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextButton(
                     onPressed: () {
                       if (_selectedConcerns.isEmpty) {
@@ -89,11 +88,11 @@ class _HomePageState extends State<SkinProblem> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Alert'),
-                              content: Text('Please Choose Your Problem.'),
+                              title: const Text('Alert'),
+                              content: const Text('Please Choose Your Problem.'),
                               actions: <Widget>[
                                 TextButton(
-                                  child: Text('OK'),
+                                  child: const Text('OK'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
@@ -105,11 +104,13 @@ class _HomePageState extends State<SkinProblem> {
                       } else {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Recommendation()),
+                          MaterialPageRoute(
+                            builder: (context) => Recommendation(concerns: _selectedConcerns),
+                          ),
                         );
                       }
                     },
-                    child: Text(
+                    child: const Text(
                       'CLICK HERE',
                       style: TextStyle(
                         color: Colors.black,
@@ -128,7 +129,7 @@ class _HomePageState extends State<SkinProblem> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black54,
         unselectedItemColor: Colors.black54,
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -156,31 +157,31 @@ class _HomePageState extends State<SkinProblem> {
             case 0:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => const Home()),
               );
               break;
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatBot()),
+                MaterialPageRoute(builder: (context) => const ChatBot()),
               );
               break;
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => BarCodeScanning()),
+                MaterialPageRoute(builder: (context) => const BarCodeScanning()),
               );
               break;
             case 3:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyCart()),
+                MaterialPageRoute(builder: (context) => const MyCart()),
               );
               break;
             case 4:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Search()),
+                MaterialPageRoute(builder: (context) => const Search()),
               );
               break;
           }
@@ -192,13 +193,13 @@ class _HomePageState extends State<SkinProblem> {
   Widget buildCheckboxListTile(String title) {
     return CheckboxListTile(
       title: Text(title),
-      value: _selectedConcerns.contains(title),
+      value: _selectedConcerns.contains(title.toLowerCase()),
       onChanged: (value) {
         setState(() {
-          if (value != null && value) {
-            _selectedConcerns.add(title);
+          if (value == true) {
+            _selectedConcerns.add(title.toLowerCase());
           } else {
-            _selectedConcerns.remove(title);
+            _selectedConcerns.remove(title.toLowerCase());
           }
         });
       },

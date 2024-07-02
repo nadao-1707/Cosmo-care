@@ -10,7 +10,9 @@ import 'package:cosmo_care/Entities/Product.dart';
 import 'ProductDetails.dart';
 
 class Recommendation extends StatefulWidget {
-  const Recommendation({Key? key}) : super(key: key);
+  final List<String> concerns;
+
+  const Recommendation({super.key, required this.concerns});
 
   @override
   _RecommendationState createState() => _RecommendationState();
@@ -32,7 +34,7 @@ class _RecommendationState extends State<Recommendation> {
       _isLoading = true;
     });
     try {
-      List<Product> products = await _clientController.fetchProductsBySkinType();
+      List<Product> products = await _clientController.fetchProductsBySkinTypeAndConcern(widget.concerns);
       setState(() {
         _products = products;
         _isLoading = false;
@@ -211,13 +213,13 @@ class ProductCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const ProductCard({
-    Key? key,
+    super.key,
     required this.imagePath,
     required this.productName,
     required this.price,
     required this.onAddToCart,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

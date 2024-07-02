@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cosmo_care/Entities/Client.dart';
+import 'package:cosmo_care/Pages/SkinProblem.dart';
 import 'package:cosmo_care/Services/AuthService.dart';
 import 'package:cosmo_care/Services/ClientController.dart';
 import 'package:flutter/material.dart';
@@ -13,27 +14,29 @@ import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Model(),
     );
   }
 }
 
 class Model extends StatefulWidget {
-  const Model({Key? key}) : super(key: key);
+  const Model({super.key});
 
   @override
   _Model createState() => _Model();
 }
 
 class _Model extends State<Model> {
-  AuthService _authService = AuthService();
-  ClientController _controller = ClientController();
+  final AuthService _authService = AuthService();
+  final ClientController _controller = ClientController();
   File? _imageFile;
   String _prediction = '';
   final String baseUrl = 'http://10.0.2.2:5001'; // Adjust for your server's IP and port
@@ -94,7 +97,7 @@ class _Model extends State<Model> {
       backgroundColor: const Color(0xFFD1C4E9),
       appBar: AppBar(
         backgroundColor: const Color(0xFFE1BEE7),
-        title: Text('Skin Type Detector'),
+        title: const Text('Skin Type Detector'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -120,22 +123,32 @@ class _Model extends State<Model> {
           children: [
             ElevatedButton(
               onPressed: _getImage,
-              child: Text('Select Image'),
+              child: const Text('Select Image'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             _imageFile != null
                 ? Image.file(
               _imageFile!,
               height: 200,
             )
-                : SizedBox(),
-            SizedBox(height: 16.0),
+                : const SizedBox(),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: _predictSkinType,
-              child: Text('Predict Skin Type'),
+              child: const Text('Predict Skin Type'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Text(_prediction),
+            const SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SkinProblem()),
+                );
+              },
+              child: const Text('Specify Your Skin Problem'),
+            ),
           ],
         ),
       ),

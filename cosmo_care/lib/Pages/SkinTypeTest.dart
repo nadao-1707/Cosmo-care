@@ -1,8 +1,8 @@
 import 'package:cosmo_care/Entities/Client.dart';
+import 'package:cosmo_care/Pages/SkinProblem.dart';
 import 'package:cosmo_care/Services/AuthService.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmo_care/Services/ClientController.dart';
-import 'package:cosmo_care/Pages/Recommendation.dart';
 import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
@@ -177,7 +177,7 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
                   // Navigate to Recommendations page
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Recommendation()),
+                    MaterialPageRoute(builder: (context) => const SkinProblem()),
                   );
                 },
                 style: ElevatedButton.styleFrom(

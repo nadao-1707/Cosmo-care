@@ -8,27 +8,29 @@ import 'package:cosmo_care/Pages/Search.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfile extends StatefulWidget {
+  const EditProfile({super.key});
+
   @override
   _EditProfileState createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
   File? _image; // Variable to hold the selected image file
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFD1C4E9), // Background color
+      backgroundColor: const Color(0xFFD1C4E9), // Background color
       appBar: AppBar(
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
-        title: Text('Edit Profile', style: TextStyle(color: Colors.black)),
+        title: const Text('Edit Profile', style: TextStyle(color: Colors.black)),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -36,7 +38,7 @@ class _EditProfileState extends State<EditProfile> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
                   _selectImage(); // Call function to select image
@@ -46,38 +48,38 @@ class _EditProfileState extends State<EditProfile> {
                         radius: 50,
                         backgroundImage: FileImage(_image!),
                       )
-                    : Icon(Icons.photo, size: 150, color: Colors.black54),
+                    : const Icon(Icons.photo, size: 150, color: Colors.black54),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               buildInputField(
                   Icons.email, 'CHANGE EMAIL', 'maysashs@gmail.com', false),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               buildInputField(Icons.lock, 'OLD PASSWORD', '••••••••', true),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               buildInputField(Icons.lock, 'NEW PASSWORD', '••••••••', true),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               buildInputField(Icons.phone, 'CHANGE PHONE', '+12345678', false),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFE1BEE7),
+                      backgroundColor: const Color(0xFFE1BEE7),
                     ),
                     onPressed: () {
                       Navigator.pop(context); // Go back to the previous page
                     },
-                    child: Text('Cancel', style: TextStyle(color: Colors.black)),
+                    child: const Text('Cancel', style: TextStyle(color: Colors.black)),
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFE1BEE7),
+                      backgroundColor: const Color(0xFFE1BEE7),
                     ),
                     onPressed: () {
                       _showSaveSuccessDialog();
                     },
-                    child: Text('Save', style: TextStyle(color: Colors.black)),
+                    child: const Text('Save', style: TextStyle(color: Colors.black)),
                   ),
                 ],
               ),
@@ -89,7 +91,7 @@ class _EditProfileState extends State<EditProfile> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black54,
         unselectedItemColor: Colors.black54,
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -117,31 +119,31 @@ class _EditProfileState extends State<EditProfile> {
             case 0:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => const Home()),
               );
               break;
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatBot()),
+                MaterialPageRoute(builder: (context) => const ChatBot()),
               );
               break;
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => BarCodeScanning()),
+                MaterialPageRoute(builder: (context) => const BarCodeScanning()),
               );
               break;
             case 3:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyCart()),
+                MaterialPageRoute(builder: (context) => const MyCart()),
               );
               break;
             case 4:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Search()),
+                MaterialPageRoute(builder: (context) => const Search()),
               );
               break;
           }
@@ -157,22 +159,22 @@ class _EditProfileState extends State<EditProfile> {
       children: <Widget>[
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black54,
             fontSize: 12,
           ),
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Container(
           decoration: BoxDecoration(
-            color: Color(0xFFEDE7F6),
+            color: const Color(0xFFEDE7F6),
             borderRadius: BorderRadius.circular(10.0),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Row(
             children: <Widget>[
               Icon(icon, color: Colors.black54),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Expanded(
                 child: TextField(
                   controller: _passwordController,
@@ -195,11 +197,11 @@ class _EditProfileState extends State<EditProfile> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Success'),
-          content: Text('Your data has been saved successfully.'),
+          title: const Text('Success'),
+          content: const Text('Your data has been saved successfully.'),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -211,8 +213,8 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   void _selectImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
         _image = File(image.path);

@@ -18,7 +18,7 @@ Future<void> addProductToCart(String productName) async {
 
 class Productdetails extends StatelessWidget {
   final Product product;
-  const Productdetails({Key? key, required this.product});
+  const Productdetails({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -172,8 +172,8 @@ class ProductDetailCard extends StatefulWidget {
   final String? howToUse;
   final List<String>? problems;
 
-  ProductDetailCard({
-    Key? key,
+  const ProductDetailCard({
+    super.key,
     required this.name,
     required this.imgURL,
     this.category,
@@ -186,7 +186,7 @@ class ProductDetailCard extends StatefulWidget {
     this.reviews,
     this.howToUse,
     this.problems,
-  }) : super(key: key);
+  });
 
   @override
   _ProductDetailCardState createState() => _ProductDetailCardState();
