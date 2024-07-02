@@ -21,6 +21,9 @@ class _SearchState extends State<Search> {
   final TextEditingController _controller = TextEditingController();
   String _searchText = ''; // Store the entered search text
   Future<List<Map<String, dynamic>>> result = Future.value([]);
+  double _minBudget = 0;
+  double _maxBudget = 1000;
+  RangeValues _budgetRange = const RangeValues(0, 1000);
 
   @override
   void dispose() {
@@ -62,6 +65,13 @@ class _SearchState extends State<Search> {
         break;
     }
   }
+
+void _filterResults() {
+  setState(() {
+    // Fetch products based on the budget range only
+    result = c.fetchProductsByPriceRange(_budgetRange.start.round(), _budgetRange.end.round());
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -110,11 +120,7 @@ class _SearchState extends State<Search> {
                         onChanged: (value) {
                           setState(() {
                             _searchText = value;
-                            if (_searchText.isNotEmpty) {
-                              result = c.searchByName(_searchText);
-                            } else {
-                              result = Future.value([]); // Reset result to empty when search text is empty
-                            }
+                            _filterResults();
                           });
                         },
                         decoration: const InputDecoration(
@@ -125,6 +131,31 @@ class _SearchState extends State<Search> {
                     ),
                   ],
                 ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Filter by Budget',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              RangeSlider(
+                values: _budgetRange,
+                min: _minBudget,
+                max: _maxBudget,
+                divisions: 20,
+                labels: RangeLabels(
+                  _budgetRange.start.round().toString(),
+                  _budgetRange.end.round().toString(),
+                ),
+                onChanged: (values) {
+                  setState(() {
+                    _budgetRange = values;
+                    _filterResults();
+                  });
+                },
               ),
               const SizedBox(height: 20),
               const Text(
