@@ -3,10 +3,8 @@ import 'package:cosmo_care/Pages/ChatBot.dart';
 import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/MyCart.dart';
 import 'package:cosmo_care/Pages/Search.dart';
-import 'package:cosmo_care/Pages/MyProfile.dart'; 
-//import 'package:cosmo_care/Pages/ProductDetails.dart'; 
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+import 'package:cosmo_care/Pages/MyProfile.dart';
+import 'package:barcode_scan2/barcode_scan2.dart';
 
 class BarCodeScanning extends StatefulWidget {
   const BarCodeScanning({super.key});
@@ -16,19 +14,20 @@ class BarCodeScanning extends StatefulWidget {
 }
 
 class _ScanPageState extends State<BarCodeScanning> {
-  File? _image;
+  String? barcodeResult;
   int _selectedIndex = 2; // Set the initial selected index to 2 for the "Scan" item
 
-  Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
-    });
+  Future<void> _scanBarcode() async {
+    try {
+      var result = await BarcodeScanner.scan();
+      setState(() {
+        barcodeResult = result.rawContent;
+      });
+    } catch (e) {
+      setState(() {
+        barcodeResult = 'Failed to get barcode.';
+      });
+    }
   }
 
   void _onItemTapped(int index) {
@@ -49,12 +48,12 @@ class _ScanPageState extends State<BarCodeScanning> {
         );
         break;
       case 2:
-        // Stay on the same page 
+        // Stay on the same page
         break;
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const MyCart()), 
+          MaterialPageRoute(builder: (context) => const MyCart()),
         );
         break;
       case 4:
@@ -65,13 +64,6 @@ class _ScanPageState extends State<BarCodeScanning> {
         break;
     }
   }
-
- /* void _navigateToProductDetails() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Productdetails(product: product)), // Navigate to ProductDetails page
-    );
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +108,7 @@ class _ScanPageState extends State<BarCodeScanning> {
                   ),
                   const SizedBox(height: 20),
                   GestureDetector(
-                    onTap: _pickImage,
+                    onTap: _scanBarcode,
                     child: Container(
                       width: 300,
                       height: 200,
@@ -125,23 +117,25 @@ class _ScanPageState extends State<BarCodeScanning> {
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: Colors.black54),
                       ),
-                      child: _image == null
+                      child: barcodeResult == null
                           ? const Icon(
                               Icons.qr_code_scanner,
                               size: 50,
                               color: Colors.black54,
                             )
-                          : Image.file(
-                              _image!,
-                              fit: BoxFit.cover,
+                          : Center(
+                              child: Text(
+                                'Barcode: $barcodeResult',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
                             ),
                     ),
                   ),
                   const SizedBox(height: 20),
-                  /*ElevatedButton(
-                    //onPressed: _navigateToProductDetails, // Navigate to ProductDetails page
-                    child: const Text('Submit'),
-                  ),*/
                 ],
               ),
             ),
