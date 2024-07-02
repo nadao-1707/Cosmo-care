@@ -39,6 +39,28 @@ class AuthService {
   }
   }
 
+  // to get currently signed in user's email
+  Future<String?> getUserName() async {
+  try {
+    String? uid = await getUserId();
+    if (uid != null) {
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+          .collection('clients')
+          .doc(uid)
+          .get();
+
+      if (snapshot.exists) {
+        Client client = Client.fromFirestore(snapshot);
+        return client.first_name;
+      }
+    }
+    return null;
+  } catch (error) {
+    print(error.toString());
+    return null;
+  }
+  }
+
   Future<String?> getUserSkinType() async {
   try {
     String? uid = await getUserId();
@@ -63,30 +85,36 @@ class AuthService {
 
 
   Future<String?> getUserUsername() async {
-    try {
-      String? uid = await getUserId();
-      if (uid != null) {
-        DocumentSnapshot<Map<String, dynamic>> snapshot =
-            await FirebaseFirestore.instance.collection('clients').doc(uid).get();
+  try {
+    String? uid = await getUserId(); // Assuming getUserId() fetches the user's ID correctly.
+    if (uid != null) {
+      print('Fetching document for UID: $uid');
+      DocumentSnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('clients').doc(uid).get();
 
-        if (snapshot.exists) {
-          Client client = Client.fromFirestore(snapshot);
-          String? username = client.username;
-          if (username != null) {
-            return username;
-          } else {
-            throw Exception('Username not found for user ID: $uid');
-          }
+      if (snapshot.exists) {
+        Client client = Client.fromFirestore(snapshot);
+        String? username = client.username;
+        if (username != null) {
+          print('Username found: $username');
+          return username;
         } else {
-          throw Exception('Snapshot does not exist for user ID: $uid');
+          print('Username not found for user ID: $uid');
+          throw Exception('Username not found for user ID: $uid');
         }
       } else {
-        throw Exception('User ID is null');
+        print('Document does not exist for user ID: $uid');
+        throw Exception('Snapshot does not exist for user ID: $uid');
       }
-    } catch (error) {
-      throw Exception('Failed to fetch username');
+    } else {
+      print('User ID is null');
+      throw Exception('User ID is null');
     }
+  } catch (error) {
+    print('Failed to fetch username: $error');
+    throw Exception('Failed to fetch username');
   }
+}
   
 
   // get current user
@@ -122,47 +150,48 @@ class AuthService {
     }
   }
 
-  // register with email and password (create the client and his cart)
-  Future<Client?> SignUp(String email, String password, String username) async {
-  try {
-    UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-    User? user = result.user;
+Future<Client?> signUp(String email, String password, String username, String firstName, String lastName) async {
+    try {
+      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      User? user = result.user;
 
-    Client newClient = Client(
-      email: email,
-      username: username, // Add username parameter
-    );
+      Client newClient = Client(
+        email: email,
+        username: username,
+        first_name: firstName,
+        last_name: lastName,
+      );
 
-    // Save client data to Firestore
-    await FirebaseFirestore.instance
-        .collection('clients')
-        .doc(user?.uid)
-        .withConverter<Client>(
-          fromFirestore: (snapshot, _) => Client.fromFirestore(snapshot),
-          toFirestore: (client, _) => client.toFirestore(),
-        )
-        .set(newClient);
+      // Save client data to Firestore
+      await FirebaseFirestore.instance
+          .collection('clients')
+          .doc(user?.uid)
+          .withConverter<Client>(
+            fromFirestore: (snapshot, _) => Client.fromFirestore(snapshot),
+            toFirestore: (client, _) => client.toFirestore(),
+          )
+          .set(newClient);
 
-    // Initialize a new cart for the user
-    Cart newCart = Cart(
-      productIds: [],
-    );
+      // Initialize a new cart for the user
+      Cart newCart = Cart(
+        productIds: [],
+      );
 
-    // Save cart data to Firestore
-    await FirebaseFirestore.instance
-        .collection('carts')
-        .doc(user?.uid)
-        .withConverter<Cart>(
-          fromFirestore: (snapshot, _) => Cart.fromFirestore(snapshot),
-          toFirestore: (cart, _) => cart.toFirestore(),
-        )
-        .set(newCart);
+      // Save cart data to Firestore
+      await FirebaseFirestore.instance
+          .collection('carts')
+          .doc(user?.uid)
+          .withConverter<Cart>(
+            fromFirestore: (snapshot, _) => Cart.fromFirestore(snapshot),
+            toFirestore: (cart, _) => cart.toFirestore(),
+          )
+          .set(newCart);
 
-    return newClient;
-  } catch (error) {
-    print(error.toString());
-    return null;
-  }
+      return newClient;
+    } catch (error) {
+      print(error.toString());
+      return null;
+    }
   }
 
   // sign out
