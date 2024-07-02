@@ -3,7 +3,7 @@ import 'package:cosmo_care/Pages/LogIn.dart';
 import 'package:cosmo_care/Services/AuthService.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+  const SignUp({Key? key}) : super(key: key);
 
   @override
   _SignUpDemoState createState() => _SignUpDemoState();
@@ -13,8 +13,15 @@ class _SignUpDemoState extends State<SignUp> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _mobileController = TextEditingController(); // New controller for mobile number
 
   final AuthService _authService = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    _mobileController.text = ''; // Initialize the mobile number controller
+  }
 
   // Function to navigate to the login page
   void navigateToLogIn() {
@@ -48,31 +55,37 @@ class _SignUpDemoState extends State<SignUp> {
     String email = _emailController.text;
     String username = _usernameController.text;
     String password = _passwordController.text;
+    String mobile = _mobileController.text.trim(); // Get mobile number from text controller and trim whitespace
 
-    if (email.isEmpty) {
-      _showAlertDialog('Alert', 'Please enter your Email');
-    } else if (username.isEmpty) {
-      _showAlertDialog('Alert', 'Please enter your Username');
-    } else if (password.isEmpty) {
-      _showAlertDialog('Alert', 'Please enter your Password');
-    } else if (password.length < 6) {
-      _showAlertDialog('Alert', 'Password must be at least 6 characters long');
-    } else {
-      // Call the sign-up method from AuthService
-      var result = await _authService.SignUp(email, password, username);
-      if (result != null) {
-        _showAlertDialog(
-          'Success',
-          'You have successfully signed up! You can now log in with your email.',
-          () {
-            Navigator.of(context).pop(); // Close the alert dialog
-            navigateToLogIn(); // Navigate to the login page
-          },
-        );
-      } else {
-        _showAlertDialog('Error', 'Failed to sign up. Please try again.');
-      }
+    // Validate mobile number format
+    if (!_isValidMobileFormat(mobile)) {
+      _showAlertDialog('Alert', 'Please enter a valid 11-digit mobile number');
+      return;
     }
+
+    // Call the sign-up method from AuthService
+    var result = await _authService.SignUp(email, password, username, mobile); // Pass mobile number to SignUp method
+    if (result != null) {
+      _showAlertDialog(
+        'Success',
+        'You have successfully signed up! You can now log in with your email.',
+        () {
+          Navigator.of(context).pop(); // Close the alert dialog
+          navigateToLogIn(); // Navigate to the login page
+        },
+      );
+    } else {
+      _showAlertDialog('Error', 'Failed to sign up. Please try again.');
+    }
+  }
+
+  // Validate mobile number format
+  bool _isValidMobileFormat(String mobile) {
+    if (mobile.isEmpty) {
+      return false;
+    }
+    // Check if it contains exactly 11 digits
+    return RegExp(r'^[0-9]{11}$').hasMatch(mobile);
   }
 
   @override
@@ -144,6 +157,19 @@ class _SignUpDemoState extends State<SignUp> {
                         labelText: 'Password',
                         hintText: 'Enter your password',
                         prefixIcon: Icon(Icons.lock),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: TextField(
+                      controller: _mobileController,
+                      keyboardType: TextInputType.phone,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Mobile Number',
+                        hintText: 'Enter your mobile number',
+                        prefixIcon: Icon(Icons.phone),
                       ),
                     ),
                   ),
