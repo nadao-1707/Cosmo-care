@@ -6,7 +6,7 @@ from PIL import Image
 app = Flask(__name__)
 
 # Define paths and variables for model loading
-checkpoint_path = 'C:/Users/acer/Documents/GitHub/Cosmo-care/cosmo_care/lib/Services.model.py'
+checkpoint_path = 'C:/Users/acer/Desktop/uni/grad project/my_model.pth'
 num_classes = 3  # Number of classes: dry, normal, oily
 
 # Load the model
