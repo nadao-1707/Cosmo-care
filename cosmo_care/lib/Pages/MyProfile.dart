@@ -1,165 +1,197 @@
+// ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, unnecessary_string_interpolations
+
+import 'package:flutter/material.dart';
+import 'package:cosmo_care/Entities/Client.dart';
 import 'package:cosmo_care/Pages/EditProfile.dart';
 import 'package:cosmo_care/Pages/LogIn.dart';
 import 'package:cosmo_care/Pages/MyCart.dart';
-import 'package:flutter/material.dart';
+import 'package:cosmo_care/Services/AuthService.dart';
+import 'package:cosmo_care/Services/ClientController.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
 import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 
+Future<Client?> returnClient() async {
+    ClientController clientController = ClientController();
+    return await clientController.getClientData();
+  }
 class MyProfile extends StatefulWidget {
-  const MyProfile({super.key});
+  const MyProfile({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _MyProfileState createState() => _MyProfileState();
 }
 
-class _HomePageState extends State<MyProfile> {
-  bool showInfo = false;
+class _MyProfileState extends State<MyProfile> {
+  late Future<Client?> _clientFuture;
+  final AuthService _authService = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    _clientFuture = returnClient();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFD1C4E9), // Background color
+      backgroundColor: Color(0xFFD1C4E9), // Background color
       appBar: AppBar(
-        backgroundColor: const Color(0xFFE1BEE7),
+        backgroundColor: Color(0xFFE1BEE7),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.person),
+            icon: Icon(Icons.person),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const MyProfile()),
+                MaterialPageRoute(builder: (context) => MyProfile()),
               );
             },
           ),
         ],
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'Anna Albert',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                height: 300, // Adjust height as needed
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEDE7F6),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                padding: const EdgeInsets.all(24.0),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Icon(Icons.person, color: Colors.black54),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0),
-                            child: Text(
-                              'Anna Albert',
-                              style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
+        child: FutureBuilder<Client?>(
+          future: _clientFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else if (snapshot.hasData && snapshot.data != null) {
+                Client? client = snapshot.data;
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        '${client?.username ?? ''}',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      children: <Widget>[
-                        Icon(Icons.email, color: Colors.black54),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0),
-                            child: Text(
-                              'info@yahoo.com',
-                              style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
+                      ),
+                      SizedBox(height: 20),
+                      Container(
+                        width: double.infinity,
+                        height: 300, // Adjust height as needed
+                        decoration: BoxDecoration(
+                          color: Color(0xFFEDE7F6),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      children: <Widget>[
-                        Icon(Icons.remove_red_eye, color: Colors.black54),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0),
-                            child: Text(
-                              '********',
-                              style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 16,
-                              ),
+                        padding: EdgeInsets.all(24.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Icon(Icons.person, color: Colors.black54),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                    child: Text(
+                                      'First Name: ${client?.first_name ?? ''}',
+                                      style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
+                            SizedBox(height: 20),
+                            Row(
+                              children: <Widget>[
+                                Icon(Icons.person, color: Colors.black54),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                    child: Text(
+                                      'Last Name: ${client?.last_name ?? ''}',
+                                      style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Row(
+                              children: <Widget>[
+                                Icon(Icons.email, color: Colors.black54),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                    child: Text(
+                                      '${client?.email ?? ''}',
+                                      style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const EditProfile()), // Navigate to EditProfile page
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFD1C4E9),
-                  foregroundColor: Colors.black,
-                ),
-                child: const Text('Show Info'),
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  _showLogoutDialog(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFD1C4E9),
-                  foregroundColor: Colors.black,
-                ),
-                child: const Text('Log Out'),
-              ),
-            ],
-          ),
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => EditProfile()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFFD1C4E9),
+                          foregroundColor: Colors.black,
+                        ),
+                        child: Text('Edit Profile'),
+                      ),
+                      SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          _showLogoutDialog(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFFD1C4E9),
+                          foregroundColor: Colors.black,
+                        ),
+                        child: Text('Log Out'),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return Text('No data available');
+              }
+            }
+          },
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black54,
         unselectedItemColor: Colors.black54,
-        backgroundColor: const Color(0xFFE1BEE7),
+        backgroundColor: Color(0xFFE1BEE7),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -187,31 +219,31 @@ class _HomePageState extends State<MyProfile> {
             case 0:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Home()),
+                MaterialPageRoute(builder: (context) => Home()),
               );
               break;
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ChatBot()),
+                MaterialPageRoute(builder: (context) => ChatBot()),
               );
               break;
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const BarCodeScanning()),
+                MaterialPageRoute(builder: (context) => BarCodeScanning()),
               );
               break;
             case 3:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const MyCart()),
+                MaterialPageRoute(builder: (context) => MyCart()),
               );
               break;
             case 4:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Search()),
+                MaterialPageRoute(builder: (context) => Search()),
               );
               break;
           }
@@ -225,20 +257,21 @@ class _HomePageState extends State<MyProfile> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Log Out'),
-          content: const Text('Are you sure you want to log out?'),
+          title: Text('Log Out'),
+          content: Text('Are you sure you want to log out?'),
           actions: <Widget>[
             TextButton(
-              child: const Text('No'),
+              child: Text('No'),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
             ),
             TextButton(
-              child: const Text('Yes'),
-              onPressed: () {
+              child: Text('Yes'),
+              onPressed: () async {
+                await _authService.SignOut(); // Call the SignOut method
                 Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const LogIn()), // Navigate to LogIn page
+                  MaterialPageRoute(builder: (context) => LogIn()), // Navigate to LogIn page
                   (Route<dynamic> route) => false,
                 );
               },
@@ -248,4 +281,6 @@ class _HomePageState extends State<MyProfile> {
       },
     );
   }
+
+  
 }
