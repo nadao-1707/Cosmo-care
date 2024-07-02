@@ -10,7 +10,7 @@ import 'package:cosmo_care/Pages/Questionnaire.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -28,7 +28,7 @@ class _HomePageState extends State<Home> {
   Future<String?> _fetchUsername() async {
     try {
       AuthService auth = AuthService();
-      return await auth.getUserUsername();
+      return await auth.getUserName();
     } catch (e) {
       print('Error fetching username: $e');
       return null;
