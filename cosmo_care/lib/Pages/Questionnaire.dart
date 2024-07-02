@@ -117,10 +117,6 @@ class Questionnaire extends StatelessWidget {
             icon: Icon(Icons.search),
             label: 'Search',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
         ],
         onTap: (index) {
           switch (index) {
