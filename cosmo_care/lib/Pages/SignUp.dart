@@ -15,6 +15,7 @@ class _SignUpDemoState extends State<SignUp> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _mobileNumberController = TextEditingController();
 
   final AuthService _authService = AuthService();
 
@@ -52,6 +53,7 @@ class _SignUpDemoState extends State<SignUp> {
     String password = _passwordController.text;
     String firstName = _firstNameController.text;
     String lastName = _lastNameController.text;
+    String mobileNumber = _mobileNumberController.text;
 
     if (email.isEmpty) {
       _showAlertDialog('Alert', 'Please enter your Email');
@@ -65,9 +67,13 @@ class _SignUpDemoState extends State<SignUp> {
       _showAlertDialog('Alert', 'Please enter your First Name');
     } else if (lastName.isEmpty) {
       _showAlertDialog('Alert', 'Please enter your Last Name');
+    } else if (mobileNumber.isEmpty) {
+      _showAlertDialog('Alert', 'Please enter your Mobile Number');
+    } else if (!_isValidMobileNumber(mobileNumber)) {
+      _showAlertDialog('Alert', 'Please enter a valid 11-digit mobile number');
     } else {
       // Call the sign-up method from AuthService
-      var result = await _authService.signUp(email, password, username, firstName, lastName);
+      var result = await _authService.SignUp(email, password, username, firstName, lastName, mobileNumber);
       if (result != null) {
         _showAlertDialog(
           'Success',
@@ -81,6 +87,11 @@ class _SignUpDemoState extends State<SignUp> {
         _showAlertDialog('Error', 'Failed to sign up. Please try again.');
       }
     }
+  }
+
+  // Function to validate mobile number
+  bool _isValidMobileNumber(String mobileNumber) {
+    return mobileNumber.length == 11 && int.tryParse(mobileNumber) != null;
   }
 
   @override
@@ -176,6 +187,18 @@ class _SignUpDemoState extends State<SignUp> {
                         labelText: 'Password',
                         hintText: 'Enter your password',
                         prefixIcon: Icon(Icons.lock),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: TextField(
+                      controller: _mobileNumberController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Mobile Number',
+                        hintText: 'Enter your mobile number',
+                        prefixIcon: Icon(Icons.phone),
                       ),
                     ),
                   ),
