@@ -12,27 +12,26 @@ class ClientController {
     _authService = AuthService();
   }
 
-  Future<void> updateClientData(Client client) async {
-  try {
-    final uid = await _authService.getUserId();
-    if (uid != null) {
+  // update client data
+  Future<String> updateClientData({required Client client}) async {
+  final uid = await _authService.getUserId();
+  if (uid != null) {
+    try {
       await FirebaseFirestore.instance.collection('clients').doc(uid).update(client.toFirestore());
-      print("Client data updated successfully.");
-    } else {
-      print("User ID not found.");
+      return "Client data updated successfully.";
+    } catch (error) {
+      return "Failed to update client data.";
     }
-  } catch (error) {
-    print("Failed to update client data: $error");
+  } else {
+    return "User ID not found.";
   }
-}
-
+  }
 
   // get client data for the profile
   Future<Client?> getClientData() async {
     try {
       final uid = await _authService.getUserId();
       if (uid != null) {
-        print("id");
          DocumentSnapshot<Map<String, dynamic>> doc = await FirebaseFirestore.instance.collection('clients').doc(uid).get();
         if (doc.exists) {
           Client client = Client.fromFirestore(doc);
@@ -107,7 +106,7 @@ class ClientController {
 }
 
    //return product id by name
-  Future<String> fetchProductIdByName(String productName) async {
+   Future<String> fetchProductIdByName(String productName) async {
   try {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('products')
@@ -212,27 +211,26 @@ class ClientController {
     }
   }
 
-  Future<List<Product>> fetchProductsBySkinType() async {
-  try {
-    String? skinType = await _authService.getUserSkinType();
+Future<List<Product>> fetchProductsBySkinTypeAndConcern(List<String> concerns) async {
+  AuthService authService = AuthService();
 
-    // Fetch products from Firestore where skinType matches
+  try {
+    String? userSkinType = await authService.getUserSkinType();
+
+    // Fetch products where problems match concerns
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
         .collection('products')
-        .where('requiredSkinType', isEqualTo: skinType)
+        .where('problems', arrayContainsAny: concerns)
         .get();
 
-    QuerySnapshot<Map<String, dynamic>> snapshotAll = await FirebaseFirestore.instance
-        .collection('products')
-        .where('requiredSkinType', isEqualTo: 'All')
-        .get();
-
-    // Combine both snapshots into a single list of DocumentSnapshot
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> combinedList =
-        [...snapshot.docs, ...snapshotAll.docs];
-
-    // Convert QueryDocumentSnapshot to a list of Product objects
-    List<Product> products = combinedList.map((doc) => Product.fromFirestore(doc)).toList();
+    // Convert to list of Product objects and filter by requiredSkinType
+    List<Product> products = snapshot.docs
+      .where((doc) {
+        List<dynamic> requiredSkinTypes = doc.data()['requiredSkinType'];
+        return requiredSkinTypes.contains(userSkinType) || requiredSkinTypes.contains('All');
+      })
+      .map((doc) => Product.fromFirestore(doc))
+      .toList();
 
     return products;
   } catch (e) {
@@ -240,6 +238,7 @@ class ClientController {
     return [];
   }
 }
+
 
 
   // add review and rating (update average and total rating)
@@ -306,16 +305,14 @@ class ClientController {
         .get();
 
     List<Map<String, dynamic>> products = [];
-    snapshot.docs.forEach((DocumentSnapshot<Map<String, dynamic>> doc) {
+    for (var doc in snapshot.docs) {
         final data = doc.data();
-        if (data != null) {
-            products.add({
-                'name': data['name'] ?? '', 
-                'imgURL': data['imgURL'] ?? '',
-                'price': data['price']?.toString() ?? '', 
-            });
-        }
-    });
+          products.add({
+              'name': data['name'] ?? '', 
+              'imgURL': data['imgURL'] ?? '',
+              'price': data['price']?.toString() ?? '', 
+          });
+          }
     return products;
  }
 
@@ -326,20 +323,18 @@ Future<List<Map<String, dynamic>>> searchByName(String productName) async {
         .get();
 
     List<Map<String, dynamic>> products = [];
-    snapshot.docs.forEach((DocumentSnapshot<Map<String, dynamic>> doc) {
+    for (var doc in snapshot.docs) {
       final data = doc.data();
-      if (data != null) {
-        final name = data['name'] ?? '';
-        if (name.toString().toLowerCase().contains(productName.toLowerCase())) {
-          print('Product found: $data'); // Logging the data
-          products.add({
-            'name': data['name'],
-            'imgURL': data['imgURL'] ?? '',
-            'price': data['price']?.toString() ?? '', // Ensure price is converted to string and no null values
-          });
-        }
+      final name = data['name'] ?? '';
+      if (name.toString().toLowerCase().contains(productName.toLowerCase())) {
+        print('Product found: $data'); // Logging the data
+        products.add({
+          'name': data['name'],
+          'imgURL': data['imgURL'] ?? '',
+          'price': data['price']?.toString() ?? '', // Ensure price is converted to string and no null values
+        });
       }
-    });
+        }
     return products;
   } catch (e) {
     return [];
@@ -355,7 +350,7 @@ Future<List<String>> getProductInfoByName(String productName) async {
         .get();
 
     if (querySnapshot.docs.isNotEmpty) {
-      querySnapshot.docs.forEach((document) {
+      for (var document in querySnapshot.docs) {
         Product product = Product.fromFirestore(document);
         productInfo.add('Name: ${product.name}');
         productInfo.add('Image URL: ${product.imgURL}');
@@ -369,7 +364,7 @@ Future<List<String>> getProductInfoByName(String productName) async {
         productInfo.add('Average Rating: ${product.averageRating}');
         productInfo.add('Total Ratings: ${product.totalRatings}');
         productInfo.add('Reviews: ${product.reviews}');
-      });
+      }
     } else {
       productInfo.add('Product not found.');
     }
@@ -471,5 +466,23 @@ Future<List<List<String>>> listProductInfoByCode(String code) async {
       throw Exception('Error fetching product: $e');
     }
   }
+
+  
+  Future<List<Map<String, dynamic>>> fetchProductsByPriceRange(int lowerPrice, int upperPrice) async {
+  try {
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection('products')
+        .where('price', isGreaterThanOrEqualTo: lowerPrice)
+        .where('price', isLessThanOrEqualTo: upperPrice)
+        .get();
+
+    List<Map<String, dynamic>> products = snapshot.docs.map((doc) => doc.data()).toList();
+    return products;
+  } catch (e) {
+    print('Error fetching products by price range: $e');
+    return [];
+  }
+}
+ 
 
 }
