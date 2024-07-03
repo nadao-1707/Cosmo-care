@@ -61,17 +61,17 @@ class _SearchState extends State<Search> {
         );
         break;
       case 4:
-        // Stay on the same page if 'Search' is tapped
+      // Stay on the same page if 'Search' is tapped
         break;
     }
   }
 
-void _filterResults() {
-  setState(() {
-    // Fetch products based on the budget range only
-    result = c.fetchProductsByPriceRange(_budgetRange.start.round(), _budgetRange.end.round());
-  });
-}
+  void _filterResults() {
+    setState(() {
+      // Fetch products based on the budget range only
+      result = c.fetchProductsByPriceRange(_budgetRange.start.round(), _budgetRange.end.round());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -204,8 +204,8 @@ void _filterResults() {
                               Product product = productSnapshot.data!;
                               return ListTile(
                                 leading: item['imgURL'] != ''
-                                  ? Image.network(item['imgURL'], width: 50, height: 50)
-                                  : null,
+                                    ? Image.network(item['imgURL'], width: 50, height: 50)
+                                    : null,
                                 title: Text(product.name),
                                 subtitle: Text('${product.price} EGP'),
                                 onTap: () {
