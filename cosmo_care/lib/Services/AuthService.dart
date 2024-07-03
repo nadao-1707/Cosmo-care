@@ -39,7 +39,7 @@ class AuthService {
   }
   }
 
-  // to get currently signed in user's email
+  // to get currently signed in user's first name
   Future<String?> getUserName() async {
   try {
     String? uid = await getUserId();
@@ -200,6 +200,27 @@ Future<Client?> signUp(String email, String password, String username, String fi
       return await _auth.signOut();
     } catch (error) {
       print(error.toString());
+    }
+  }
+
+  Future<void> updatePass(String currentPassword ,String newPassword)
+  async {
+    User? user = _auth.currentUser;
+    try {
+      // Re-authenticate the user
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: user!.email!,
+        password: currentPassword,
+      );
+      await user.reauthenticateWithCredential(credential);
+
+      // Update the password
+      await user.updatePassword(newPassword);
+      print('Password updated successfully');
+    
+    } catch (e) {
+      print('Error updating password: $e');
+      
     }
   }
 
