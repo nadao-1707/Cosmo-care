@@ -193,24 +193,12 @@ class AuthService {
     }
   }
 
-  Future<void> updatePass(String currentPassword ,String newPassword)
-  async {
-    User? user = _auth.currentUser;
+  Future<void> updatePass(String email) async {
     try {
-      // Re-authenticate the user
-      AuthCredential credential = EmailAuthProvider.credential(
-        email: user!.email!,
-        password: currentPassword,
-      );
-      await user.reauthenticateWithCredential(credential);
-
-      // Update the password
-      await user.updatePassword(newPassword);
-      print('Password updated successfully');
-    
+      await _auth.sendPasswordResetEmail(email: email);
+      print('Email Sent Instructions have been sent to your email.');
     } catch (e) {
-      print('Error updating password: $e');
-      
+      print('Error, Failed to send reset email. Please try again.');
     }
   }
 
