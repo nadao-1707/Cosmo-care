@@ -271,7 +271,7 @@ class _EditProfileState extends State<EditProfile> {
 
  void _saveProfileChanges(Client client) async {
   ClientController clientController = ClientController();
-  await clientController.updateClientData(client); // Wait for update to complete
+  await clientController.updateClientData(client: client); // Wait for update to complete
   
   _showSaveSuccessDialog();
 }
