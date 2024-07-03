@@ -130,6 +130,30 @@ class _RecommendationState extends State<Recommendation> {
                       },
                     ),
             ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MyCart()),
+                    );
+                  },
+                  child: const Text('Show cart'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ChatBot()),
+                    );
+                  },
+                  child: const Text('Chat with us'),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -190,12 +214,6 @@ class _RecommendationState extends State<Recommendation> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const Search()),
-              );
-              break;
-            case 5:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
               break;
           }
