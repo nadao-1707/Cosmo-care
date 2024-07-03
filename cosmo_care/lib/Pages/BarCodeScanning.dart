@@ -4,7 +4,7 @@ import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/MyCart.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
-import 'package:barcode_scan2/barcode_scan2.dart';
+//import 'package:barcode_scan2/barcode_scan2.dart';
 
 class BarCodeScanning extends StatefulWidget {
   const BarCodeScanning({super.key});
@@ -17,18 +17,18 @@ class _ScanPageState extends State<BarCodeScanning> {
   String? barcodeResult;
   int _selectedIndex = 2; // Set the initial selected index to 2 for the "Scan" item
 
-  Future<void> _scanBarcode() async {
-    try {
-      var result = await BarcodeScanner.scan();
-      setState(() {
-        barcodeResult = result.rawContent;
-      });
-    } catch (e) {
-      setState(() {
-        barcodeResult = 'Failed to get barcode.';
-      });
-    }
-  }
+  // Future<void> _scanBarcode() async {
+  //   try {
+  //     var result = await BarcodeScanner.scan();
+  //     setState(() {
+  //       barcodeResult = result.rawContent;
+  //     });
+  //   } catch (e) {
+  //     setState(() {
+  //       barcodeResult = 'Failed to get barcode.';
+  //     });
+  //   }
+  // }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -108,7 +108,7 @@ class _ScanPageState extends State<BarCodeScanning> {
                   ),
                   const SizedBox(height: 20),
                   GestureDetector(
-                    onTap: _scanBarcode,
+                    //onTap: _scanBarcode,
                     child: Container(
                       width: 300,
                       height: 200,

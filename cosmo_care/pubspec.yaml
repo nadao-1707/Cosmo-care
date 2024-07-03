@@ -73,10 +73,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets:
-    # - assets/icons/email.png
     - assets/images/login_image-removebg-preview.png
-    # - assets/icons/user-credentials.png
-    # - assets/icons/user-male-circle.png
     - assets/images/QR-Code.png
     - assets/images/questionaire.png
     - assets/images/woman face.jpeg
