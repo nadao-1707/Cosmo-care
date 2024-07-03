@@ -150,7 +150,7 @@ class _RecommendationState extends State<Recommendation> {
                       MaterialPageRoute(builder: (context) => const ChatBot()),
                     );
                   },
-                  child: const Text('Chat with us'),
+                  child: const Text('Chat with us for more info'),
                 ),
               ],
             ),
