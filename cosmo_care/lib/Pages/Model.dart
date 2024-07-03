@@ -14,19 +14,6 @@ import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 
-void main() => runApp(const MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Model(),
-    );
-  }
-}
-
 class Model extends StatefulWidget {
   const Model({super.key});
 
