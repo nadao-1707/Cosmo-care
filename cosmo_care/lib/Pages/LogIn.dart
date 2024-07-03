@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cosmo_care/Entities/Client.dart';
 import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/SignUp.dart';
-import 'package:cosmo_care/Services/AuthService.dart'; // Import your AuthService
+import 'package:cosmo_care/Services/AuthService.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -14,9 +14,8 @@ class LogIn extends StatefulWidget {
 class _LoginDemoState extends State<LogIn> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final AuthService _authService = AuthService(); // Instance of AuthService
+  final AuthService _authService = AuthService();
 
-  // Function to navigate to the home page
   void navigateToHome() {
     Navigator.pushReplacement(
       context,
@@ -24,7 +23,6 @@ class _LoginDemoState extends State<LogIn> {
     );
   }
 
-  // Function to navigate to the sign-up page
   void navigateToSignUp() {
     Navigator.push(
       context,
@@ -32,7 +30,6 @@ class _LoginDemoState extends State<LogIn> {
     );
   }
 
-  // Function to validate inputs and show alert if needed
   void _validateAndLogin() async {
     String email = _usernameController.text;
     String password = _passwordController.text;
@@ -42,7 +39,6 @@ class _LoginDemoState extends State<LogIn> {
     } else if (password.isEmpty) {
       _showAlertDialog('Alert', 'Please enter your password');
     } else {
-      // Call sign in method from AuthService
       Client? client = await _authService.SignInWithEmailAndPassword(email, password);
 
       if (client != null) {
@@ -53,7 +49,6 @@ class _LoginDemoState extends State<LogIn> {
     }
   }
 
-  // Function to show an alert dialog
   void _showAlertDialog(String title, String message) {
     showDialog(
       context: context,
@@ -74,41 +69,25 @@ class _LoginDemoState extends State<LogIn> {
     );
   }
 
-  // Function to show a dialog for choosing the reset method
-  void _forgetPassword() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Forget Password'),
-          content: const Text('Choose your method to receive reset instructions'),
-          actions: <Widget>[
-            ElevatedButton(
-              child: const Text('Email'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _showAlertDialog('Email Sent', 'Instructions have been sent to your email.');
-                // Implement your email sending logic here
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Mobile'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _showAlertDialog('SMS Sent', 'Instructions have been sent to your mobile number.');
-                // Implement your SMS sending logic here
-              },
-            ),
-          ],
-        );
-      },
-    );
+  void _forgetPassword() async {
+    String email = _usernameController.text;
+
+    if (email.isEmpty) {
+      _showAlertDialog('Alert', 'Please enter your email to reset password');
+    } else {
+      try {
+        await _authService.updatePass(email);
+        _showAlertDialog('Email Sent', 'Instructions have been sent to your email.');
+      } catch (e) {
+        _showAlertDialog('Error', 'Failed to send reset email. Please try again.');
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFCDB7EB), // Background color
+      backgroundColor: const Color(0xFFCDB7EB),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -135,7 +114,7 @@ class _LoginDemoState extends State<LogIn> {
               margin: const EdgeInsets.symmetric(horizontal: 30),
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: const Color(0xfffecdcdd), // Light rose color
+                color: const Color(0xfffecdcdd),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
@@ -182,7 +161,7 @@ class _LoginDemoState extends State<LogIn> {
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFAE94D1), // Button color
+                        backgroundColor: const Color(0xFFAE94D1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0),
                         ),
@@ -201,7 +180,7 @@ class _LoginDemoState extends State<LogIn> {
                       const Text('Create new account?'),
                       const SizedBox(height: 5),
                       InkWell(
-                        onTap: navigateToSignUp, // Call navigateToSignUp function
+                        onTap: navigateToSignUp,
                         child: const Text(
                           'Sign up',
                           style: TextStyle(
