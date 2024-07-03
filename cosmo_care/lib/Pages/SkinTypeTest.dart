@@ -1,7 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:cosmo_care/Entities/Client.dart';
 import 'package:cosmo_care/Pages/SkinProblem.dart';
 import 'package:cosmo_care/Services/AuthService.dart';
-import 'package:flutter/material.dart';
 import 'package:cosmo_care/Services/ClientController.dart';
 import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
@@ -11,7 +11,7 @@ import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 
 class SkinTypeTest extends StatefulWidget {
-  const SkinTypeTest({super.key});
+  const SkinTypeTest({Key? key}) : super(key: key);
 
   @override
   _SkinTypeTestState createState() => _SkinTypeTestState();
@@ -20,17 +20,31 @@ class SkinTypeTest extends StatefulWidget {
 class _SkinTypeTestState extends State<SkinTypeTest> {
   late ClientController _clientController;
   late AuthService _authService;
-  bool isDry = false;
-  bool isOily = false;
-  bool isNormal = false;
-  bool isCombination = false;
-  bool isSensitive = false;
+  Set<String> selectedSkinTypes = {};
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     _clientController = ClientController();
     _authService = AuthService();
+  }
+
+  void _showAlert() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Please select at least one skin type'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -58,136 +72,90 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'SKIN TYPE TEST',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+      body: Expanded(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  'SKIN TYPE TEST',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
-            CheckboxListTile(
-              title: const Text("DRY"),
-              value: isDry,
-              onChanged: (bool? value) {
-                setState(() {
-                  isDry = value!;
-                  if (isDry) {
-                    isOily = false;
-                    isNormal = false;
-                    isCombination = false;
-                    isSensitive = false;
-                  }
-                });
-              },
-            ),
-            CheckboxListTile(
-              title: const Text("OILY"),
-              value: isOily,
-              onChanged: (bool? value) {
-                setState(() {
-                  isOily = value!;
-                  if (isOily) {
-                    isDry = false;
-                    isNormal = false;
-                    isCombination = false;
-                    isSensitive = false;
-                  }
-                });
-              },
-            ),
-            CheckboxListTile(
-              title: const Text("NORMAL"),
-              value: isNormal,
-              onChanged: (bool? value) {
-                setState(() {
-                  isNormal = value!;
-                  if (isNormal) {
-                    isDry = false;
-                    isOily = false;
-                    isCombination = false;
-                    isSensitive = false;
-                  }
-                });
-              },
-            ),
-            CheckboxListTile(
-              title: const Text("COMBINATION"),
-              value: isCombination,
-              onChanged: (bool? value) {
-                setState(() {
-                  isCombination = value!;
-                  if (isCombination) {
-                    isDry = false;
-                    isOily = false;
-                    isNormal = false;
-                    isSensitive = false;
-                  }
-                });
-              },
-            ),
-            CheckboxListTile(
-              title: const Text("SENSITIVE"),
-              value: isSensitive,
-              onChanged: (bool? value) {
-                setState(() {
-                  isSensitive = value!;
-                  if (isSensitive) {
-                    isDry = false;
-                    isOily = false;
-                    isNormal = false;
-                    isCombination = false;
-                  }
-                });
-              },
-            ),
-            Center(
-              child: ElevatedButton(
-                onPressed: () async {
-                  // Determine selected skin type
-                  String? skinType;
-                  if (isDry) {
-                    skinType = "dry";
-                  } else if (isOily) {
-                    skinType = "oily";
-                  } else if (isNormal) {
-                    skinType = "normal";
-                  } else if (isCombination) {
-                    skinType = "combination";
-                  } else if (isSensitive) {
-                    skinType = "sensitive";
-                  }
-
-                  // Update client data
-                  var userId = await _authService.getUserId();
-                  if (userId?.isNotEmpty ?? false) {
-                    await _clientController.updateClientData(
-                      client: Client(skinType: skinType),
-                    );
-                  }
-
-                  // Navigate to Recommendations page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SkinProblem()),
-                  );
+              CheckboxListTile(
+                title: const Text("DRY"),
+                value: selectedSkinTypes.contains("dry"),
+                onChanged: (bool? value) {
+                  setState(() {
+                    if (value != null && value) {
+                      selectedSkinTypes.add("dry");
+                    } else {
+                      selectedSkinTypes.remove("dry");
+                    }
+                  });
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFD9D9D9),
-                  padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-                ),
-                child: const Text('NEXT'),
               ),
-            ),
-          ],
+              CheckboxListTile(
+                title: const Text("OILY"),
+                value: selectedSkinTypes.contains("oily"),
+                onChanged: (bool? value) {
+                  setState(() {
+                    if (value != null && value) {
+                      selectedSkinTypes.add("oily");
+                    } else {
+                      selectedSkinTypes.remove("oily");
+                    }
+                  });
+                },
+              ),
+              CheckboxListTile(
+                title: const Text("NORMAL"),
+                value: selectedSkinTypes.contains("normal"),
+                onChanged: (bool? value) {
+                  setState(() {
+                    if (value != null && value) {
+                      selectedSkinTypes.add("normal");
+                    } else {
+                      selectedSkinTypes.remove("normal");
+                    }
+                  });
+                },
+              ),
+              CheckboxListTile(
+                title: const Text("COMBINATION"),
+                value: selectedSkinTypes.contains("combination"),
+                onChanged: (bool? value) {
+                  setState(() {
+                    if (value != null && value) {
+                      selectedSkinTypes.add("combination");
+                    } else {
+                      selectedSkinTypes.remove("combination");
+                    }
+                  });
+                },
+              ),
+              CheckboxListTile(
+                title: const Text("SENSITIVE"),
+                value: selectedSkinTypes.contains("sensitive"),
+                onChanged: (bool? value) {
+                  setState(() {
+                    if (value != null && value) {
+                      selectedSkinTypes.add("sensitive");
+                    } else {
+                      selectedSkinTypes.remove("sensitive");
+                    }
+                  });
+                },
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -251,6 +219,31 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
               break;
           }
         },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: ElevatedButton(
+        onPressed: selectedSkinTypes.isNotEmpty ? () async {
+          // Update client data
+          var userId = await _authService.getUserId();
+          if (userId?.isNotEmpty ?? false) {
+            await _clientController.updateClientData(
+              client: Client(skinType: selectedSkinTypes.toList().join(",")),
+            );
+          }
+
+          // Navigate to Recommendations page
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const SkinProblem()),
+          );
+        } : _showAlert,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFFD9D9D9),
+          padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+        ),
+        child: isLoading
+            ? const CircularProgressIndicator(color: Colors.white)
+            : const Text('NEXT'),
       ),
     );
   }
