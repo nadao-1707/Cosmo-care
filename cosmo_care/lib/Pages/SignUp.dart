@@ -73,7 +73,7 @@ class _SignUpDemoState extends State<SignUp> {
       _showAlertDialog('Alert', 'Please enter a valid 11-digit mobile number');
     } else {
       // Call the sign-up method from AuthService
-      var result = await _authService.SignUp(email, password, username, firstName, lastName, mobileNumber);
+      var result = await _authService.SignUp(email, password, username, firstName, lastName);
       if (result != null) {
         _showAlertDialog(
           'Success',
