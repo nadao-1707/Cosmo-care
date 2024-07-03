@@ -150,9 +150,9 @@ class AuthService {
     }
   }
 
-Future<Client?> SignUp(String email, String password, String username, String firstName, String lastName) async {
+  Future<Client?> SignUp(String email, String password, String username, String firstName, String lastName,int num) async {
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
 
       Client newClient = Client(
@@ -160,6 +160,11 @@ Future<Client?> SignUp(String email, String password, String username, String fi
         username: username,
         first_name: firstName,
         last_name: lastName,
+        skinType: '', // Initialize as empty string
+        phoneNumber: num, // Initialize as zero
+        address: '', // Initialize as empty string
+        cardNumber: '', // Initialize as empty string
+        CVV: 0, // Initialize as zero
       );
 
       // Save client data to Firestore
@@ -167,25 +172,10 @@ Future<Client?> SignUp(String email, String password, String username, String fi
           .collection('clients')
           .doc(user?.uid)
           .withConverter<Client>(
-            fromFirestore: (snapshot, _) => Client.fromFirestore(snapshot),
-            toFirestore: (client, _) => client.toFirestore(),
-          )
+        fromFirestore: (snapshot, _) => Client.fromFirestore(snapshot),
+        toFirestore: (client, _) => client.toFirestore(),
+      )
           .set(newClient);
-
-      // Initialize a new cart for the user
-      Cart newCart = Cart(
-        productIds: [],
-      );
-
-      // Save cart data to Firestore
-      await FirebaseFirestore.instance
-          .collection('carts')
-          .doc(user?.uid)
-          .withConverter<Cart>(
-            fromFirestore: (snapshot, _) => Cart.fromFirestore(snapshot),
-            toFirestore: (cart, _) => cart.toFirestore(),
-          )
-          .set(newCart);
 
       return newClient;
     } catch (error) {

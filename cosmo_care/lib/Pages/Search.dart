@@ -9,7 +9,7 @@ import 'package:cosmo_care/Pages/MyProfile.dart';
 import 'package:cosmo_care/Services/ClientController.dart';
 
 class Search extends StatefulWidget {
-  const Search({super.key});
+  const Search({Key? key}) : super(key: key);
 
   @override
   _SearchState createState() => _SearchState();
@@ -19,11 +19,8 @@ class _SearchState extends State<Search> {
   int _selectedIndex = 4; // Set the initial selected index to 4 for the "Search" item
   ClientController c = ClientController();
   final TextEditingController _controller = TextEditingController();
-  //String _searchText = ''; // Store the entered search text
+  String _searchText = ''; // Store the entered search text
   Future<List<Map<String, dynamic>>> result = Future.value([]);
-  double _minBudget = 0;
-  double _maxBudget = 1000;
-  RangeValues _budgetRange = const RangeValues(0, 1000);
 
   @override
   void dispose() {
@@ -66,13 +63,6 @@ class _SearchState extends State<Search> {
     }
   }
 
-  void _filterResults() {
-    setState(() {
-      // Fetch products based on the budget range only
-      result = c.fetchProductsByPriceRange(_budgetRange.start.round(), _budgetRange.end.round());
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,18 +102,22 @@ class _SearchState extends State<Search> {
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Row(
                   children: <Widget>[
-                    const Icon(Icons.search, color: Colors.black54),
-                    const SizedBox(width: 10),
+                    Icon(Icons.search, color: Colors.black54),
+                    SizedBox(width: 10),
                     Expanded(
                       child: TextField(
                         controller: _controller,
                         onChanged: (value) {
                           setState(() {
-                            //_searchText = value;
-                            _filterResults();
+                            _searchText = value;
+                            if (_searchText.isNotEmpty) {
+                              result = c.searchByName(_searchText);
+                            } else {
+                              result = Future.value([]); // Reset result to empty when search text is empty
+                            }
                           });
                         },
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: 'Search',
                           border: InputBorder.none,
                         ),
@@ -131,31 +125,6 @@ class _SearchState extends State<Search> {
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Filter by Budget',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              RangeSlider(
-                values: _budgetRange,
-                min: _minBudget,
-                max: _maxBudget,
-                divisions: 20,
-                labels: RangeLabels(
-                  _budgetRange.start.round().toString(),
-                  _budgetRange.end.round().toString(),
-                ),
-                onChanged: (values) {
-                  setState(() {
-                    _budgetRange = values;
-                    _filterResults();
-                  });
-                },
               ),
               const SizedBox(height: 20),
               const Text(
@@ -172,18 +141,18 @@ class _SearchState extends State<Search> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     // Display CircularProgressIndicator while waiting for initial data
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     // Show error message if there's an error in fetching data
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     // Display message when no results are found
-                    return const Center(child: Text('No results found'));
+                    return Center(child: Text('No results found'));
                   } else {
                     // Fetching products and displaying them
                     return ListView.builder(
                       shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
+                      physics: NeverScrollableScrollPhysics(),
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         final item = snapshot.data![index];
@@ -192,13 +161,13 @@ class _SearchState extends State<Search> {
                           builder: (context, productSnapshot) {
                             if (productSnapshot.connectionState == ConnectionState.waiting) {
                               // Display CircularProgressIndicator while waiting for product data
-                              return const Center(child: CircularProgressIndicator());
+                              return Center(child: CircularProgressIndicator());
                             } else if (productSnapshot.hasError) {
                               // Show error message if there's an error fetching product data
                               return Center(child: Text('Error: ${productSnapshot.error}'));
                             } else if (!productSnapshot.hasData || productSnapshot.data == null) {
                               // Placeholder for handling loading state or error
-                              return const SizedBox(); // Alternatively, you can display an error message or retry option
+                              return SizedBox(); // Alternatively, you can display an error message or retry option
                             } else {
                               // Product data is fetched, display ListTile with product details
                               Product product = productSnapshot.data!;

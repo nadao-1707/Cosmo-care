@@ -28,8 +28,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/loading', // Set the initial route to the loading screen
       routes: {
         '/loading': (context) => const Loading(), // Define loading screen route
-        '/': (context) => const Questionnaire(), // Define root route
-        '/skinTypeTest': (context) => const SkinTypeTest(), // Define SkinTypeTest route
+       '/skinTypeTest': (context) => const SkinTypeTest(), // Define SkinTypeTest route
         //'/uploadImage': (context) => const UploadImage(), // Define UploadImage route
         '/Model': (context) => const Model(), 
         //'/Detectingimage': (context) => const Detectingimage(image:), 

@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:io';
 import 'package:cosmo_care/Entities/Client.dart';
 import 'package:cosmo_care/Pages/MyCart.dart';
@@ -10,7 +8,6 @@ import 'package:cosmo_care/Pages/ChatBot.dart';
 import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EditProfile extends StatefulWidget {
   @override
@@ -18,151 +15,135 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  File? _image; // Variable to hold the selected image file
-  late TextEditingController _emailController;
+  File? _image;
   late TextEditingController _usernameController;
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
   late TextEditingController _skinTypeController;
   late TextEditingController _phoneController;
-  late TextEditingController _addressController;
-  late TextEditingController _cardNumberController;
-  late TextEditingController _cvvController;
+  late Client _client;
 
   @override
   void initState() {
     super.initState();
-    _emailController = TextEditingController();
     _usernameController = TextEditingController();
     _firstNameController = TextEditingController();
     _lastNameController = TextEditingController();
     _skinTypeController = TextEditingController();
     _phoneController = TextEditingController();
-    _addressController = TextEditingController();
-    _cardNumberController = TextEditingController();
-    _cvvController = TextEditingController();
+    _client = Client();
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
     _usernameController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
     _skinTypeController.dispose();
     _phoneController.dispose();
-    _addressController.dispose();
-    _cardNumberController.dispose();
-    _cvvController.dispose();
     super.dispose();
   }
 
-  Future<Client?> _fetchClientData() async {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _fetchClientData();
+  }
+
+  Future<void> _fetchClientData() async {
     ClientController clientController = ClientController();
-    return await clientController.getClientData();
+    Client? client = await clientController.getClientData();
+    if (client != null) {
+      setState(() {
+        _client = client;
+        _usernameController.text = _client.username ?? '';
+        _firstNameController.text = _client.first_name ?? '';
+        _lastNameController.text = _client.last_name ?? '';
+        _skinTypeController.text = _client.skinType ?? '';
+        _phoneController.text = _client.phoneNumber?.toString() ?? '';
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFD1C4E9), // Background color
+      backgroundColor: Color(0xFFD1C4E9),
       appBar: AppBar(
         backgroundColor: Color(0xFFE1BEE7),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); // Go back to the previous page
+            Navigator.pop(context);
           },
         ),
         title: Text('Edit Profile', style: TextStyle(color: Colors.black)),
       ),
-      body: FutureBuilder<Client?>(
-        future: _fetchClientData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data == null) {
-            return Center(child: Text('No data found'));
-          } else {
-            Client client = snapshot.data!;
-            _emailController.text = client.email ?? '';
-            _usernameController.text = client.username ?? '';
-            _firstNameController.text = client.first_name ?? '';
-            _lastNameController.text = client.last_name ?? '';
-            _skinTypeController.text = client.skinType ?? '';
-            _phoneController.text = client.phoneNumber?.toString() ?? '';
-            _addressController.text = client.address ?? '';
-            _cardNumberController.text = client.cardNumber ?? '';
-            _cvvController.text = client.CVV?.toString() ?? '';
-
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 20),
-                    GestureDetector(
-                      onTap: () {
-                        _selectImage(); // Call function to select image
-                      },
-                      child: _image != null
-                          ? CircleAvatar(
-                              radius: 50,
-                              backgroundImage: FileImage(_image!),
-                            )
-                          : Icon(Icons.photo, size: 150, color: Colors.black54),
-                    ),
-                    SizedBox(height: 20),
-                    buildInputField(Icons.email, 'CHANGE EMAIL', _emailController, false),
-                    SizedBox(height: 20),
-                    buildInputField(Icons.person, 'CHANGE USERNAME', _usernameController, false),
-                    SizedBox(height: 20),
-                    buildInputField(Icons.person, 'FIRST NAME', _firstNameController, false),
-                    SizedBox(height: 20),
-                    buildInputField(Icons.person, 'LAST NAME', _lastNameController, false),
-                    SizedBox(height: 20),
-                    buildInputField(Icons.texture, 'SKIN TYPE', _skinTypeController, false),
-                    SizedBox(height: 20),
-                    buildInputField(Icons.phone, 'CHANGE PHONE', _phoneController, false),
-                    SizedBox(height: 20),
-                    buildInputField(Icons.home, 'ADDRESS', _addressController, false),
-                    SizedBox(height: 20),
-                    buildInputField(Icons.credit_card, 'CARD NUMBER', _cardNumberController, false),
-                    SizedBox(height: 20),
-                    buildInputField(Icons.security, 'CVV', _cvvController, false),
-                    SizedBox(height: 40),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFFE1BEE7),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context); // Go back to the previous page
-                          },
-                          child: Text('Cancel', style: TextStyle(color: Colors.black)),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFFE1BEE7),
-                          ),
-                          onPressed: () {
-                            _saveProfileChanges(client);
-                          },
-                          child: Text('Save', style: TextStyle(color: Colors.black)),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  _selectImage();
+                },
+                child: _image != null
+                    ? CircleAvatar(
+                  radius: 50,
+                  backgroundImage: FileImage(_image!),
+                )
+                    : Icon(Icons.photo, size: 150, color: Colors.black54),
               ),
-            );
-          }
-        },
+              SizedBox(height: 20),
+              buildInputField(Icons.person, 'USERNAME', _usernameController, false, (value) {
+                _client.username = value;
+              }),
+              SizedBox(height: 20),
+              buildInputField(Icons.person, 'FIRST NAME', _firstNameController, false, (value) {
+                _client.first_name = value;
+              }),
+              SizedBox(height: 20),
+              buildInputField(Icons.person, 'LAST NAME', _lastNameController, false, (value) {
+                _client.last_name = value;
+              }),
+              SizedBox(height: 20),
+              buildInputField(Icons.texture, 'SKIN TYPE', _skinTypeController, false, (value) {
+                _client.skinType = value;
+              }),
+              SizedBox(height: 20),
+              buildInputField(Icons.phone, 'PHONE NUMBER', _phoneController, false, (value) {
+                _client.phoneNumber = int.tryParse(value);
+              }),
+              SizedBox(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFE1BEE7),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('Cancel', style: TextStyle(color: Colors.black)),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFE1BEE7),
+                    ),
+                    onPressed: () {
+                      _saveProfileChanges(_client);
+                    },
+                    child: Text('Save', style: TextStyle(color: Colors.black)),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -229,8 +210,8 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Widget buildInputField(
-      IconData icon, String label, TextEditingController controller, bool obscureText) {
+  Widget buildInputField(IconData icon, String label, TextEditingController controller, bool obscureText,
+      ValueChanged<String> onChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -256,6 +237,7 @@ class _EditProfileState extends State<EditProfile> {
                 child: TextField(
                   controller: controller,
                   obscureText: obscureText,
+                  onChanged: onChanged,
                   decoration: InputDecoration(
                     hintText: label,
                     border: InputBorder.none,
@@ -269,33 +251,32 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
- void _saveProfileChanges(Client client) async {
-  ClientController clientController = ClientController();
-  await clientController.updateClientData(client: client);
-  
-  _showSaveSuccessDialog();
-}
+  void _saveProfileChanges(Client client) async {
+    ClientController clientController = ClientController();
+    await clientController.updateClientData(client: client);
+    _showSaveSuccessDialog(client);
+  }
 
+  void _showSaveSuccessDialog(Client client) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Success'),
+          content: Text('Profile changes saved successfully.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-  void _showSaveSuccessDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Success'),
-        content: Text('Your profile changes have been saved successfully.'),
-        actions: <Widget>[
-          TextButton(
-            child: Text('OK'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
 
   void _selectImage() async {
     final ImagePicker _picker = ImagePicker();

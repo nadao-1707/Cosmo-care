@@ -53,7 +53,8 @@ class _SignUpDemoState extends State<SignUp> {
     String password = _passwordController.text;
     String firstName = _firstNameController.text;
     String lastName = _lastNameController.text;
-    String mobileNumber = _mobileNumberController.text;
+    String mobileNumberStr = _mobileNumberController.text;
+    int? mobileNumber = int.tryParse(mobileNumberStr);
 
     if (email.isEmpty) {
       _showAlertDialog('Alert', 'Please enter your Email');
@@ -67,18 +68,18 @@ class _SignUpDemoState extends State<SignUp> {
       _showAlertDialog('Alert', 'Please enter your First Name');
     } else if (lastName.isEmpty) {
       _showAlertDialog('Alert', 'Please enter your Last Name');
-    } else if (mobileNumber.isEmpty) {
+    } else if (mobileNumberStr.isEmpty) {
       _showAlertDialog('Alert', 'Please enter your Mobile Number');
-    } else if (!_isValidMobileNumber(mobileNumber)) {
+    } else if (mobileNumber == null || !_isValidMobileNumber(mobileNumberStr)) {
       _showAlertDialog('Alert', 'Please enter a valid 11-digit mobile number');
     } else {
       // Call the sign-up method from AuthService
-      var result = await _authService.SignUp(email, password, username, firstName, lastName);
+      var result = await _authService.SignUp(email, password, username, firstName, lastName, mobileNumber);
       if (result != null) {
         _showAlertDialog(
           'Success',
           'You have successfully signed up! You can now log in with your email.',
-          () {
+              () {
             Navigator.of(context).pop(); // Close the alert dialog
             navigateToLogIn(); // Navigate to the login page
           },
