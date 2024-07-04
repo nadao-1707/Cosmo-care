@@ -18,7 +18,7 @@ class AuthService {
   
   // to get currently signed in user's email
   Future<String?> getUserEmail() async {
-  try {
+  try { 
     String? uid = await getUserId();
     if (uid != null) {
       DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
@@ -149,7 +149,7 @@ class AuthService {
     }
   }
 
-  Future<Client?> SignUp(String email, String password, String username, String firstName, String lastName,int num) async {
+  Future<Client?> SignUp(String email, String password, String username, String firstName, String lastName, int num) async {
     try {
       UserCredential result = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;

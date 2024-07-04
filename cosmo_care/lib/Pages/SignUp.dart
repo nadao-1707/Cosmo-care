@@ -19,7 +19,7 @@ class _SignUpDemoState extends State<SignUp> {
 
   final AuthService _authService = AuthService();
 
-  // Function to navigate to the login page
+  // Function to navigate to the login page 
   void navigateToLogIn() {
     Navigator.pushReplacement(
       context,

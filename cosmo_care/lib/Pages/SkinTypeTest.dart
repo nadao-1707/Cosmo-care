@@ -20,7 +20,7 @@ class SkinTypeTest extends StatefulWidget {
 class _SkinTypeTestState extends State<SkinTypeTest> {
   late ClientController _clientController;
   late AuthService _authService;
-  Set<String> selectedSkinTypes = {};
+  String? selectedSkinType;
   bool isLoading = false;
 
   @override
@@ -34,7 +34,7 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Please select at least one skin type'),
+        title: const Text('Please select a skin type'),
         actions: <Widget>[
           TextButton(
             child: const Text('OK'),
@@ -72,91 +72,72 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
           ),
         ],
       ),
-      body: Expanded(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  'SKIN TYPE TEST',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              'SKIN TYPE TEST',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
-              CheckboxListTile(
-                title: const Text("DRY"),
-                value: selectedSkinTypes.contains("dry"),
-                onChanged: (bool? value) {
-                  setState(() {
-                    if (value != null && value) {
-                      selectedSkinTypes.add("dry");
-                    } else {
-                      selectedSkinTypes.remove("dry");
-                    }
-                  });
-                },
-              ),
-              CheckboxListTile(
-                title: const Text("OILY"),
-                value: selectedSkinTypes.contains("oily"),
-                onChanged: (bool? value) {
-                  setState(() {
-                    if (value != null && value) {
-                      selectedSkinTypes.add("oily");
-                    } else {
-                      selectedSkinTypes.remove("oily");
-                    }
-                  });
-                },
-              ),
-              CheckboxListTile(
-                title: const Text("NORMAL"),
-                value: selectedSkinTypes.contains("normal"),
-                onChanged: (bool? value) {
-                  setState(() {
-                    if (value != null && value) {
-                      selectedSkinTypes.add("normal");
-                    } else {
-                      selectedSkinTypes.remove("normal");
-                    }
-                  });
-                },
-              ),
-              CheckboxListTile(
-                title: const Text("COMBINATION"),
-                value: selectedSkinTypes.contains("combination"),
-                onChanged: (bool? value) {
-                  setState(() {
-                    if (value != null && value) {
-                      selectedSkinTypes.add("combination");
-                    } else {
-                      selectedSkinTypes.remove("combination");
-                    }
-                  });
-                },
-              ),
-              CheckboxListTile(
-                title: const Text("SENSITIVE"),
-                value: selectedSkinTypes.contains("sensitive"),
-                onChanged: (bool? value) {
-                  setState(() {
-                    if (value != null && value) {
-                      selectedSkinTypes.add("sensitive");
-                    } else {
-                      selectedSkinTypes.remove("sensitive");
-                    }
-                  });
-                },
-              ),
-            ],
+              textAlign: TextAlign.center,
+            ),
           ),
-        ),
+          RadioListTile<String>(
+            title: const Text("DRY"),
+            value: "dry",
+            groupValue: selectedSkinType,
+            onChanged: (String? value) {
+              setState(() {
+                selectedSkinType = value;
+              });
+            },
+          ),
+          RadioListTile<String>(
+            title: const Text("OILY"),
+            value: "oily",
+            groupValue: selectedSkinType,
+            onChanged: (String? value) {
+              setState(() {
+                selectedSkinType = value;
+              });
+            },
+          ),
+          RadioListTile<String>(
+            title: const Text("NORMAL"),
+            value: "normal",
+            groupValue: selectedSkinType,
+            onChanged: (String? value) {
+              setState(() {
+                selectedSkinType = value;
+              });
+            },
+          ),
+          RadioListTile<String>(
+            title: const Text("COMBINATION"),
+            value: "combination",
+            groupValue: selectedSkinType,
+            onChanged: (String? value) {
+              setState(() {
+                selectedSkinType = value;
+              });
+            },
+          ),
+          RadioListTile<String>(
+            title: const Text("SENSITIVE"),
+            value: "sensitive",
+            groupValue: selectedSkinType,
+            onChanged: (String? value) {
+              setState(() {
+                selectedSkinType = value;
+              });
+            },
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -222,12 +203,12 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: ElevatedButton(
-        onPressed: selectedSkinTypes.isNotEmpty ? () async {
-          // Update client data
+        onPressed: selectedSkinType != null ? () async {
+          // Update client data (add skin type)
           var userId = await _authService.getUserId();
           if (userId?.isNotEmpty ?? false) {
             await _clientController.updateClientData(
-              client: Client(skinType: selectedSkinTypes.toList().join(",")),
+              client: Client(skinType: selectedSkinType!),
             );
           }
 
