@@ -18,11 +18,13 @@ Future<void> addProductToCart(String productName) async {
   await controller.addToCart(id);
 }
 
-Future<void> addReview(String productName,String review) async {
+Future<void> addReview(String productName, String review) async {
   ClientController controller = ClientController();
   String id = await controller.fetchProductIdByName(productName); 
-  await controller.addReview(id,review);
+  String? username = await fetchUsername(); 
+  await controller.addReview(id, 'Review by $username: $review');
 }
+
 
 Future<void> addRating(String productName,int rating) async {
   ClientController controller = ClientController();
@@ -88,29 +90,29 @@ class Productdetails extends StatelessWidget {
               howToUse: product.howToUse,
               problems: product.problems,
             ),
-            Center(
-              child: ElevatedButton(
-                onPressed: () async {
-                  await addProductToCart(product.name);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFB39DDB), 
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-                  child: Text(
-                    'ADD TO CART',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+          Center(
+  child: ElevatedButton(
+    onPressed: () async {
+      await addProductToCart(product.name);
+    },
+    style: ElevatedButton.styleFrom(
+      padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0), // Adjusted padding
+      minimumSize: Size(100, 36), // Reduced minimum size
+      backgroundColor: const Color(0xFFB39DDB),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+    ),
+    child: const Text(
+      'ADD TO CART',
+      style: TextStyle(
+        fontSize: 12, // Reduced font size
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ),
+),
+
           ],
         ),
       ),
@@ -229,220 +231,231 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
     super.dispose();
   }
 
-  Widget getContent() {
-    print("Reviews: ${widget.reviews}"); // Debugging line
-    switch (selectedIndex) {
-      case 0:
-        return Text(
-          widget.description ?? 'No description available',
-          textAlign: TextAlign.justify,
-        );
-      case 1:
-        return Text(
-          widget.ingredients ?? 'No ingredients available',
-          textAlign: TextAlign.justify,
-        );
-      case 2:
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Category:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
+ Widget getContent() {
+  switch (selectedIndex) {
+    case 0:
+      return Text(
+        widget.description ?? 'No description available',
+        textAlign: TextAlign.justify,
+      );
+    case 1:
+      return Text(
+        widget.ingredients ?? 'No ingredients available',
+        textAlign: TextAlign.justify,
+      );
+    case 2:
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Category:',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
             ),
-            const SizedBox(height: 1),
-            Text(
-              widget.category ?? 'N/A',
-              textAlign: TextAlign.justify,
+          ),
+          const SizedBox(height: 1),
+          Text(
+            widget.category ?? 'N/A',
+            textAlign: TextAlign.justify,
+          ),
+          const SizedBox(height: 1),
+          Text(
+            'Required Skin Type:',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
             ),
-            const SizedBox(height: 1),
-            Text(
-              'Required Skin Type:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: widget.requiredSkinType?.map((SkinType) => Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Text('- $SkinType'),
-              )).toList() ?? [Text('N/A')],
-            ),
-            Row(
-              children: [
-                Text(
-                  'Price:',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-                SizedBox(width: 3),
-                Text(
-                  '${widget.price} EGP',
-                  textAlign: TextAlign.justify,
-                ),
-              ],
-            ),
-            Text(
-              'Rating:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(height: 1),
-            RatingBar.builder(
-              initialRating: widget.averageRating ?? 0,
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: true,
-              itemCount: 5,
-              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-              itemBuilder: (context, _) => Icon(
-                Icons.star,
-                color: Colors.amber,
-              ),
-              onRatingUpdate: (rating) {
-                print(rating);
-              },
-              ignoreGestures: true,
-            ),
-            Text(
-              '${widget.averageRating?.toStringAsFixed(1) ?? '0.0'} (${widget.totalRatings ?? 0} reviews)',
-              textAlign: TextAlign.justify,
-            ),
-            const SizedBox(height: 1),
-            Text(
-              'How To Use:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(height: 1),
-            Text(
-              widget.howToUse ?? 'No usage instructions available',
-              textAlign: TextAlign.justify,
-            ),
-            const SizedBox(height: 1),
-            Text(
-              'Problems:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: widget.problems?.map((problem) => Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
-                child: Text('- $problem'),
-              )).toList() ?? [Text('No problems listed')],
-            ),
-          ],
-        );
-      case 3:
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (widget.reviews != null && widget.reviews!.isNotEmpty)
-              ListView(
-                shrinkWrap: true,
-                children: widget.reviews!.map((review) => ListTile(title: Text(review))).toList(),
-              )
-            else
-              Center(child: Text('No reviews available')),
-            const SizedBox(height: 16),
-            TextField(
-              controller: reviewController,
-              decoration: InputDecoration(
-                labelText: 'Add a Review',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: () async {
-                if (reviewController.text.isNotEmpty) {
-                  await addReview(widget.name, reviewController.text);
-                  setState(() {
-                    widget.reviews?.add(reviewController.text);
-                    reviewController.clear();
-                  });
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFB39DDB),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: widget.requiredSkinType?.map((SkinType) => Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Text('- $SkinType'),
+            )).toList() ?? [Text('N/A')],
+          ),
+          Row(
+            children: [
+              Text(
+                'Price:',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
                 ),
               ),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-                child: Text(
-                  'SUBMIT REVIEW',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+              SizedBox(width: 3),
+              Text(
+                '${widget.price} EGP',
+                textAlign: TextAlign.justify,
+              ),
+            ],
+          ),
+          Text(
+            'Rating:',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(height: 1),
+          RatingBar.builder(
+            initialRating: widget.averageRating ?? 0,
+            minRating: 1,
+            direction: Axis.horizontal,
+            allowHalfRating: true,
+            itemCount: 5,
+            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+            itemBuilder: (context, _) => Icon(
+              Icons.star,
+              color: Colors.amber,
+            ),
+            onRatingUpdate: (rating) {
+              print(rating);
+            },
+            ignoreGestures: true,
+          ),
+          Text(
+            '${widget.averageRating?.toStringAsFixed(1) ?? '0.0'} (${widget.totalRatings ?? 0} reviews)',
+            textAlign: TextAlign.justify,
+          ),
+          const SizedBox(height: 1),
+          Text(
+            'How To Use:',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(height: 1),
+          Text(
+            widget.howToUse ?? 'No usage instructions available',
+            textAlign: TextAlign.justify,
+          ),
+          const SizedBox(height: 1),
+          Text(
+            'Problems:',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: widget.problems?.map((problem) => Padding(
+              padding: const EdgeInsets.only(bottom: 4.0),
+              child: Text('- $problem'),
+            )).toList() ?? [Text('No problems listed')],
+          ),
+        ],
+      );
+    case 3:
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (widget.reviews != null && widget.reviews!.isNotEmpty)
+            ListView(
+              shrinkWrap: true,
+              children: widget.reviews!.map((review) => ListTile(title: Text(review))).toList(),
+            )
+          else
+            Center(child: Text('No reviews until now')),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: reviewController,
+                  decoration: InputDecoration(
+                    labelText: 'Add a Review',
+                    border: OutlineInputBorder(),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: ratingController,
-              decoration: InputDecoration(
-                labelText: 'Add a Rating (1-5)',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: () async {
-                if (ratingController.text.isNotEmpty) {
-                  int? rating = int.tryParse(ratingController.text);
-                  if (rating != null && rating > 0 && rating <= 5) {
-                    await addRating(widget.name, rating);
+              SizedBox(width: 8),
+              ElevatedButton(
+                onPressed: () async {
+                  if (reviewController.text.isNotEmpty) {
+                    await addReview(widget.name, reviewController.text);
                     setState(() {
-                      widget.averageRating = (widget.averageRating! * widget.totalRatings! + rating) / (widget.totalRatings! + 1);
-                      widget.totalRatings = widget.totalRatings! + 1;
-                      ratingController.clear();
+                      widget.reviews?.add(reviewController.text);
+                      reviewController.clear();
                     });
-                  } else {
-                    // Show an error message for invalid rating
                   }
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFB39DDB),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFB39DDB),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-                child: Text(
-                  'SUBMIT RATING',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                  child: Text(
+                    'SUBMIT',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        );
-      default:
-        return Container();
-    }
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: ratingController,
+                  decoration: InputDecoration(
+                    labelText: 'Add a Rating (1-5)',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+              SizedBox(width: 8),
+              ElevatedButton(
+                onPressed: () async {
+                  if (ratingController.text.isNotEmpty) {
+                    int? rating = int.tryParse(ratingController.text);
+                    if (rating != null && rating > 0 && rating <= 5) {
+                      await addRating(widget.name, rating);
+                      setState(() {
+                        widget.averageRating = (widget.averageRating! * widget.totalRatings! + rating) / (widget.totalRatings! + 1);
+                        widget.totalRatings = widget.totalRatings! + 1;
+                        ratingController.clear();
+                      });
+                    }
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFB39DDB),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                  child: Text(
+                    'SUBMIT',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    default:
+      return Container();
   }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
