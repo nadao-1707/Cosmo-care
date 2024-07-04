@@ -241,15 +241,16 @@ Future<List<Product>> fetchProductsBySkinTypeAndConcern(List<String> concerns) a
 
 
 
-  // add review and rating (update average and total rating)
-  Future<void> addRatingAndReview(String productId, int rating, String review) async {
+  // add review 
+   Future<void> addReview(String productId, String review) async {
+    final FirebaseFirestore _db = FirebaseFirestore.instance;
     try {
-      final CollectionReference<Product> productsRef = FirebaseFirestore.instance
-      .collection('products')
-      .withConverter<Product>(
-      fromFirestore: (snapshot, _) => Product.fromFirestore(snapshot),
-      toFirestore: (product, _) => product.toFirestore(),
-      );
+      final CollectionReference<Product> productsRef = _db
+          .collection('products')
+          .withConverter<Product>(
+            fromFirestore: (snapshot, _) => Product.fromFirestore(snapshot),
+            toFirestore: (product, _) => product.toFirestore(),
+          );
       DocumentReference<Product> productDocRef = productsRef.doc(productId);
 
       DocumentSnapshot<Product> snapshot = await productDocRef.get();
@@ -259,6 +260,33 @@ Future<List<Product>> fetchProductsBySkinTypeAndConcern(List<String> concerns) a
         product.reviews ??= [];
         product.reviews!.add(review);
 
+        await productDocRef.set(product);
+      } else {
+        throw Exception('Product not found.');
+      }
+    } catch (error) {
+      print('Failed to add review: $error');
+      rethrow;
+    }
+  }
+
+   // add rating (update average and total rating)
+  Future<void> addRating(String productId, int rating) async {
+    final FirebaseFirestore _db = FirebaseFirestore.instance;
+    try {
+      final CollectionReference<Product> productsRef = _db
+          .collection('products')
+          .withConverter<Product>(
+            fromFirestore: (snapshot, _) => Product.fromFirestore(snapshot),
+            toFirestore: (product, _) => product.toFirestore(),
+          );
+      DocumentReference<Product> productDocRef = productsRef.doc(productId);
+
+      DocumentSnapshot<Product> snapshot = await productDocRef.get();
+
+      if (snapshot.exists) {
+        Product product = snapshot.data()!;
+        
         double newAverageRating = ((product.averageRating ?? 0) * (product.totalRatings ?? 0) + rating) /
             ((product.totalRatings ?? 0) + 1);
 
@@ -270,7 +298,7 @@ Future<List<Product>> fetchProductsBySkinTypeAndConcern(List<String> concerns) a
         throw Exception('Product not found.');
       }
     } catch (error) {
-      print('Failed to add rating and review: $error');
+      print('Failed to add rating: $error');
       rethrow;
     }
   }
