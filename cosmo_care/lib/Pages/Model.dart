@@ -47,11 +47,11 @@ class _Model extends State<Model> {
     try {
       final prediction = await uploadImage(_imageFile!);
       var userId = await _authService.getUserId();
-                  if (userId?.isNotEmpty ?? false) {
-                    await _controller.updateClientData(
-                      client: Client(skinType: prediction),
-                    );
-                  }
+      if (userId?.isNotEmpty ?? false) {
+        await _controller.updateClientData(
+          client: Client(skinType: prediction),
+        );
+      }
       setState(() {
         _prediction = 'Predicted Skin Type: $prediction';
       });
@@ -72,7 +72,7 @@ class _Model extends State<Model> {
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(responseBody);
-      return jsonResponse['class'];
+      return jsonResponse['prediction']; // Ensure this key matches the Flask response
     } else {
       throw Exception('Failed to predict skin type');
     }
@@ -210,3 +210,4 @@ class _Model extends State<Model> {
     );
   }
 }
+
