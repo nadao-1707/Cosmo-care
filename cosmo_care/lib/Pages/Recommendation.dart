@@ -11,8 +11,14 @@ import 'ProductDetails.dart';
 
 class Recommendation extends StatefulWidget {
   final List<String> concerns;
+  final int lowPrice;
+  final int highPrice;
 
-  const Recommendation({super.key, required this.concerns, String? priceRange});
+  const Recommendation({
+    super.key,
+    required this.concerns,
+     required this.lowPrice, required this.highPrice,
+  });
 
   @override
   _RecommendationState createState() => _RecommendationState();
@@ -30,22 +36,36 @@ class _RecommendationState extends State<Recommendation> {
   }
 
   Future<void> _fetchProducts() async {
-    setState(() {
-      _isLoading = true;
-    });
-    try {
-      List<Product> products = await _clientController.fetchProductsBySkinTypeAndConcern(widget.concerns);
-      setState(() {
-        _products = products;
-        _isLoading = false;
-      });
-    } catch (e) {
-      print('Error fetching products: $e');
-      setState(() {
-        _isLoading = false;
-      });
+  setState(() {
+    _isLoading = true;
+  });
+
+  try {
+    List<Product> products;
+
+    if (widget.lowPrice == 0 && widget.highPrice == 0) {
+      // Use fetchProductsBySkinTypeAndConcern when both prices are zero
+      products = await _clientController.fetchProductsBySkinTypeAndConcern(widget.concerns);
+    } else {
+      // Otherwise, use fetchProductsByPriceRangeAndConcern
+      products = await _clientController.fetchProductsByPriceRangeAndConcern(
+        widget.lowPrice,
+        widget.highPrice,
+        widget.concerns,
+      );
     }
+
+    setState(() {
+      _products = products;
+      _isLoading = false;
+    });
+  } catch (e) {
+    print('Error fetching products: $e');
+    setState(() {
+      _isLoading = false;
+    });
   }
+}
 
   void _addToCart(Product product) async {
     try {
