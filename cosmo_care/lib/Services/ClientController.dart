@@ -239,8 +239,7 @@ class ClientController {
       rethrow; // Propagate the error to handle it in UI if needed
     }
   }
-
-
+  
   Future<List<Product>> fetchProductsBySkinTypeAndConcern(List<String> concerns) async {
   AuthService authService = AuthService();
 
@@ -269,6 +268,35 @@ class ClientController {
   }
 }
 
+  Future<List<Product>> fetchProductsByPriceRangeAndConcern(int lowerPrice, int upperPrice, List<String> concerns) async {
+  AuthService authService = AuthService();
+
+  try {
+    String? userSkinType = await authService.getUserSkinType();
+
+    // Fetch products where problems match concerns and price is within range
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection('products')
+        .where('problems', arrayContainsAny: concerns)
+        .where('price', isGreaterThanOrEqualTo: lowerPrice)
+        .where('price', isLessThanOrEqualTo: upperPrice)
+        .get();
+
+    // Convert to list of Product objects and filter by requiredSkinType
+    List<Product> products = snapshot.docs
+      .where((doc) {
+        List<dynamic> requiredSkinTypes = doc.data()['requiredSkinType'];
+        return requiredSkinTypes.contains(userSkinType) || requiredSkinTypes.contains('All');
+      })
+      .map((doc) => Product.fromFirestore(doc))
+      .toList();
+
+    return products;
+  } catch (e) {
+    print('Error fetching products by price range and concern: $e');
+    return [];
+  }
+}
 
 
   // add review 
