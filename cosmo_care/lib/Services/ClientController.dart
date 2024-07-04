@@ -149,7 +149,7 @@ class ClientController {
 
   Future<void> addToCart(String productId) async {
     try {
-      final uid = await _authService.getUserId();  // Ensure this method is correct and returns a valid UID
+      final uid = await _authService.getUserId();
       final cartRef = FirebaseFirestore.instance
           .collection('carts')
           .doc(uid)

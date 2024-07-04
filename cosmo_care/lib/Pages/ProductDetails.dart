@@ -10,6 +10,7 @@ import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/MyCart.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 Future<void> addProductToCart(String productName) async {
   ClientController controller = ClientController();
@@ -296,8 +297,24 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
               ),
             ),
             const SizedBox(height: 1),
+            RatingBar.builder(
+              initialRating: widget.averageRating ?? 0,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+              itemBuilder: (context, _) => Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (rating) {
+                print(rating);
+              },
+              ignoreGestures: true,
+            ),
             Text(
-              '${widget.averageRating} (${widget.totalRatings} reviews)',
+              '${widget.averageRating?.toStringAsFixed(1) ?? '0.0'} (${widget.totalRatings ?? 0} reviews)',
               textAlign: TextAlign.justify,
             ),
             const SizedBox(height: 1),
