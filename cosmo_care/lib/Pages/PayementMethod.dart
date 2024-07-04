@@ -11,7 +11,9 @@ import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 
 class PaymentMethod extends StatefulWidget {
-  const PaymentMethod({super.key});
+  final double totalPrice;
+
+  const PaymentMethod({super.key, required this.totalPrice});
 
   @override
   _PaymentPageState createState() => _PaymentPageState();
@@ -98,10 +100,10 @@ void _checkout() async {
         
         _controller.emptyCart();
 
-        // Navigate to final checkout page
+        // Navigate to final checkout pageb
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const Final()),
+          MaterialPageRoute(builder: (context) => Final(totalPrice: widget.totalPrice)),
         );
       } else {
         throw Exception('User ID is null');

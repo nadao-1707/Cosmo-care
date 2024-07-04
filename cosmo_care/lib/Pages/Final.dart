@@ -1,3 +1,4 @@
+import 'package:cosmo_care/Entities/Client.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
@@ -5,9 +6,12 @@ import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/MyCart.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
+import 'package:cosmo_care/Services/ClientController.dart'; // Import ClientController
 
 class Final extends StatefulWidget {
-  const Final({super.key});
+  final double totalPrice;
+
+  const Final({super.key, required this.totalPrice});
 
   @override
   _FinalPageState createState() => _FinalPageState();
@@ -15,6 +19,13 @@ class Final extends StatefulWidget {
 
 class _FinalPageState extends State<Final> {
   int _selectedIndex = 0;
+  Future<Client?>? _clientFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _clientFuture = ClientController().getClientData(); // Initialize the client data fetch
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -82,46 +93,92 @@ class _FinalPageState extends State<Final> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Icon(
-              Icons.check_circle,
-              size: 80,
-              color: Colors.black,
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Your order is confirmed',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Home()),
-                );
-              },
-              child: const Text(
-                'IF you like to go to home page again please\nCLICK HERE',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Color.fromARGB(255, 112, 181, 238), // Changed color to blue to indicate a link
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline, // Added underline for link style
+      body: FutureBuilder<Client?>(
+        future: _clientFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData) {
+            return Center(child: Text('No client data found.'));
+          }
+
+          final client = snapshot.data!;
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Icon(
+                  Icons.check_circle,
+                  size: 80,
+                  color: Colors.black,
                 ),
-                textAlign: TextAlign.center,
-              ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Your order is confirmed',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Total Price: \$${widget.totalPrice.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Name: ${client.first_name} ${client.last_name}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+                Text(
+                  'Phone: ${client.phoneNumber}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+                Text(
+                  'Address: ${client.address}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Home()),
+                    );
+                  },
+                  child: const Text(
+                    'IF you like to go to home page again please\nCLICK HERE',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color.fromARGB(255, 112, 181, 238), // Changed color to blue to indicate a link
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline, // Added underline for link style
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

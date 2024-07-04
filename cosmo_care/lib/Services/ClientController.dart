@@ -542,6 +542,4 @@ Future<List<List<String>>> listProductInfoByCode(String code) async {
   }
 }
 
- 
-
 }

@@ -129,31 +129,39 @@ class _MyCartState extends State<MyCart> {
   }
 
   void _checkout() {
-    if (_cartProductsWithQuantities.isEmpty) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Cart is Empty'),
-            content: const Text('Please add products to your cart before checkout.'),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const PaymentMethod()),
-      );
-    }
+  if (_cartProductsWithQuantities.isEmpty) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Cart is Empty'),
+          content: const Text('Please add products to your cart before checkout.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  } else {
+    double totalPrice = _cartProductsWithQuantities.entries.fold(
+      0,
+      (total, entry) => total + entry.value * entry.key.price,
+    );
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaymentMethod(totalPrice: totalPrice),
+      ),
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
