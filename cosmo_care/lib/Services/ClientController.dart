@@ -383,25 +383,6 @@ class ClientController {
     }
   }
 
-  //client controller
- Future<List<Map<String, dynamic>>> listProductsByCategory(String category) async {
-  final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
-        .collection('products')
-        .where('category', isEqualTo: category)
-        .get();
-
-    List<Map<String, dynamic>> products = [];
-    for (var doc in snapshot.docs) {
-        final data = doc.data();
-          products.add({
-              'name': data['name'] ?? '', 
-              'imgURL': data['imgURL'] ?? '',
-              'price': data['price']?.toString() ?? '', 
-          });
-          }
-    return products;
- }
-
 Future<List<Map<String, dynamic>>> searchByName(String productName) async {
   try {
     final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
@@ -508,32 +489,6 @@ Future<List<List<String>>> listProductInfoByCode(String code) async {
   }
   return listOfsearchedProducts;
 }
-
-// Filter products by categories
-   Future<List<List<Product>>> filterProductsByCategories(List<String> categories) async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    try {
-      QuerySnapshot<Map<String, dynamic>> snapshot = await firestore
-          .collection('Products')
-          .where('category', whereIn: categories)
-          .get();
-
-      List<List<Product>> productsArray = [];
-      for (var category in categories) {
-        List<Product> categoryProducts = snapshot.docs
-            .where((doc) => doc.data()['category'] == category)
-            .map((doc) => Product.fromFirestore(doc))
-            .toList();
-        productsArray.add(categoryProducts);
-      }
-
-      return productsArray;
-    } catch (e) {
-      // Handle error if any
-      print('Error fetching products by categories: $e');
-      return [];
-    }
-  }
   // Get product by name
   Future<Product> getProductByName(String productName) async {
     try {
@@ -552,22 +507,5 @@ Future<List<List<String>>> listProductInfoByCode(String code) async {
       throw Exception('Error fetching product: $e');
     }
   }
-
-  
-  Future<List<Map<String, dynamic>>> fetchProductsByPriceRange(int lowerPrice, int upperPrice) async {
-  try {
-    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
-        .collection('products')
-        .where('price', isGreaterThanOrEqualTo: lowerPrice)
-        .where('price', isLessThanOrEqualTo: upperPrice)
-        .get();
-
-    List<Map<String, dynamic>> products = snapshot.docs.map((doc) => doc.data()).toList();
-    return products;
-  } catch (e) {
-    print('Error fetching products by price range: $e');
-    return [];
-  }
-}
 
 }
