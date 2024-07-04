@@ -148,7 +148,7 @@ class _LoginDemoState extends State<LogIn> {
                   InkWell(
                     onTap: _forgetPassword,
                     child: const Text(
-                      'Forget Password?',
+                      'Forgot Password?',
                       style: TextStyle(
                         color: Colors.black,
                         decoration: TextDecoration.underline,
