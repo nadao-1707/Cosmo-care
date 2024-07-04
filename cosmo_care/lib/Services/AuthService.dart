@@ -16,27 +16,6 @@ class AuthService {
     return user?.uid;
   }
   
-  // to get currently signed in user's email
-  Future<String?> getUserEmail() async {
-  try { 
-    String? uid = await getUserId();
-    if (uid != null) {
-      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
-          .collection('clients')
-          .doc(uid)
-          .get();
-
-      if (snapshot.exists) {
-        Client client = Client.fromFirestore(snapshot);
-        return client.email;
-      }
-    }
-    return null;
-  } catch (error) {
-    print(error.toString());
-    return null;
-  }
-  }
 
   // to get currently signed in user's first name
   Future<String?> getUserName() async {
