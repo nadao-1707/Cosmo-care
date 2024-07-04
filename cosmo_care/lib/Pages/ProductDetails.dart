@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cosmo_care/Services/AuthService.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmo_care/Entities/Product.dart';
 import 'package:cosmo_care/Services/ClientController.dart';
@@ -15,6 +16,28 @@ Future<void> addProductToCart(String productName) async {
   String id = await controller.fetchProductIdByName(productName); 
   await controller.addToCart(id);
 }
+
+Future<void> addReview(String productName,String review) async {
+  ClientController controller = ClientController();
+  String id = await controller.fetchProductIdByName(productName); 
+  await controller.addReview(id,review);
+}
+
+Future<void> addRating(String productName,int rating) async {
+  ClientController controller = ClientController();
+  String id = await controller.fetchProductIdByName(productName); 
+  await controller.addRating(id,rating);
+}
+
+Future<String?> fetchUsername() async {
+    try {
+      AuthService auth = AuthService();
+      return await auth.getUserUsername();
+    } catch (e) {
+      print('Error fetching username: $e');
+      return null;
+    }
+  }
 
 class Productdetails extends StatelessWidget {
   final Product product;
@@ -165,14 +188,14 @@ class ProductDetailCard extends StatefulWidget {
   final List<String>? requiredSkinType;
   final int price;
   final String? description;
-  final String? ingredients; // Updated to String
-  final double? averageRating;
-  final int? totalRatings;
+  final String? ingredients;
+  double? averageRating;
+  int? totalRatings;
   final List<String>? reviews;
   final String? howToUse;
   final List<String>? problems;
 
-  const ProductDetailCard({
+   ProductDetailCard({
     super.key,
     required this.name,
     required this.imgURL,
@@ -180,7 +203,7 @@ class ProductDetailCard extends StatefulWidget {
     this.requiredSkinType,
     required this.price,
     this.description,
-    this.ingredients, // Updated to String
+    this.ingredients,
     this.averageRating,
     this.totalRatings,
     this.reviews,
@@ -194,129 +217,217 @@ class ProductDetailCard extends StatefulWidget {
 
 class _ProductDetailCardState extends State<ProductDetailCard> {
   int selectedIndex = 0;
+  final TextEditingController reviewController = TextEditingController();
+  final TextEditingController ratingController = TextEditingController();
+
+  @override
+  void dispose() {
+    reviewController.dispose();
+    ratingController.dispose();
+    super.dispose();
+  }
+
+  Widget getContent() {
+    print("Reviews: ${widget.reviews}"); // Debugging line
+    switch (selectedIndex) {
+      case 0:
+        return Text(
+          widget.description ?? 'No description available',
+          textAlign: TextAlign.justify,
+        );
+      case 1:
+        return Text(
+          widget.ingredients ?? 'No ingredients available',
+          textAlign: TextAlign.justify,
+        );
+      case 2:
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Category:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 1),
+            Text(
+              widget.category ?? 'N/A',
+              textAlign: TextAlign.justify,
+            ),
+            const SizedBox(height: 1),
+            Text(
+              'Required Skin Type:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: widget.requiredSkinType?.map((SkinType) => Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Text('- $SkinType'),
+              )).toList() ?? [Text('N/A')],
+            ),
+            Row(
+              children: [
+                Text(
+                  'Price:',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                SizedBox(width: 3),
+                Text(
+                  '${widget.price} EGP',
+                  textAlign: TextAlign.justify,
+                ),
+              ],
+            ),
+            Text(
+              'Rating:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 1),
+            Text(
+              '${widget.averageRating} (${widget.totalRatings} reviews)',
+              textAlign: TextAlign.justify,
+            ),
+            const SizedBox(height: 1),
+            Text(
+              'How To Use:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 1),
+            Text(
+              widget.howToUse ?? 'No usage instructions available',
+              textAlign: TextAlign.justify,
+            ),
+            const SizedBox(height: 1),
+            Text(
+              'Problems:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: widget.problems?.map((problem) => Padding(
+                padding: const EdgeInsets.only(bottom: 4.0),
+                child: Text('- $problem'),
+              )).toList() ?? [Text('No problems listed')],
+            ),
+          ],
+        );
+      case 3:
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (widget.reviews != null && widget.reviews!.isNotEmpty)
+              ListView(
+                shrinkWrap: true,
+                children: widget.reviews!.map((review) => ListTile(title: Text(review))).toList(),
+              )
+            else
+              Center(child: Text('No reviews available')),
+            const SizedBox(height: 16),
+            TextField(
+              controller: reviewController,
+              decoration: InputDecoration(
+                labelText: 'Add a Review',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: () async {
+                if (reviewController.text.isNotEmpty) {
+                  await addReview(widget.name, reviewController.text);
+                  setState(() {
+                    widget.reviews?.add(reviewController.text);
+                    reviewController.clear();
+                  });
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFB39DDB),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                child: Text(
+                  'SUBMIT REVIEW',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: ratingController,
+              decoration: InputDecoration(
+                labelText: 'Add a Rating (1-5)',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: () async {
+                if (ratingController.text.isNotEmpty) {
+                  int? rating = int.tryParse(ratingController.text);
+                  if (rating != null && rating > 0 && rating <= 5) {
+                    await addRating(widget.name, rating);
+                    setState(() {
+                      widget.averageRating = (widget.averageRating! * widget.totalRatings! + rating) / (widget.totalRatings! + 1);
+                      widget.totalRatings = widget.totalRatings! + 1;
+                      ratingController.clear();
+                    });
+                  } else {
+                    // Show an error message for invalid rating
+                  }
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFB39DDB),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                child: Text(
+                  'SUBMIT RATING',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      default:
+        return Container();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    Widget getContent() {
-      print("Reviews: ${widget.reviews}"); // Debugging line
-      switch (selectedIndex) {
-        case 0:
-          return Text(
-            widget.description ?? 'No description available',
-            textAlign: TextAlign.justify,
-          );
-        case 1:
-          return Text(
-            widget.ingredients ?? 'No ingredients available',
-            textAlign: TextAlign.justify,
-          );
-        case 2:
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Category:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 1),
-              Text(
-              widget.category ?? 'N/A',
-                textAlign: TextAlign.justify,
-              ),
-              const SizedBox(height: 1),
-
-              Text(
-                'Required Skin Type:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: widget.requiredSkinType?.map((SkinType) => Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Text('- $SkinType'),
-                )).toList() ?? [Text('N/A')],
-              ),
-              Row(
-                children: [
-                  Text(
-                    'Price:',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                  SizedBox(width: 3), 
-                  Text(
-                    '${widget.price} EGP',
-                    textAlign: TextAlign.justify,
-                  ),
-                ],
-              ),
-
-              Text(
-                'Rating:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 1),
-              Text(
-                '${widget.averageRating} (${widget.totalRatings} reviews)',
-                textAlign: TextAlign.justify,
-              ),
-              const SizedBox(height: 1),
-
-              Text(
-                'How To Use:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 1),
-              Text(
-                widget.howToUse ?? 'No usage instructions available',
-                textAlign: TextAlign.justify,
-              ),
-              const SizedBox(height: 1),
-
-              Text(
-                'Problems:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: widget.problems?.map((problem) => Padding(
-                padding: const EdgeInsets.only(bottom: 4.0), // Adjust spacing between items if needed
-                child: Text('- $problem'),
-                )).toList() ?? [Text('No problems listed')],
-              )
-            ],
-          );
-        case 3:
-          if (widget.reviews != null && widget.reviews!.isNotEmpty) {
-            return ListView(
-              shrinkWrap: true,
-              children: widget.reviews!.map((review) => ListTile(title: Text(review))).toList(),
-            );
-          } else {
-            return Center(child: Text('No reviews available'));
-          }
-        default:
-          return Container();
-      }
-    }
-
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
