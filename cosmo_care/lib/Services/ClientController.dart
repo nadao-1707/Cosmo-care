@@ -125,6 +125,27 @@ class ClientController {
     return ''; // Return an empty string in case of error
   }
 }
+
+  Future<Product?> fetchProductByCode(String productCode) async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('products')
+          .where('code', isEqualTo: productCode)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+        return Product.fromFirestore(documentSnapshot as DocumentSnapshot<Map<String, dynamic>>); // Return the product
+      } else {
+        print('No product found with the code $productCode');
+        return null; // Return null if no product is found
+      }
+    } catch (e) {
+      print('Error fetching product: $e');
+      return null; // Return null in case of error
+    }
+  }
+
   Future<void> addToCart(String productId) async {
   try {
     final uid = await _authService.getUserId();  // Ensure this method is correct and returns a valid UID

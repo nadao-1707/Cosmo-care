@@ -2,7 +2,6 @@ import 'package:cosmo_care/Pages/SkinTypeTest.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/Loading.dart';
-import 'package:cosmo_care/Pages/Questionnaire.dart'; 
 import 'package:cosmo_care/Pages/Model.dart'; 
 
 Future<void> main() async {
@@ -29,9 +28,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/loading': (context) => const Loading(), // Define loading screen route
        '/skinTypeTest': (context) => const SkinTypeTest(), // Define SkinTypeTest route
-        //'/uploadImage': (context) => const UploadImage(), // Define UploadImage route
-        '/Model': (context) => const Model(), 
-        //'/Detectingimage': (context) => const Detectingimage(image:), 
+        '/Model': (context) => const Model(),
       },
       theme: ThemeData(
         primarySwatch: Colors.purple, // Example theme customization

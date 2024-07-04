@@ -121,7 +121,7 @@ class _HomePageState extends State<Home> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const BarCodeScanning()),
+                        MaterialPageRoute(builder: (context) => BarCodeScanning()),
                       );
                     },
                     child: Stack(
@@ -196,7 +196,7 @@ class _HomePageState extends State<Home> {
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const BarCodeScanning()),
+                MaterialPageRoute(builder: (context) => BarCodeScanning()),
               );
               break;
             case 3:

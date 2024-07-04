@@ -36,7 +36,7 @@ class _FinalPageState extends State<Final> {
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const BarCodeScanning()),
+          MaterialPageRoute(builder: (context) => BarCodeScanning()),
         );
         break;
       case 3:

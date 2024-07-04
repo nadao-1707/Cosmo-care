@@ -1,82 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:cosmo_care/Pages/ChatBot.dart';
-import 'package:cosmo_care/Pages/Home.dart';
-import 'package:cosmo_care/Pages/MyCart.dart';
-import 'package:cosmo_care/Pages/Search.dart';
-import 'package:cosmo_care/Pages/MyProfile.dart';
-//import 'package:barcode_scan2/barcode_scan2.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+import '../Services/ClientController.dart';
+import 'ChatBot.dart';
+import 'Home.dart';
+import 'MyCart.dart';
+import 'MyProfile.dart';
+import 'ProductDetails.dart'; // Ensure this import is correct
+import 'Search.dart';
 
 class BarCodeScanning extends StatefulWidget {
-  const BarCodeScanning({super.key});
-
   @override
-  _ScanPageState createState() => _ScanPageState();
+  _BarCodeScanningPageState createState() => _BarCodeScanningPageState();
 }
 
-class _ScanPageState extends State<BarCodeScanning> {
-  String? barcodeResult;
-  int _selectedIndex = 2; // Set the initial selected index to 2 for the "Scan" item
+class _BarCodeScanningPageState extends State<BarCodeScanning> {
+  String barcode = "";
+  final ClientController clientController = ClientController();
+  var fetchedProduct;
+  bool showMessage = false; // Variable to control the visibility of the message
 
-  // Future<void> _scanBarcode() async {
-  //   try {
-  //     var result = await BarcodeScanner.scan();
-  //     setState(() {
-  //       barcodeResult = result.rawContent;
-  //     });
-  //   } catch (e) {
-  //     setState(() {
-  //       barcodeResult = 'Failed to get barcode.';
-  //     });
-  //   }
-  // }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    switch (index) {
-      case 0:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Home()),
-        );
-        break;
-      case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ChatBot()),
-        );
-        break;
-      case 2:
-        // Stay on the same page
-        break;
-      case 3:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const MyCart()),
-        );
-        break;
-      case 4:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Search()),
-        );
-        break;
+  void _onBarcodeDetect(BarcodeCapture capture) {
+    final List<Barcode> barcodes = capture.barcodes;
+    if (barcodes.isNotEmpty) {
+      setState(() {
+        barcode = barcodes.first.rawValue ?? 'Failed to get barcode';
+      });
+      print('Scanned Barcode: $barcode');
+      clientController.fetchProductByCode(barcode).then((product) {
+        if (product != null) {
+          setState(() {
+            fetchedProduct = product; // Store the fetched product
+            showMessage = false; // Hide the message if a product is found
+          });
+        } else {
+          setState(() {
+            fetchedProduct = null; // Ensure fetchedProduct is set to null
+            showMessage = true; // Show the message if no product is found
+          });
+        }
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFD1C4E9), // Background color
+      backgroundColor: const Color(0xFFD1C4E9),
       appBar: AppBar(
         backgroundColor: const Color(0xFFE1BEE7),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); // Go back to the previous page
+            Navigator.pop(context);
           },
         ),
+        title: Text("Scan Barcode"),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
@@ -89,66 +67,90 @@ class _ScanPageState extends State<BarCodeScanning> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            const SizedBox(height: 60),
-            Center(
+      body: Column(
+        children: [
+          Expanded(
+            flex: 2,
+            child: MobileScanner(
+              onDetect: _onBarcodeDetect,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Center(
               child: Column(
-                children: [
-                  const Text(
-                    'Scan your product here...',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Scanned Barcode:',
+                    style: TextStyle(fontSize: 20),
                   ),
-                  const SizedBox(height: 20),
-                  GestureDetector(
-                    //onTap: _scanBarcode,
-                    child: Container(
-                      width: 300,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.black54),
-                      ),
-                      child: barcodeResult == null
-                          ? const Icon(
-                              Icons.qr_code_scanner,
-                              size: 50,
-                              color: Colors.black54,
-                            )
-                          : Center(
-                              child: Text(
-                                'Barcode: $barcodeResult',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                    ),
+                  SizedBox(height: 10),
+                  Text(
+                    barcode,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
+                  if (fetchedProduct != null) // Only show the button if a product is fetched
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Productdetails(product: fetchedProduct),
+                          ),
+                        );
+                      },
+                      child: Text("Go to Product Details Page"),
+                    ),
+                  if (showMessage) // Only show the message if `showMessage` is true
+                    Text(
+                      'No product found for the scanned barcode.',
+                      style: TextStyle(color: Colors.red, fontSize: 16),
+                    ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.black54,
         backgroundColor: const Color(0xFFE1BEE7),
-        currentIndex: _selectedIndex, // Set the selected index
-        onTap: _onItemTapped, // Handle item tap
+        currentIndex: 3,
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Home()),
+              );
+              break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ChatBot()),
+              );
+              break;
+            case 2:
+            // Scan page already present
+              break;
+            case 3:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MyCart()),
+              );
+              break;
+            case 4:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Search()),
+              );
+              break;
+          }
+        },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

@@ -201,7 +201,7 @@ class _RecommendationState extends State<Recommendation> {
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const BarCodeScanning()),
+                MaterialPageRoute(builder: (context) => BarCodeScanning()),
               );
               break;
             case 3:
