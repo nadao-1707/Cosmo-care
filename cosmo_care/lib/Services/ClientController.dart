@@ -51,44 +51,45 @@ class ClientController {
   }
 
   //list cart contents by user id
-  static Future<List<Product>> listCartContents(String userId) async {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  static Future<Map<Product, int>> listCartContents(String userId) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  try {
-    DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
-        .collection('carts')
-        .doc(userId)
-        .get();
+    try {
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
+          .collection('carts')
+          .doc(userId)
+          .get();
 
-    if (snapshot.exists) {
-      Cart cart = Cart.fromFirestore(snapshot);
-      List<String> productIds = cart.productIds;
-      List<Product> products = [];
+      if (snapshot.exists) {
+        Cart cart = Cart.fromFirestore(snapshot);
+        Map<String, int> productQuantities = cart.productQuantities;
+        Map<Product, int> productsWithQuantities = {};
 
-      for (String productId in productIds) {
-        DocumentSnapshot<Map<String, dynamic>> productSnapshot = await firestore
-            .collection('products')
-            .doc(productId)
-            .get();
+        for (String productId in productQuantities.keys) {
+          DocumentSnapshot<Map<String, dynamic>> productSnapshot = await firestore
+              .collection('products')
+              .doc(productId)
+              .get();
 
-        if (productSnapshot.exists) {
-          Product product = Product.fromFirestore(productSnapshot);
-          products.add(product);
-        } else {
-          print('Product document with ID $productId does not exist.');
+          if (productSnapshot.exists) {
+            Product product = Product.fromFirestore(productSnapshot);
+            int quantity = productQuantities[productId] ?? 0;
+            productsWithQuantities[product] = quantity;
+          } else {
+            print('Product document with ID $productId does not exist.');
+          }
         }
-      }
 
-      return products;
-    } else {
-      print('Cart document with ID does not exist.');
-      return [];
+        return productsWithQuantities;
+      } else {
+        print('Cart document with ID does not exist.');
+        return {};
+      }
+    } catch (e) {
+      print('Error fetching cart: $e');
+      return {};
     }
-  } catch (e) {
-    print('Error fetching cart: $e');
-    return [];
   }
-}
 
   Future<String> getProductID(String name) async {
   try {
@@ -147,63 +148,70 @@ class ClientController {
   }
 
   Future<void> addToCart(String productId) async {
-  try {
-    final uid = await _authService.getUserId();  // Ensure this method is correct and returns a valid UID
-    final cartRef = FirebaseFirestore.instance
-        .collection('carts')
-        .doc(uid)
-        .withConverter<Cart>(
-          fromFirestore: (snapshot, _) => Cart.fromFirestore(snapshot),
-          toFirestore: (cart, _) => cart.toFirestore(),
-        );
+    try {
+      final uid = await _authService.getUserId();  // Ensure this method is correct and returns a valid UID
+      final cartRef = FirebaseFirestore.instance
+          .collection('carts')
+          .doc(uid)
+          .withConverter<Cart>(
+        fromFirestore: (snapshot, _) => Cart.fromFirestore(snapshot),
+        toFirestore: (cart, _) => cart.toFirestore(),
+      );
 
-    final snapshot = await cartRef.get();
+      final snapshot = await cartRef.get();
 
-    if (!snapshot.exists) {
-      final newCart = Cart(productIds: [productId]);
-      await cartRef.set(newCart);
-    } else {
-      final cart = snapshot.data();
-      if (cart == null) {
-        print("Failed to retrieve cart data");
-        return;
+      if (!snapshot.exists) {
+        // Create a new cart with one unit of the product
+        final newCart = Cart(productQuantities: {productId: 1});
+        await cartRef.set(newCart);
+      } else {
+        final cart = snapshot.data();
+        if (cart == null) {
+          print("Failed to retrieve cart data");
+          return;
+        }
+        final productQuantities = Map<String, int>.from(cart.productQuantities);
+        // Add one unit of the product to the cart
+        if (productQuantities.containsKey(productId)) {
+          productQuantities[productId] = productQuantities[productId]! + 1;
+        } else {
+          productQuantities[productId] = 1;
+        }
+        await cartRef.set(Cart(productQuantities: productQuantities));
       }
-      if (!cart.productIds.contains(productId)) {
-        cart.productIds.add(productId);
-        await cartRef.set(cart);
-      }
+    } catch (error) {
+      print("Failed to add product to cart: $error");
+      rethrow;  // Optionally rethrow the error to handle it higher up
     }
-  } catch (error) {
-    print("Failed to add product to cart: $error");
-    rethrow;  // Optionally rethrow the error to handle it higher up
   }
-}
 
   // remove from cart
   Future<void> removeFromCart(String productId) async {
-  try {
-    final uid = await _authService.getUserId();
-    DocumentReference<Cart> cartRef = FirebaseFirestore.instance
-        .collection('carts')
-        .doc(uid)
-        .withConverter<Cart>(
-          fromFirestore: (snapshot, _) => Cart.fromFirestore(snapshot),
-          toFirestore: (cart, _) => cart.toFirestore(),
-        );
+    try {
+      final uid = await _authService.getUserId();
+      DocumentReference<Cart> cartRef = FirebaseFirestore.instance
+          .collection('carts')
+          .doc(uid)
+          .withConverter<Cart>(
+        fromFirestore: (snapshot, _) => Cart.fromFirestore(snapshot),
+        toFirestore: (cart, _) => cart.toFirestore(),
+      );
 
-    DocumentSnapshot<Cart> snapshot = await cartRef.get();
+      DocumentSnapshot<Cart> snapshot = await cartRef.get();
 
-    if (snapshot.exists) {
-      Cart cart = snapshot.data()!;
-      if (cart.productIds.contains(productId)) {
-        cart.productIds.remove(productId);
-        await cartRef.set(cart);
+      if (snapshot.exists) {
+        Cart cart = snapshot.data()!;
+        final productQuantities = Map<String, int>.from(cart.productQuantities);
+        if (productQuantities.containsKey(productId)) {
+          productQuantities.remove(productId);
+          await cartRef.set(Cart(productQuantities: productQuantities));
+        }
       }
+    } catch (error) {
+      print("Failed to remove product from cart: $error");
     }
-  } catch (error) {
-    print("Failed to remove product from cart: $error");
   }
-  }
+
 
   Future<void> emptyCart() async {
     try {
@@ -211,7 +219,7 @@ class ClientController {
       if (userId != null) {
         // Create an empty cart object
         Cart emptyCart = Cart(
-          productIds: [],
+          productQuantities: {},
         );
 
         // Update Firestore with the empty cart
@@ -219,9 +227,9 @@ class ClientController {
             .collection('carts')
             .doc(userId)
             .withConverter<Cart>(
-              fromFirestore: (snapshot, _) => Cart.fromFirestore(snapshot),
-              toFirestore: (cart, _) => cart.toFirestore(),
-            )
+          fromFirestore: (snapshot, _) => Cart.fromFirestore(snapshot),
+          toFirestore: (cart, _) => cart.toFirestore(),
+        )
             .set(emptyCart);
       } else {
         throw Exception('User ID is null');
@@ -232,7 +240,8 @@ class ClientController {
     }
   }
 
-Future<List<Product>> fetchProductsBySkinTypeAndConcern(List<String> concerns) async {
+
+  Future<List<Product>> fetchProductsBySkinTypeAndConcern(List<String> concerns) async {
   AuthService authService = AuthService();
 
   try {

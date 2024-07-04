@@ -18,24 +18,24 @@ class MyCart extends StatefulWidget {
 
 class _MyCartState extends State<MyCart> {
   late ClientController _controller;
-  int _selectedIndex = 3; // Set the initial selected index to 3 for the "Cart" item
-  List<Product> _cartProducts = [];
+  int _selectedIndex = 3;
+  Map<Product, int> _cartProductsWithQuantities = {};
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _fetchCartContents();
     _controller = ClientController();
+    _fetchCartContents();
   }
 
   Future<void> _fetchCartContents() async {
     String? userId = await AuthService().getUserId();
 
     if (userId != null) {
-      List<Product> products = await ClientController.listCartContents(userId);
+      Map<Product, int> productsWithQuantities = await ClientController.listCartContents(userId);
       setState(() {
-        _cartProducts = products;
+        _cartProductsWithQuantities = productsWithQuantities;
         _isLoading = false;
       });
     } else {
@@ -81,9 +81,29 @@ class _MyCartState extends State<MyCart> {
     }
   }
 
+  void _increaseQuantity(Product product) {
+    setState(() {
+      int currentQuantity = _cartProductsWithQuantities[product] ?? 1;
+      _cartProductsWithQuantities[product] = currentQuantity + 1;
+    });
+    // Optionally, update the quantity in Firestore if needed
+  }
+
+  void _decreaseQuantity(Product product) {
+    setState(() {
+      int currentQuantity = _cartProductsWithQuantities[product] ?? 1;
+      if (currentQuantity > 1) {
+        _cartProductsWithQuantities[product] = currentQuantity - 1;
+      } else {
+        _removeFromCart(product);
+      }
+    });
+    // Optionally, update the quantity in Firestore if needed
+  }
+
   void _removeFromCart(Product product) {
     setState(() {
-      _cartProducts.remove(product); // Optimistically remove from UI
+      _cartProductsWithQuantities.remove(product); // Optimistically remove from UI
     });
 
     _controller.getProductID(product.name).then((docId) {
@@ -96,20 +116,20 @@ class _MyCartState extends State<MyCart> {
         print('Failed to remove from cart: $error');
         // Revert UI change if removal fails
         setState(() {
-          _cartProducts.add(product);
+          _cartProductsWithQuantities[product] = 1; // Add back the product
         });
       });
     }).catchError((error) {
       print('Error getting product ID: $error');
       // Revert UI change if getProductID fails
       setState(() {
-        _cartProducts.add(product);
+        _cartProductsWithQuantities[product] = 1; // Add back the product
       });
     });
   }
 
   void _checkout() {
-    if (_cartProducts.isEmpty) {
+    if (_cartProductsWithQuantities.isEmpty) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -138,13 +158,13 @@ class _MyCartState extends State<MyCart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFD1C4E9), // Background color
+      backgroundColor: const Color(0xFFD1C4E9),
       appBar: AppBar(
         backgroundColor: const Color(0xFFE1BEE7),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); // Go back to the previous page
+            Navigator.pop(context);
           },
         ),
         title: const Text('Checkout'),
@@ -169,11 +189,15 @@ class _MyCartState extends State<MyCart> {
                 children: [
                   Flexible(
                     child: ListView.builder(
-                      itemCount: _cartProducts.length,
+                      itemCount: _cartProductsWithQuantities.length,
                       itemBuilder: (context, index) {
-                        final product = _cartProducts[index];
+                        final product = _cartProductsWithQuantities.keys.elementAt(index);
+                        final quantity = _cartProductsWithQuantities[product]!;
                         return ProductCheckoutCard(
                           product: product,
+                          quantity: quantity,
+                          onIncrease: () => _increaseQuantity(product),
+                          onDecrease: () => _decreaseQuantity(product),
                           onRemove: () => _removeFromCart(product),
                         );
                       },
@@ -195,7 +219,7 @@ class _MyCartState extends State<MyCart> {
                           ),
                         ),
                         Text(
-                          'EGP ${_cartProducts.fold(0, (total, current) => total + current.price)}',
+                          'EGP ${_cartProductsWithQuantities.entries.fold(0, (total, entry) => total + entry.value * entry.key.price)}',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -225,8 +249,8 @@ class _MyCartState extends State<MyCart> {
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.black54,
         backgroundColor: const Color(0xFFE1BEE7),
-        currentIndex: _selectedIndex, // Set the selected index to Cart
-        onTap: _onItemTapped, // Handle item tap
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -254,24 +278,32 @@ class _MyCartState extends State<MyCart> {
   }
 }
 
+
 class ProductCheckoutCard extends StatelessWidget {
   final Product product;
+  final int quantity;
   final VoidCallback onRemove;
+  final VoidCallback onIncrease;
+  final VoidCallback onDecrease;
 
-  const ProductCheckoutCard({super.key, 
+  const ProductCheckoutCard({
+    super.key,
     required this.product,
+    required this.quantity,
     required this.onRemove,
+    required this.onIncrease,
+    required this.onDecrease,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 3, // Add elevation for a slight shadow effect
+      elevation: 3,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12), // Rounded corners for the card
-        side: BorderSide(color: Colors.grey.shade300, width: 1), // Border color and width
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey.shade300, width: 1),
       ),
-      color: Colors.white, // Change the background color of the card
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Row(
@@ -307,6 +339,27 @@ class ProductCheckoutCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.remove),
+                        onPressed: onDecrease,
+                        color: Colors.black,
+                      ),
+                      Text(
+                        '$quantity',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: onIncrease,
+                        color: Colors.black,
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
