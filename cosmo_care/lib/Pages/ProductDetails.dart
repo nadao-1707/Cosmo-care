@@ -181,6 +181,7 @@ class Productdetails extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable  
 class ProductDetailCard extends StatefulWidget {
   final String name;
   final String imgURL;

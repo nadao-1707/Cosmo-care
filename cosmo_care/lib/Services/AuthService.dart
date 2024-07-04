@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cosmo_care/Entities/Cart.dart';
 import 'package:cosmo_care/Entities/Client.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
