@@ -17,7 +17,7 @@ class AuthService {
   }
   
 
-  // to get currently signed in user's first name
+  // to get currently signed in user's first name For Home page
   Future<String?> getUserName() async {
   try {
     String? uid = await getUserId();
