@@ -25,6 +25,13 @@ class _SkinProblemState extends State<SkinProblem> {
     'Above EGP 2000',
   ];
 
+  Map<String, List<int>> _priceRangeMap = {
+    'Under EGP 500': [0, 500],
+    'EGP 500 - EGP 1000': [500, 1000],
+    'EGP 1000 - EGP 2000': [1000, 2000],
+    'Above EGP 2000': [2000, 10000], // You can set a maximum value here
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +81,7 @@ class _SkinProblemState extends State<SkinProblem> {
                   buildCheckboxListTile('Dry Skin'),
                   buildCheckboxListTile('Dark Spots'),
                   buildCheckboxListTile('Pigment Spots'),
-              ],
+                ],
               ),
             ),
             const SizedBox(height: 10),
@@ -136,10 +143,22 @@ class _SkinProblemState extends State<SkinProblem> {
                           },
                         );
                       } else {
+                        int lowPrice = 0;
+                        int highPrice = 0;
+
+                        if (_selectedPrice != null) {
+                          lowPrice = _priceRangeMap[_selectedPrice]![0];
+                          highPrice = _priceRangeMap[_selectedPrice]![1];
+                        }
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Recommendation(concerns: _selectedConcerns, priceRange: _selectedPrice),
+                            builder: (context) => Recommendation(
+                              concerns: _selectedConcerns,
+                              lowPrice: lowPrice,
+                              highPrice: highPrice,
+                            ),
                           ),
                         );
                       }
