@@ -15,13 +15,13 @@ import 'package:cosmo_care/Pages/MyProfile.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 
 class Model extends StatefulWidget {
-  const Model({super.key});
+  const Model({Key? key}) : super(key: key);
 
   @override
-  _Model createState() => _Model();
+  _ModelState createState() => _ModelState();
 }
 
-class _Model extends State<Model> {
+class _ModelState extends State<Model> {
   final AuthService _authService = AuthService();
   final ClientController _controller = ClientController();
   File? _imageFile;
@@ -42,7 +42,10 @@ class _Model extends State<Model> {
   }
 
   Future<void> _predictSkinType() async {
-    if (_imageFile == null) return;
+    if (_imageFile == null) {
+      _showImageRequiredAlert();
+      return;
+    }
 
     try {
       final prediction = await uploadImage(_imageFile!);
@@ -60,6 +63,26 @@ class _Model extends State<Model> {
         _prediction = 'Error: $e';
       });
     }
+  }
+
+  void _showImageRequiredAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Upload Image Required'),
+          content: Text('Please upload an image before predicting.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<String> uploadImage(File imageFile) async {
@@ -84,7 +107,6 @@ class _Model extends State<Model> {
       backgroundColor: const Color(0xFFD1C4E9),
       appBar: AppBar(
         backgroundColor: const Color(0xFFE1BEE7),
-        title: const Text('Skin Type Detector'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -103,41 +125,58 @@ class _Model extends State<Model> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ElevatedButton(
-              onPressed: _getImage,
-              child: const Text('Select Image'),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'Upload Your Image Here',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16.0),
-            _imageFile != null
-                ? Image.file(
-              _imageFile!,
-              height: 200,
-            )
-                : const SizedBox(),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: _predictSkinType,
-              child: const Text('Predict Skin Type'),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ElevatedButton(
+                  onPressed: _getImage,
+                  child: const Text('Select Image'),
+                ),
+                const SizedBox(height: 16.0),
+                _imageFile != null
+                    ? Image.file(
+                        _imageFile!,
+                        height: 200,
+                      )
+                    : const SizedBox(),
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: _predictSkinType,
+                  child: const Text('Predict Skin Type'),
+                ),
+                const SizedBox(height: 16.0),
+                Text(_prediction),
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SkinProblem()),
+                    );
+                  },
+                  child: const Text('Specify Your Skin Problem'),
+                ),
+              ],
             ),
-            const SizedBox(height: 16.0),
-            Text(_prediction),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SkinProblem()),
-                );
-              },
-              child: const Text('Specify Your Skin Problem'),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -210,4 +249,3 @@ class _Model extends State<Model> {
     );
   }
 }
-

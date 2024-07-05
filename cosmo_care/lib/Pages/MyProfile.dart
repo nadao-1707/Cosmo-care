@@ -49,10 +49,7 @@ class _MyProfileState extends State<MyProfile> {
           IconButton(
             icon: Icon(Icons.person),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MyProfile()),
-              );
+              //do nothing
             },
           ),
         ],

@@ -54,7 +54,6 @@ class _BarCodeScanningPageState extends State<BarCodeScanning> {
             Navigator.pop(context);
           },
         ),
-        title: Text("Scan Barcode"),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
@@ -69,6 +68,18 @@ class _BarCodeScanningPageState extends State<BarCodeScanning> {
       ),
       body: Column(
         children: [
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              "Scan product's BarCode here for more info",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
           Expanded(
             flex: 2,
             child: MobileScanner(
@@ -119,7 +130,7 @@ class _BarCodeScanningPageState extends State<BarCodeScanning> {
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.black54,
         backgroundColor: const Color(0xFFE1BEE7),
-        currentIndex: 3,
+        currentIndex: 2,
         onTap: (index) {
           switch (index) {
             case 0:

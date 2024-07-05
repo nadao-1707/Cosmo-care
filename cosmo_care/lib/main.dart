@@ -27,12 +27,10 @@ class MyApp extends StatelessWidget {
       initialRoute: '/loading', // Set the initial route to the loading screen
       routes: {
         '/loading': (context) => const Loading(), // Define loading screen route
-       '/skinTypeTest': (context) => const SkinTypeTest(), // Define SkinTypeTest route
-        '/Model': (context) => const Model(),
       },
       theme: ThemeData(
         primarySwatch: Colors.purple, // Example theme customization
-        hintColor: Colors.pink, // Example theme customization
+        hintColor: Colors.purple, // Example theme customization
       ),
     );
   }

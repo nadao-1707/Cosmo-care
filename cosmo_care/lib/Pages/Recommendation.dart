@@ -17,7 +17,8 @@ class Recommendation extends StatefulWidget {
   const Recommendation({
     super.key,
     required this.concerns,
-     required this.lowPrice, required this.highPrice,
+    required this.lowPrice, 
+    required this.highPrice,
   });
 
   @override
@@ -36,36 +37,36 @@ class _RecommendationState extends State<Recommendation> {
   }
 
   Future<void> _fetchProducts() async {
-  setState(() {
-    _isLoading = true;
-  });
+    setState(() {
+      _isLoading = true;
+    });
 
-  try {
-    List<Product> products;
+    try {
+      List<Product> products;
 
-    if (widget.lowPrice == 0 && widget.highPrice == 0) {
-      // Use fetchProductsBySkinTypeAndConcern when both prices are zero
-      products = await _clientController.fetchProductsBySkinTypeAndConcern(widget.concerns);
-    } else {
-      // Otherwise, use fetchProductsByPriceRangeAndConcern
-      products = await _clientController.fetchProductsByPriceRangeAndConcern(
-        widget.lowPrice,
-        widget.highPrice,
-        widget.concerns,
-      );
+      if (widget.lowPrice == 0 && widget.highPrice == 0) {
+        // Use fetchProductsBySkinTypeAndConcern when both prices are zero
+        products = await _clientController.fetchProductsBySkinTypeAndConcern(widget.concerns);
+      } else {
+        // Otherwise, use fetchProductsByPriceRangeAndConcern
+        products = await _clientController.fetchProductsByPriceRangeAndConcern(
+          widget.lowPrice,
+          widget.highPrice,
+          widget.concerns,
+        );
+      }
+
+      setState(() {
+        _products = products;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching products: $e');
+      setState(() {
+        _isLoading = false;
+      });
     }
-
-    setState(() {
-      _products = products;
-      _isLoading = false;
-    });
-  } catch (e) {
-    print('Error fetching products: $e');
-    setState(() {
-      _isLoading = false;
-    });
   }
-}
 
   void _addToCart(Product product) async {
     try {
@@ -92,7 +93,6 @@ class _RecommendationState extends State<Recommendation> {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
-        title: const Text('Suggested Products'),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
@@ -154,23 +154,33 @@ class _RecommendationState extends State<Recommendation> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const MyCart()),
-                    );
-                  },
-                  child: const Text('Show cart'),
-                ),
-                ElevatedButton(
+                ElevatedButton.icon(
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const ChatBot()),
                     );
                   },
-                  child: const Text('Chat with us for more info'),
+                  icon: const Icon(Icons.chat),
+                  label: const Text('Chat for more info'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFD9D9D9),
+                    padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
+                  ),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MyCart()),
+                    );
+                  },
+                  icon: const Icon(Icons.shopping_cart),
+                  label: const Text('Show cart'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFD9D9D9),
+                    padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
+                  ),
                 ),
               ],
             ),
@@ -290,7 +300,7 @@ class ProductCard extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 2), // Adjust spacing size
+              const SizedBox(height: 1), // Adjust spacing size
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

@@ -167,27 +167,28 @@ class _MyCartState extends State<MyCart> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFD1C4E9),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFE1BEE7),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: const Text('Checkout'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MyProfile()),
-              );
-            },
-          ),
-        ],
-      ),
+appBar: AppBar(
+  backgroundColor: const Color(0xFFE1BEE7),
+  leading: IconButton(
+    icon: const Icon(Icons.arrow_back),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  ),
+  title: const Text('My cart'),
+  centerTitle: true, // Center align the title
+  actions: [
+    IconButton(
+      icon: const Icon(Icons.person),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MyProfile()),
+        );
+      },
+    ),
+  ],
+),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(

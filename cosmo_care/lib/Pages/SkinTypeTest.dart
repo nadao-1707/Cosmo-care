@@ -59,7 +59,6 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
-        title: const Text('Skin Type Test', style: TextStyle(color: Colors.black)),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
@@ -78,7 +77,7 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
-              'SKIN TYPE TEST',
+              'WHAT IS YOUR SKIN TYPE ?',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

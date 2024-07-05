@@ -77,7 +77,6 @@ class _EditProfileState extends State<EditProfile> {
             Navigator.pop(context);
           },
         ),
-        title: Text('Edit Profile', style: TextStyle(color: Colors.black)),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -85,6 +84,18 @@ class _EditProfileState extends State<EditProfile> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  'EDIT YOUR PROFILE',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
               SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
@@ -276,7 +287,6 @@ class _EditProfileState extends State<EditProfile> {
       },
     );
   }
-
 
   void _selectImage() async {
     final ImagePicker _picker = ImagePicker();

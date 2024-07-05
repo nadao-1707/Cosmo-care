@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Cosmo Care Chat',
+      title: 'Chat with us',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -121,7 +121,9 @@ class _ChatBotState extends State<ChatBot> {
             Navigator.pop(context);
           },
         ),
-        title: const Text('Chat with Cosmo Care', style: TextStyle(color: Colors.black)),
+        title: const Center(
+          child: Text('Chat with Cosmo Care', style: TextStyle(color: Colors.black)),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),

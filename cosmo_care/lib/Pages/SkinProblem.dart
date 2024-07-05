@@ -8,7 +8,7 @@ import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 
 class SkinProblem extends StatefulWidget {
-  const SkinProblem({super.key});
+  const SkinProblem({Key? key}) : super(key: key);
 
   @override
   _SkinProblemState createState() => _SkinProblemState();
@@ -17,6 +17,7 @@ class SkinProblem extends StatefulWidget {
 class _SkinProblemState extends State<SkinProblem> {
   final List<String> _selectedConcerns = [];
   String? _selectedPrice;
+  bool _showBudgetOptions = false;
 
   final List<String> _priceOptions = [
     'Under EGP 500',
@@ -29,7 +30,18 @@ class _SkinProblemState extends State<SkinProblem> {
     'Under EGP 500': [0, 500],
     'EGP 500 - EGP 1000': [500, 1000],
     'EGP 1000 - EGP 2000': [1000, 2000],
-    'Above EGP 2000': [2000, 10000], // You can set a maximum value here
+    'Above EGP 2000': [2000, 10000],
+  };
+
+  Map<String, bool> _expandedInfo = {
+    'Acne': false,
+    'Dark Circles': false,
+    'Under Eye Wrinkles': false,
+    'Under Eye Puffiness': false,
+    'Eye Bags': false,
+    'Dry Skin': false,
+    'Dark Spots': false,
+    'Pigment Spots': false,
   };
 
   @override
@@ -44,7 +56,6 @@ class _SkinProblemState extends State<SkinProblem> {
             Navigator.pop(context);
           },
         ),
-        title: const Text('Select Your Concern', style: TextStyle(color: Colors.black)),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
@@ -63,11 +74,13 @@ class _SkinProblemState extends State<SkinProblem> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             const Text(
-              'Please, Select your Concern',
+              'PLEASE, SELECT YOUR CONCERNS',
               style: TextStyle(
-                color: Colors.black,
                 fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
             Expanded(
@@ -77,60 +90,84 @@ class _SkinProblemState extends State<SkinProblem> {
                   buildCheckboxListTile('Dark Circles'),
                   buildCheckboxListTile('Under Eye Wrinkles'),
                   buildCheckboxListTile('Under Eye Puffiness'),
-                  buildCheckboxListTile('Eye Bages'),
+                  buildCheckboxListTile('Eye Bags'),
                   buildCheckboxListTile('Dry Skin'),
                   buildCheckboxListTile('Dark Spots'),
                   buildCheckboxListTile('Pigment Spots'),
                 ],
               ),
             ),
-            const SizedBox(height: 10),
-            const Text(
-              'Select your Budget',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-              ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Select Budget',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+                Switch(
+                  value: _showBudgetOptions,
+                  onChanged: (bool value) {
+                    setState(() {
+                      _showBudgetOptions = value;
+                    });
+                  },
+                ),
+              ],
             ),
-            const SizedBox(height: 10),
-            DropdownButton<String>(
-              hint: const Text('Select your Budget'),
-              value: _selectedPrice,
-              isExpanded: true,
-              items: _priceOptions.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedPrice = newValue;
-                });
-              },
+            if (_showBudgetOptions) // Show budget options if selected
+Padding(
+  padding: const EdgeInsets.only(top: 10.0),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: _priceOptions.map((String value) {
+      String label = value;
+      // Adjust label to show range inside button
+      if (value.startsWith('EGP')) {
+        List<int> range = _priceRangeMap[value]!;
+        label = '$value (${range[0]} - ${range[1]})';
+      }
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        child: SizedBox(
+          width: double.infinity, // Ensures buttons expand to fill width
+          child: ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _selectedPrice = value;
+              });
+            },
+            style: ElevatedButton.styleFrom(
+              foregroundColor: _selectedPrice == value ? Colors.white : Colors.black, backgroundColor: _selectedPrice == value ? Colors.purple : Colors.grey[200],
+              padding: const EdgeInsets.all(16.0), // Adjust padding here
             ),
+            child: Text(label),
+          ),
+        ),
+      );
+    }).toList(),
+  ),
+),
+
             const SizedBox(height: 20),
             Center(
               child: Column(
                 children: [
-                  const Text(
-                    'To see the suggested products for you',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextButton(
+                  const SizedBox(height: 20),
+                  ElevatedButton(
                     onPressed: () {
-                      if (_selectedConcerns.isEmpty) {
-                        // Show alert if no concerns are selected
+                      if (_selectedConcerns.isEmpty ||
+                          (_showBudgetOptions && _selectedPrice == null)) {
+                        // Show alert if no concerns or budget selected (if budget is required)
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: const Text('Alert'),
-                              content: const Text('Please Choose Your Problem.'),
+                              content: const Text(
+                                  'Please Choose Your Concerns.'),
                               actions: <Widget>[
                                 TextButton(
                                   child: const Text('OK'),
@@ -143,13 +180,12 @@ class _SkinProblemState extends State<SkinProblem> {
                           },
                         );
                       } else {
-                        int lowPrice = 0;
-                        int highPrice = 0;
-
-                        if (_selectedPrice != null) {
-                          lowPrice = _priceRangeMap[_selectedPrice]![0];
-                          highPrice = _priceRangeMap[_selectedPrice]![1];
-                        }
+                        int lowPrice = _showBudgetOptions
+                            ? _priceRangeMap[_selectedPrice!]![0]
+                            : 0;
+                        int highPrice = _showBudgetOptions
+                            ? _priceRangeMap[_selectedPrice!]![1]
+                            : 10000;
 
                         Navigator.push(
                           context,
@@ -163,14 +199,13 @@ class _SkinProblemState extends State<SkinProblem> {
                         );
                       }
                     },
-                    child: const Text(
-                      'CLICK HERE',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        decoration: TextDecoration.underline,
-                      ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFD9D9D9),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 50.0, vertical: 15.0),
                     ),
+                    child: const Text(
+                        'TAP HERE TO SEE YOUR SUGGESTED PRODUCTS'),
                   ),
                 ],
               ),
@@ -244,18 +279,66 @@ class _SkinProblemState extends State<SkinProblem> {
   }
 
   Widget buildCheckboxListTile(String title) {
-    return CheckboxListTile(
-      title: Text(title),
-      value: _selectedConcerns.contains(title.toLowerCase()),
-      onChanged: (value) {
-        setState(() {
-          if (value == true) {
-            _selectedConcerns.add(title.toLowerCase());
-          } else {
-            _selectedConcerns.remove(title.toLowerCase());
-          }
-        });
-      },
+    return Column(
+      children: [
+        ListTile(
+          leading: IconButton(
+            icon: _expandedInfo[title] ?? false
+                ? Icon(Icons.arrow_drop_up)
+                : Icon(Icons.arrow_drop_down),
+            onPressed: () {
+              setState(() {
+                _expandedInfo[title] = !_expandedInfo[title]!;
+              });
+            },
+          ),
+          title: Text(title),
+          trailing: Checkbox(
+            value: _selectedConcerns.contains(title.toLowerCase()),
+            onChanged: (value) {
+              setState(() {
+                if (value == true) {
+                  _selectedConcerns.add(title.toLowerCase());
+                } else {
+                  _selectedConcerns.remove(title.toLowerCase());
+                }
+              });
+            },
+          ),
+        ),
+        if (_expandedInfo[title] ?? false) // Show more info if expanded
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              getMoreInfo(title), // Replace with your actual info fetching method
+              style: TextStyle(fontSize: 14.0),
+            ),
+          ),
+      ],
     );
+  }
+
+  // Dummy method to fetch more info
+  String getMoreInfo(String concern) {
+    switch (concern) {
+      case 'Acne':
+        return 'Acne is a common skin condition that occurs when hair follicles become clogged with oil and dead skin cells. It can cause whiteheads, blackheads or pimples. Acne is most common among teenagers, though it affects people of all ages.';
+      case 'Dark Circles':
+        return 'Dark circles under the lower eyelids are common in men and women. Often accompanied by bags, dark circles can make you appear older than you are. They are usually caused by fatigue.';
+      case 'Under Eye Wrinkles':
+        return 'Under-eye wrinkles are a common sign of aging caused by the thinning of the skin and loss of collagen. Factors such as sun exposure, smoking, and facial expressions can contribute to their formation.';
+      case 'Under Eye Puffiness':
+        return 'Under-eye puffiness can be caused by fluid retention, lack of sleep, allergies, and aging. It can make the eyes appear swollen and tired.';
+      case 'Eye Bags':
+        return 'Eye bags can result from fluid retention, fat moving to a different area below the eye, and occasionally, from certain medical conditions. As you age, you may notice bags forming around your eyes, which is quite common. Bags under the eyes do not usually signify a serious condition.';
+      case 'Dry Skin':
+        return "Dry skin is skin that doesn't have enough moisture in it to keep it feeling soft. The medical term for dry skin is xeroderma (pronounced “ze-ROW-derm-ah”). Xerosis (pronounced “ze-ROW-sis”) is severely dry skin. Dry skin feels like rough patches of your skin that can flake or look scaly.";
+      case 'Dark Spots':
+        return 'Dark spots on the skin, or hyperpigmentation, occur due to an overproduction of melanin. Melanin gives the eyes, skin, and hair their color. Depending on the cause, people may call some types of dark spots on the skin age spots or sunspots. These spots can vary in size and amount from person to person';
+      case 'Pigment Spots':
+        return 'Hyperpigmentation is a common condition that makes some areas of the skin darker than others. “Hyper” means more, and “pigment” means color. Hyperpigmentation can appear as brown, black, gray, red or pink spots or patches. The spots are sometimes called age spots, sun spots or liver spots.';
+      default:
+        return '';
+    }
   }
 }

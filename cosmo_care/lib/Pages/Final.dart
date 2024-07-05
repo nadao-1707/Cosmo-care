@@ -169,7 +169,7 @@ class _FinalPageState extends State<Final> {
                       'IF you like to go to home page again please\nCLICK HERE',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Color.fromARGB(255, 112, 181, 238), // Changed color to blue to indicate a link
+                        color: Colors.black, // Changed color to black to indicate a link
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.underline, // Added underline for link style
                       ),

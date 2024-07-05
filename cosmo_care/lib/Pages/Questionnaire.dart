@@ -1,3 +1,5 @@
+import 'package:cosmo_care/Pages/Model.dart';
+import 'package:cosmo_care/Pages/SkinTypeTest.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
@@ -42,7 +44,12 @@ class Questionnaire extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Image.asset('assets/images/woman face.jpeg', width: 370, fit: BoxFit.cover),
+                  Flexible(
+                    child: Image.asset(
+                      'assets/images/woman face.jpeg',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -67,7 +74,10 @@ class Questionnaire extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/skinTypeTest'); // Navigate to SkinTypeTest page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SkinTypeTest()),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xffD9D9D9),
@@ -77,7 +87,10 @@ class Questionnaire extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/Model'); // Navigate to UploadImage page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Model()),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xffD9D9D9),

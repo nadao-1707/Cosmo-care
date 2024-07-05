@@ -44,6 +44,7 @@ Future<String?> fetchUsername() async {
 
 class Productdetails extends StatelessWidget {
   final Product product;
+
   const Productdetails({super.key, required this.product});
 
   @override
@@ -55,10 +56,9 @@ class Productdetails extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); 
+            Navigator.pop(context);
           },
         ),
-        title: const Text('Products Details'),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
@@ -90,38 +90,37 @@ class Productdetails extends StatelessWidget {
               howToUse: product.howToUse,
               problems: product.problems,
             ),
-          Center(
-  child: ElevatedButton(
-    onPressed: () async {
-      await addProductToCart(product.name);
-    },
-    style: ElevatedButton.styleFrom(
-      padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0), // Adjusted padding
-      minimumSize: Size(100, 36), // Reduced minimum size
-      backgroundColor: const Color(0xFFB39DDB),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-    ),
-    child: const Text(
-      'ADD TO CART',
-      style: TextStyle(
-        fontSize: 12, // Reduced font size
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  ),
-),
-
+            Center(
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  await addProductToCart(product.name);
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                  minimumSize: const Size(200, 36), // Fixed minimum size
+                  backgroundColor: const Color(0xFFB39DDB),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                icon: const Icon(Icons.shopping_cart), // Cart icon added
+                label: const Text(
+                  'ADD TO CART',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.black,
+        selectedItemColor: Colors.black54,
         unselectedItemColor: Colors.black54,
         backgroundColor: const Color(0xFFE1BEE7),
-        currentIndex: 3, // Set the selected index to Cart
         onTap: (index) {
           // Add navigation logic based on the selected index here
           switch (index) {
@@ -231,231 +230,229 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
     super.dispose();
   }
 
- Widget getContent() {
-  switch (selectedIndex) {
-    case 0:
-      return Text(
-        widget.description ?? 'No description available',
-        textAlign: TextAlign.justify,
-      );
-    case 1:
-      return Text(
-        widget.ingredients ?? 'No ingredients available',
-        textAlign: TextAlign.justify,
-      );
-    case 2:
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Category:',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
-          const SizedBox(height: 1),
-          Text(
-            widget.category ?? 'N/A',
-            textAlign: TextAlign.justify,
-          ),
-          const SizedBox(height: 1),
-          Text(
-            'Required Skin Type:',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: widget.requiredSkinType?.map((SkinType) => Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Text('- $SkinType'),
-            )).toList() ?? [Text('N/A')],
-          ),
-          Row(
-            children: [
-              Text(
-                'Price:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
+  Widget getContent() {
+    switch (selectedIndex) {
+      case 0:
+        return Text(
+          widget.description ?? 'No description available',
+          textAlign: TextAlign.justify,
+        );
+      case 1:
+        return Text(
+          widget.ingredients ?? 'No ingredients available',
+          textAlign: TextAlign.justify,
+        );
+      case 2:
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Category:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
               ),
-              SizedBox(width: 3),
-              Text(
-                '${widget.price} EGP',
-                textAlign: TextAlign.justify,
+            ),
+            const SizedBox(height: 1),
+            Text(
+              widget.category ?? 'N/A',
+              textAlign: TextAlign.justify,
+            ),
+            const SizedBox(height: 1),
+            Text(
+              'Required Skin Type:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
               ),
-            ],
-          ),
-          Text(
-            'Rating:',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
             ),
-          ),
-          const SizedBox(height: 1),
-          RatingBar.builder(
-            initialRating: widget.averageRating ?? 0,
-            minRating: 1,
-            direction: Axis.horizontal,
-            allowHalfRating: true,
-            itemCount: 5,
-            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-            itemBuilder: (context, _) => Icon(
-              Icons.star,
-              color: Colors.amber,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: widget.requiredSkinType?.map((SkinType) => Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Text('- $SkinType'),
+              )).toList() ?? [Text('N/A')],
             ),
-            onRatingUpdate: (rating) {
-              print(rating);
-            },
-            ignoreGestures: true,
-          ),
-          Text(
-            '${widget.averageRating?.toStringAsFixed(1) ?? '0.0'} (${widget.totalRatings ?? 0} reviews)',
-            textAlign: TextAlign.justify,
-          ),
-          const SizedBox(height: 1),
-          Text(
-            'How To Use:',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
-          const SizedBox(height: 1),
-          Text(
-            widget.howToUse ?? 'No usage instructions available',
-            textAlign: TextAlign.justify,
-          ),
-          const SizedBox(height: 1),
-          Text(
-            'Problems:',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: widget.problems?.map((problem) => Padding(
-              padding: const EdgeInsets.only(bottom: 4.0),
-              child: Text('- $problem'),
-            )).toList() ?? [Text('No problems listed')],
-          ),
-        ],
-      );
-    case 3:
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (widget.reviews != null && widget.reviews!.isNotEmpty)
-            ListView(
-              shrinkWrap: true,
-              children: widget.reviews!.map((review) => ListTile(title: Text(review))).toList(),
-            )
-          else
-            Center(child: Text('No reviews until now')),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: reviewController,
-                  decoration: InputDecoration(
-                    labelText: 'Add a Review',
-                    border: OutlineInputBorder(),
+            Row(
+              children: [
+                Text(
+                  'Price:',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
                   ),
                 ),
-              ),
-              SizedBox(width: 8),
-              ElevatedButton(
-                onPressed: () async {
-                  if (reviewController.text.isNotEmpty) {
-                    await addReview(widget.name, reviewController.text);
-                    setState(() {
-                      widget.reviews?.add(reviewController.text);
-                      reviewController.clear();
-                    });
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFB39DDB),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                SizedBox(width: 3),
+                Text(
+                  '${widget.price} EGP',
+                  textAlign: TextAlign.justify,
                 ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                  child: Text(
-                    'SUBMIT',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+              ],
+            ),
+            Text(
+              'Rating:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 1),
+            RatingBar.builder(
+              initialRating: widget.averageRating ?? 0,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+              itemBuilder: (context, _) => Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (rating) {
+                print(rating);
+              },
+              ignoreGestures: true,
+            ),
+            Text(
+              '${widget.averageRating?.toStringAsFixed(1) ?? '0.0'} (${widget.totalRatings ?? 0} reviews)',
+              textAlign: TextAlign.justify,
+            ),
+            const SizedBox(height: 1),
+            Text(
+              'How To Use:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 1),
+            Text(
+              widget.howToUse ?? 'No usage instructions available',
+              textAlign: TextAlign.justify,
+            ),
+            const SizedBox(height: 1),
+            Text(
+              'Problems:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: widget.problems?.map((problem) => Padding(
+                padding: const EdgeInsets.only(bottom: 4.0),
+                child: Text('- $problem'),
+              )).toList() ?? [Text('No problems listed')],
+            ),
+          ],
+        );
+      case 3:
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (widget.reviews != null && widget.reviews!.isNotEmpty)
+              ListView(
+                shrinkWrap: true,
+                children: widget.reviews!.map((review) => ListTile(title: Text(review))).toList(),
+              )
+            else
+              Center(child: Text('No reviews until now')),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: reviewController,
+                    decoration: InputDecoration(
+                      labelText: 'Add a Review',
+                      border: OutlineInputBorder(),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: ratingController,
-                  decoration: InputDecoration(
-                    labelText: 'Add a Rating (1-5)',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-              ),
-              SizedBox(width: 8),
-              ElevatedButton(
-                onPressed: () async {
-                  if (ratingController.text.isNotEmpty) {
-                    int? rating = int.tryParse(ratingController.text);
-                    if (rating != null && rating > 0 && rating <= 5) {
-                      await addRating(widget.name, rating);
+                SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (reviewController.text.isNotEmpty) {
+                      await addReview(widget.name, reviewController.text);
                       setState(() {
-                        widget.averageRating = (widget.averageRating! * widget.totalRatings! + rating) / (widget.totalRatings! + 1);
-                        widget.totalRatings = widget.totalRatings! + 1;
-                        ratingController.clear();
+                        widget.reviews?.add(reviewController.text);
+                        reviewController.clear();
                       });
                     }
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFB39DDB),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFB39DDB),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                  child: Text(
-                    'SUBMIT',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                    child: Text(
+                      'SUBMIT',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      );
-    default:
-      return Container();
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: ratingController,
+                    decoration: InputDecoration(
+                      labelText: 'Add a Rating (1-5)',
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (ratingController.text.isNotEmpty) {
+                      int? rating = int.tryParse(ratingController.text);
+                      if (rating != null && rating > 0 && rating <= 5) {
+                        await addRating(widget.name, rating);
+                        setState(() {
+                          widget.averageRating = (widget.averageRating! * widget.totalRatings! + rating) / (widget.totalRatings! + 1);
+                          widget.totalRatings = widget.totalRatings! + 1;
+                          ratingController.clear();
+                        });
+                      }
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFB39DDB),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                    child: Text(
+                      'SUBMIT',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      default:
+        return Container();
+    }
   }
-}
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -464,94 +461,97 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Image.network(
-                widget.imgURL,
-                width: 200,
-                height: 200,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Center(
-              child: Text(
-                widget.name,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+      child: SizedBox(
+        height: 600, // Fixed height for the card
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Image.network(
+                  widget.imgURL,
+                  width: 200,
+                  height: 200,
+                  fit: BoxFit.cover,
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = 0;
-                    });
-                  },
-                  child: Text(
-                    'OverView',
-                    style: TextStyle(
-                      color: selectedIndex == 0 ? Colors.green : Colors.grey,
-                      fontWeight: selectedIndex == 0 ? FontWeight.bold : FontWeight.normal,
-                    ),
+              const SizedBox(height: 16),
+              Center(
+                child: Text(
+                  widget.name,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = 1;
-                    });
-                  },
-                  child: Text(
-                    'Ingredients',
-                    style: TextStyle(
-                      color: selectedIndex == 1 ? Colors.green : Colors.grey,
-                      fontWeight: selectedIndex == 1 ? FontWeight.bold : FontWeight.normal,
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = 0;
+                      });
+                    },
+                    child: Text(
+                      'Overview',
+                      style: TextStyle(
+                        color: selectedIndex == 0 ? Colors.green : Colors.grey,
+                        fontWeight: selectedIndex == 0 ? FontWeight.bold : FontWeight.normal,
+                      ),
                     ),
                   ),
-                ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = 2;
-                    });
-                  },
-                  child: Text(
-                    'Details',
-                    style: TextStyle(
-                      color: selectedIndex == 2 ? Colors.green : Colors.grey,
-                      fontWeight: selectedIndex == 2 ? FontWeight.bold : FontWeight.normal,
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = 1;
+                      });
+                    },
+                    child: Text(
+                      'Ingredients',
+                      style: TextStyle(
+                        color: selectedIndex == 1 ? Colors.green : Colors.grey,
+                        fontWeight: selectedIndex == 1 ? FontWeight.bold : FontWeight.normal,
+                      ),
                     ),
                   ),
-                ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = 3;
-                    });
-                  },
-                  child: Text(
-                    'Reviews',
-                    style: TextStyle(
-                      color: selectedIndex == 3 ? Colors.green : Colors.grey,
-                      fontWeight: selectedIndex == 3 ? FontWeight.bold : FontWeight.normal,
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = 2;
+                      });
+                    },
+                    child: Text(
+                      'Details',
+                      style: TextStyle(
+                        color: selectedIndex == 2 ? Colors.green : Colors.grey,
+                        fontWeight: selectedIndex == 2 ? FontWeight.bold : FontWeight.normal,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const Divider(),
-            getContent(),
-          ],
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = 3;
+                      });
+                    },
+                    child: Text(
+                      'Reviews',
+                      style: TextStyle(
+                        color: selectedIndex == 3 ? Colors.green : Colors.grey,
+                        fontWeight: selectedIndex == 3 ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(),
+              getContent(),
+            ],
+          ),
         ),
       ),
     );

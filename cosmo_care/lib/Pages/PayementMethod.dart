@@ -302,8 +302,6 @@ class _PaymentMethodState extends State<PaymentMethod> {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
-        title:
-            const Text('Choose a payment method', style: TextStyle(color: Colors.black)),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
