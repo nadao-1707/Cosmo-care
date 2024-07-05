@@ -1,8 +1,6 @@
-import 'package:cosmo_care/Pages/SkinTypeTest.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/Loading.dart';
-import 'package:cosmo_care/Pages/Model.dart'; 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

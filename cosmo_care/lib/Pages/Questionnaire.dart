@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/Model.dart';
 import 'package:cosmo_care/Pages/SkinTypeTest.dart';
-import 'package:flutter/material.dart';
 import 'package:cosmo_care/Pages/BarCodeScanning.dart';
 import 'package:cosmo_care/Pages/ChatBot.dart';
 import 'package:cosmo_care/Pages/Home.dart';
@@ -9,7 +9,7 @@ import 'package:cosmo_care/Pages/Search.dart';
 import 'package:cosmo_care/Pages/MyProfile.dart';
 
 class Questionnaire extends StatelessWidget {
-  const Questionnaire({super.key});
+  const Questionnaire({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +24,14 @@ class Questionnaire extends StatelessWidget {
           },
         ),
         actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 354.0),
+            child: Image.asset(
+              'assets/images/login_image-removebg-preview.png', // Your image path
+              width: 80, // Adjust the width as needed
+              height: 43, // Adjust the height as needed
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () {
