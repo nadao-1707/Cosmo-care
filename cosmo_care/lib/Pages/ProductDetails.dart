@@ -25,27 +25,26 @@ Future<void> addReview(String productName, String review) async {
   await controller.addReview(id, 'Review by $username: $review');
 }
 
-
-Future<void> addRating(String productName,int rating) async {
+Future<void> addRating(String productName, int rating) async {
   ClientController controller = ClientController();
   String id = await controller.fetchProductIdByName(productName); 
-  await controller.addRating(id,rating);
+  await controller.addRating(id, rating);
 }
 
 Future<String?> fetchUsername() async {
-    try {
-      AuthService auth = AuthService();
-      return await auth.getUserUsername();
-    } catch (e) {
-      print('Error fetching username: $e');
-      return null;
-    }
+  try {
+    AuthService auth = AuthService();
+    return await auth.getUserUsername();
+  } catch (e) {
+    print('Error fetching username: $e');
+    return null;
   }
+}
 
-class Productdetails extends StatelessWidget {
+class ProductDetails extends StatelessWidget {
   final Product product;
 
-  const Productdetails({super.key, required this.product});
+  const ProductDetails({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +197,7 @@ class ProductDetailCard extends StatefulWidget {
   final String? howToUse;
   final List<String>? problems;
 
-   ProductDetailCard({
+  ProductDetailCard({
     super.key,
     required this.name,
     required this.imgURL,
@@ -461,96 +460,98 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       color: Colors.white,
-      child: SizedBox(
+      child: Container(
         height: 600, // Fixed height for the card
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Image.network(
-                  widget.imgURL,
-                  width: 200,
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Center(
-                child: Text(
-                  widget.name,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Image.network(
+                    widget.imgURL,
+                    width: 200,
+                    height: 200,
+                    fit: BoxFit.contain, // Ensure the image fits within the container
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = 0;
-                      });
-                    },
-                    child: Text(
-                      'Overview',
-                      style: TextStyle(
-                        color: selectedIndex == 0 ? Colors.green : Colors.grey,
-                        fontWeight: selectedIndex == 0 ? FontWeight.bold : FontWeight.normal,
-                      ),
+                const SizedBox(height: 16),
+                Center(
+                  child: Text(
+                    widget.name,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = 1;
-                      });
-                    },
-                    child: Text(
-                      'Ingredients',
-                      style: TextStyle(
-                        color: selectedIndex == 1 ? Colors.green : Colors.grey,
-                        fontWeight: selectedIndex == 1 ? FontWeight.bold : FontWeight.normal,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = 0;
+                        });
+                      },
+                      child: Text(
+                        'Overview',
+                        style: TextStyle(
+                          color: selectedIndex == 0 ? Colors.green : Colors.grey,
+                          fontWeight: selectedIndex == 0 ? FontWeight.bold : FontWeight.normal,
+                        ),
                       ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = 2;
-                      });
-                    },
-                    child: Text(
-                      'Details',
-                      style: TextStyle(
-                        color: selectedIndex == 2 ? Colors.green : Colors.grey,
-                        fontWeight: selectedIndex == 2 ? FontWeight.bold : FontWeight.normal,
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = 1;
+                        });
+                      },
+                      child: Text(
+                        'Ingredients',
+                        style: TextStyle(
+                          color: selectedIndex == 1 ? Colors.green : Colors.grey,
+                          fontWeight: selectedIndex == 1 ? FontWeight.bold : FontWeight.normal,
+                        ),
                       ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = 3;
-                      });
-                    },
-                    child: Text(
-                      'Reviews',
-                      style: TextStyle(
-                        color: selectedIndex == 3 ? Colors.green : Colors.grey,
-                        fontWeight: selectedIndex == 3 ? FontWeight.bold : FontWeight.normal,
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = 2;
+                        });
+                      },
+                      child: Text(
+                        'Details',
+                        style: TextStyle(
+                          color: selectedIndex == 2 ? Colors.green : Colors.grey,
+                          fontWeight: selectedIndex == 2 ? FontWeight.bold : FontWeight.normal,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const Divider(),
-              getContent(),
-            ],
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = 3;
+                        });
+                      },
+                      child: Text(
+                        'Reviews',
+                        style: TextStyle(
+                          color: selectedIndex == 3 ? Colors.green : Colors.grey,
+                          fontWeight: selectedIndex == 3 ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const Divider(),
+                getContent(),
+              ],
+            ),
           ),
         ),
       ),

@@ -142,7 +142,7 @@ class _RecommendationState extends State<Recommendation> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Productdetails(product: product),
+                                builder: (context) => ProductDetails(product: product),
                               ),
                             );
                           },
@@ -151,39 +151,43 @@ class _RecommendationState extends State<Recommendation> {
                     ),
             ),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const ChatBot()),
-                    );
-                  },
-                  icon: const Icon(Icons.chat),
-                  label: const Text('Chat for more info'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFD9D9D9),
-                    padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
-                  ),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const MyCart()),
-                    );
-                  },
-                  icon: const Icon(Icons.shopping_cart),
-                  label: const Text('Show cart'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFD9D9D9),
-                    padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
-                  ),
-                ),
-              ],
-            ),
+Center(
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      ElevatedButton.icon(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ChatBot()),
+          );
+        },
+        icon: const Icon(Icons.chat),
+        label: const Text('Chat for more info'),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFFD9D9D9),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+        ),
+      ),
+      const SizedBox(width: 20), // Adjust the width as needed
+      ElevatedButton.icon(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const MyCart()),
+          );
+        },
+        icon: const Icon(Icons.shopping_cart),
+        label: const Text('Show cart'),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFFD9D9D9),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+        ),
+      ),
+    ],
+  ),
+)
+
           ],
         ),
       ),

@@ -71,7 +71,6 @@ class _FinalPageState extends State<Final> {
       backgroundColor: const Color(0xFFCDB7EB),
       appBar: AppBar(
         backgroundColor: const Color(0xFFE1BEE7),
-        title: const Text('Order Confirmation', style: TextStyle(color: Colors.black)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {

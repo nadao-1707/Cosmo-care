@@ -108,7 +108,7 @@ class _BarCodeScanningPageState extends State<BarCodeScanning> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Productdetails(product: fetchedProduct),
+                            builder: (context) => ProductDetails(product: fetchedProduct),
                           ),
                         );
                       },

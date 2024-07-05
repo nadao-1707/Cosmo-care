@@ -75,7 +75,6 @@ class _SearchState extends State<Search> {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
-        title: const Text('Search', style: TextStyle(color: Colors.black)),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
@@ -180,7 +179,7 @@ class _SearchState extends State<Search> {
                                 onTap: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => Productdetails(product: product)),
+                                    MaterialPageRoute(builder: (context) => ProductDetails(product: product)),
                                   );
                                 },
                               );
