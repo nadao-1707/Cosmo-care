@@ -85,6 +85,26 @@ class _ModelState extends State<Model> {
     );
   }
 
+  void _showPredictFirstAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Predict Skin Type First'),
+          content: Text('Please upload your image and press "Predict Skin Type" first.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<String> uploadImage(File imageFile) async {
     final url = Uri.parse('$baseUrl/predict');
     final request = http.MultipartRequest('POST', url)
@@ -166,10 +186,14 @@ class _ModelState extends State<Model> {
                 const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const SkinProblem()),
-                    );
+                    if (_imageFile == null || _prediction.isEmpty) {
+                      _showPredictFirstAlert();
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SkinProblem()),
+                      );
+                    }
                   },
                   child: const Text('Specify Your Skin Problem'),
                 ),

@@ -24,14 +24,14 @@ class Questionnaire extends StatelessWidget {
           },
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 354.0),
-            child: Image.asset(
-              'assets/images/login_image-removebg-preview.png', // Your image path
-              width: 80, // Adjust the width as needed
-              height: 43, // Adjust the height as needed
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(right: 330.0),
+          //   child: Image.asset(
+          //     'assets/images/login_image-removebg-preview.png', // Your image path
+          //     width: 80, // Adjust the width as needed
+          //     height: 43, // Adjust the height as needed
+          //   ),
+          // ),
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () {

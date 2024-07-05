@@ -202,10 +202,10 @@ Padding(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFD9D9D9),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 50.0, vertical: 15.0),
+                          horizontal: 20.0, vertical: 5.0),
                     ),
                     child: const Text(
-                        'TAP HERE TO SEE YOUR SUGGESTED PRODUCTS'),
+                        'TAP TO SEE YOUR SUGGESTED PRODUCTS'),
                   ),
                 ],
               ),
