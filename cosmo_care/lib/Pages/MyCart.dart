@@ -86,7 +86,6 @@ class _MyCartState extends State<MyCart> {
       int currentQuantity = _cartProductsWithQuantities[product] ?? 1;
       _cartProductsWithQuantities[product] = currentQuantity + 1;
     });
-    // Optionally, update the quantity in Firestore if needed
   }
 
   void _decreaseQuantity(Product product) {
@@ -98,12 +97,11 @@ class _MyCartState extends State<MyCart> {
         _removeFromCart(product);
       }
     });
-    // Optionally, update the quantity in Firestore if needed
   }
 
   void _removeFromCart(Product product) {
     setState(() {
-      _cartProductsWithQuantities.remove(product); // Optimistically remove from UI
+      _cartProductsWithQuantities.remove(product);
     });
 
     _controller.getProductID(product.name).then((docId) {
@@ -114,16 +112,14 @@ class _MyCartState extends State<MyCart> {
         );
       }).catchError((error) {
         print('Failed to remove from cart: $error');
-        // Revert UI change if removal fails
         setState(() {
-          _cartProductsWithQuantities[product] = 1; // Add back the product
+          _cartProductsWithQuantities[product] = 1; 
         });
       });
     }).catchError((error) {
       print('Error getting product ID: $error');
-      // Revert UI change if getProductID fails
       setState(() {
-        _cartProductsWithQuantities[product] = 1; // Add back the product
+        _cartProductsWithQuantities[product] = 1;
       });
     });
   }
