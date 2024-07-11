@@ -27,12 +27,12 @@ class _HomePageState extends State<Loading> {
 
   void _startAutoSwipe() {
     // Delay the first swipe and subsequent swipes using recursive function
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (_currentPage < imagePaths.length - 1) {
         _currentPage++;
         _controller.animateToPage(
           _currentPage,
-          duration: const Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 1000),
           curve: Curves.easeInOut,
         );
         // Call _startAutoSwipe recursively for the next image

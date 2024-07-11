@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      home: Loading(),
       debugShowCheckedModeBanner: false,
       initialRoute: '/loading', // Set the initial route to the loading screen
       routes: {
@@ -33,4 +34,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
