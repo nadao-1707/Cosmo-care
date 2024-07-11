@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, unnecessary_string_interpolations
-
 import 'package:flutter/material.dart';
 import 'package:cosmo_care/Entities/Client.dart';
 import 'package:cosmo_care/Pages/EditProfile.dart';
@@ -188,9 +186,10 @@ class _MyProfileState extends State<MyProfile> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.black54,
+        selectedItemColor: Colors.black,
         unselectedItemColor: Colors.black54,
         backgroundColor: Color(0xFFE1BEE7),
+        currentIndex: 5, // Set the current index to indicate the Profile page
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
