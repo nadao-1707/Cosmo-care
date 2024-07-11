@@ -104,7 +104,7 @@ class _EditProfileState extends State<EditProfile> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 0),
               GestureDetector(
                 onTap: () {
                   _selectImage();

@@ -364,7 +364,7 @@ class _ProductDetailCardState extends State<ProductDetailCard> {
               )
             else
               Center(child: Text('No reviews until now')),
-            const SizedBox(height: 16),
+            const SizedBox(height: 10),
             Row(
               children: [
                 Expanded(

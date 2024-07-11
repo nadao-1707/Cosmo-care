@@ -128,15 +128,7 @@ class _SearchState extends State<Search> {
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
-              const Text(
-                'Recent',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
+              //const SizedBox(height: 20),
               const SizedBox(height: 20),
               FutureBuilder<List<Map<String, dynamic>>>(
                 future: result,

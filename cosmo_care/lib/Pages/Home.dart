@@ -79,9 +79,9 @@ class _HomePageState extends State<Home> {
                 },
               ),
             ),
-            SizedBox(height: 50),
+            SizedBox(height: 20),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40.0),
+              padding: const EdgeInsets.symmetric(horizontal: 50.0),
               child: Column(
                 children: [
                   GestureDetector(
@@ -98,7 +98,7 @@ class _HomePageState extends State<Home> {
                           borderRadius: BorderRadius.circular(8.0),
                           child: Opacity(
                             opacity: 0.4,
-                            child: Image.asset('assets/images/questionaire.png', width: 200, fit: BoxFit.cover),
+                            child: Image.asset('assets/images/questionaire.png', width: 250, fit: BoxFit.cover),
                           ),
                         ),
                         const Text(
@@ -128,7 +128,7 @@ class _HomePageState extends State<Home> {
                           borderRadius: BorderRadius.circular(8.0),
                           child: Opacity(
                             opacity: 0.4,
-                            child: Image.asset('assets/images/QR-Code.png', width: 150, fit: BoxFit.cover),
+                            child: Image.asset('assets/images/QR-Code.png', width: 200, fit: BoxFit.cover),
                           ),
                         ),
                         const Text(
