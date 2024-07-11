@@ -13,9 +13,10 @@ import 'package:cosmo_care/Pages/Home.dart';
 import 'package:cosmo_care/Pages/Search.dart';
 
 Future<Client?> returnClient() async {
-    ClientController clientController = ClientController();
-    return await clientController.getClientData();
-  }
+  ClientController clientController = ClientController();
+  return await clientController.getClientData();
+}
+
 class MyProfile extends StatefulWidget {
   const MyProfile({Key? key}) : super(key: key);
 
@@ -45,12 +46,13 @@ class _MyProfileState extends State<MyProfile> {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
+        title: Text('My Profile'), // Add the title here
         actions: [
-          IconButton(
-            icon: Icon(Icons.person),
-            onPressed: () {
-              //do nothing
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/login_image-removebg-preview.png'),
+            ),
           ),
         ],
       ),
@@ -210,6 +212,10 @@ class _MyProfileState extends State<MyProfile> {
             icon: Icon(Icons.search),
             label: 'Search',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
         onTap: (index) {
           switch (index) {
@@ -242,6 +248,9 @@ class _MyProfileState extends State<MyProfile> {
                 context,
                 MaterialPageRoute(builder: (context) => Search()),
               );
+              break;
+            case 5:
+              // Profile page already present
               break;
           }
         },
@@ -278,6 +287,4 @@ class _MyProfileState extends State<MyProfile> {
       },
     );
   }
-
-  
 }

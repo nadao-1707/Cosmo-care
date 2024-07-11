@@ -51,18 +51,15 @@ class _BarCodeScanningPageState extends State<BarCodeScanning> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // Go back to the previous page
           },
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MyProfile()),
-              );
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/login_image-removebg-preview.png'),
+            ),
           ),
         ],
       ),
@@ -146,7 +143,7 @@ class _BarCodeScanningPageState extends State<BarCodeScanning> {
               );
               break;
             case 2:
-            // Scan page already present
+              // Scan page already present
               break;
             case 3:
               Navigator.push(
@@ -158,6 +155,12 @@ class _BarCodeScanningPageState extends State<BarCodeScanning> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const Search()),
+              );
+              break;
+            case 5:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
               break;
           }
@@ -182,6 +185,10 @@ class _BarCodeScanningPageState extends State<BarCodeScanning> {
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),

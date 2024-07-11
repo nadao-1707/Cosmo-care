@@ -17,7 +17,7 @@ class Recommendation extends StatefulWidget {
   const Recommendation({
     super.key,
     required this.concerns,
-    required this.lowPrice, 
+    required this.lowPrice,
     required this.highPrice,
   });
 
@@ -94,14 +94,11 @@ class _RecommendationState extends State<Recommendation> {
           },
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MyProfile()),
-              );
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/login_image-removebg-preview.png'), 
+            ),
           ),
         ],
       ),
@@ -151,43 +148,42 @@ class _RecommendationState extends State<Recommendation> {
                     ),
             ),
             const SizedBox(height: 16),
-Center(
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      ElevatedButton.icon(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const ChatBot()),
-          );
-        },
-        icon: const Icon(Icons.chat),
-        label: const Text('Chat for more info'),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFD9D9D9),
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-        ),
-      ),
-      const SizedBox(width: 20), // Adjust the width as needed
-      ElevatedButton.icon(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const MyCart()),
-          );
-        },
-        icon: const Icon(Icons.shopping_cart),
-        label: const Text('Show cart'),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFD9D9D9),
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-        ),
-      ),
-    ],
-  ),
-)
-
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ChatBot()),
+                      );
+                    },
+                    icon: const Icon(Icons.chat),
+                    label: const Text('Chat for more info'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFD9D9D9),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+                    ),
+                  ),
+                  const SizedBox(width: 20), // Adjust the width as needed
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const MyCart()),
+                      );
+                    },
+                    icon: const Icon(Icons.shopping_cart),
+                    label: const Text('Show cart'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFD9D9D9),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -216,6 +212,10 @@ Center(
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
         onTap: (index) {
@@ -248,6 +248,12 @@ Center(
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const Search()),
+              );
+              break;
+            case 5:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
               break;
           }

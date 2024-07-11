@@ -130,18 +130,15 @@ class _ModelState extends State<Model> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // Go back to the previous page
           },
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MyProfile()),
-              );
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/login_image-removebg-preview.png'), 
+            ),
           ),
         ],
       ),
@@ -227,6 +224,10 @@ class _ModelState extends State<Model> {
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
         onTap: (index) {

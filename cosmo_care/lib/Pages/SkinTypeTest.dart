@@ -52,7 +52,7 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
     return Scaffold(
       backgroundColor: const Color(0xFFCDB7EB), // Background color
       appBar: AppBar(
-        backgroundColor: const Color(0xFFE3CCE1),
+        backgroundColor: const Color(0xFFE1BEE7),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -60,14 +60,12 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
           },
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MyProfile()),
-              );
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/login_image-removebg-preview.png'),
+              radius: 20,
+            ),
           ),
         ],
       ),
@@ -164,6 +162,10 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
             icon: Icon(Icons.search),
             label: 'Search',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
         onTap: (index) {
           switch (index) {
@@ -195,6 +197,12 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const Search()),
+              );
+              break;
+            case 5:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
               break;
           }

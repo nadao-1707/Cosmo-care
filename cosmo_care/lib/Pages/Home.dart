@@ -42,14 +42,11 @@ class _HomePageState extends State<Home> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFE3CCE1),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MyProfile()),
-              );
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/login_image-removebg-preview.png'), 
+            ),
           ),
         ],
       ),
@@ -178,6 +175,10 @@ class _HomePageState extends State<Home> {
             icon: Icon(Icons.search),
             label: 'Search',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'profile',
+          ),
         ],
         onTap: (index) {
           switch (index) {
@@ -209,6 +210,12 @@ class _HomePageState extends State<Home> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const Search()),
+              );
+              break;
+            case 5:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
               break;
           }

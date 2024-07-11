@@ -53,18 +53,16 @@ class _SkinProblemState extends State<SkinProblem> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // Go back to the previous page
           },
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MyProfile()),
-              );
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/login_image-removebg-preview.png'),
+              radius: 20,
+            ),
           ),
         ],
       ),
@@ -118,40 +116,43 @@ class _SkinProblemState extends State<SkinProblem> {
                 ),
               ],
             ),
-            if (_showBudgetOptions) // Show budget options if selected
-Padding(
-  padding: const EdgeInsets.only(top: 10.0),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: _priceOptions.map((String value) {
-      String label = value;
-      // Adjust label to show range inside button
-      if (value.startsWith('EGP')) {
-        List<int> range = _priceRangeMap[value]!;
-        label = '$value (${range[0]} - ${range[1]})';
-      }
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: SizedBox(
-          width: double.infinity, // Ensures buttons expand to fill width
-          child: ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _selectedPrice = value;
-              });
-            },
-            style: ElevatedButton.styleFrom(
-              foregroundColor: _selectedPrice == value ? Colors.white : Colors.black, backgroundColor: _selectedPrice == value ? Colors.purple : Colors.grey[200],
-              padding: const EdgeInsets.all(16.0), // Adjust padding here
-            ),
-            child: Text(label),
-          ),
-        ),
-      );
-    }).toList(),
-  ),
-),
-
+            if (_showBudgetOptions)
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _priceOptions.map((String value) {
+                    String label = value;
+                    if (value.startsWith('EGP')) {
+                      List<int> range = _priceRangeMap[value]!;
+                      label = '$value (${range[0]} - ${range[1]})';
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              _selectedPrice = value;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: _selectedPrice == value
+                                ? Colors.white
+                                : Colors.black,
+                            backgroundColor: _selectedPrice == value
+                                ? Colors.purple
+                                : Colors.grey[200],
+                            padding: const EdgeInsets.all(16.0),
+                          ),
+                          child: Text(label),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
             const SizedBox(height: 20),
             Center(
               child: Column(
@@ -161,13 +162,12 @@ Padding(
                     onPressed: () {
                       if (_selectedConcerns.isEmpty ||
                           (_showBudgetOptions && _selectedPrice == null)) {
-                        // Show alert if no concerns or budget selected (if budget is required)
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              content: const Text(
-                                  'Please Choose Your Concerns.'),
+                              content:
+                                  const Text('Please Choose Your Concerns.'),
                               actions: <Widget>[
                                 TextButton(
                                   child: const Text('OK'),
@@ -204,8 +204,7 @@ Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20.0, vertical: 5.0),
                     ),
-                    child: const Text(
-                        'TAP TO SEE YOUR SUGGESTED PRODUCTS'),
+                    child: const Text('TAP TO SEE YOUR SUGGESTED PRODUCTS'),
                   ),
                 ],
               ),
@@ -239,6 +238,10 @@ Padding(
             icon: Icon(Icons.search),
             label: 'Search',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
         onTap: (index) {
           switch (index) {
@@ -270,6 +273,12 @@ Padding(
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const Search()),
+              );
+              break;
+            case 5:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
               break;
           }
@@ -306,11 +315,11 @@ Padding(
             },
           ),
         ),
-        if (_expandedInfo[title] ?? false) // Show more info if expanded
+        if (_expandedInfo[title] ?? false)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              getMoreInfo(title), // Replace with your actual info fetching method
+              getMoreInfo(title),
               style: TextStyle(fontSize: 14.0),
             ),
           ),
@@ -318,7 +327,6 @@ Padding(
     );
   }
 
-  // Dummy method to fetch more info
   String getMoreInfo(String concern) {
     switch (concern) {
       case 'Acne':

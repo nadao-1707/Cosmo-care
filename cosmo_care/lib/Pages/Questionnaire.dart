@@ -24,22 +24,12 @@ class Questionnaire extends StatelessWidget {
           },
         ),
         actions: [
-          // Padding(
-          //   padding: const EdgeInsets.only(right: 330.0),
-          //   child: Image.asset(
-          //     'assets/images/login_image-removebg-preview.png', // Your image path
-          //     width: 80, // Adjust the width as needed
-          //     height: 43, // Adjust the height as needed
-          //   ),
-          // ),
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MyProfile()),
-              );
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/login_image-removebg-preview.png'),
+              radius: 20,
+            ),
           ),
         ],
       ),
@@ -138,6 +128,10 @@ class Questionnaire extends StatelessWidget {
             icon: Icon(Icons.search),
             label: 'Search',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
         onTap: (index) {
           switch (index) {
@@ -169,6 +163,12 @@ class Questionnaire extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const Search()),
+              );
+              break;
+            case 5:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MyProfile()),
               );
               break;
           }

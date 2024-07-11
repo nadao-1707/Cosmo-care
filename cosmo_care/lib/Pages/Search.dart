@@ -60,6 +60,12 @@ class _SearchState extends State<Search> {
       case 4:
       // Stay on the same page if 'Search' is tapped
         break;
+      case 5:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MyProfile()),
+        );
+        break;
     }
   }
 
@@ -76,14 +82,11 @@ class _SearchState extends State<Search> {
           },
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MyProfile()),
-              );
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/login_image-removebg-preview.png'), 
+            ),
           ),
         ],
       ),
@@ -222,6 +225,10 @@ class _SearchState extends State<Search> {
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),

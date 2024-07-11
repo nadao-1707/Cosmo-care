@@ -78,6 +78,12 @@ class _MyCartState extends State<MyCart> {
           MaterialPageRoute(builder: (context) => const Search()),
         );
         break;
+      case 5:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MyProfile()),
+        );
+        break;
     }
   }
 
@@ -177,16 +183,13 @@ appBar: AppBar(
   ),
   title: const Text('My cart'),
   centerTitle: true, // Center align the title
-  actions: [
-    IconButton(
-      icon: const Icon(Icons.person),
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const MyProfile()),
-        );
-      },
-    ),
+      actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+            backgroundImage: AssetImage('assets/images/login_image-removebg-preview.png'),
+          ),
+      ),
   ],
 ),
       body: _isLoading
@@ -280,6 +283,10 @@ appBar: AppBar(
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),

@@ -70,6 +70,11 @@ class _PaymentMethodState extends State<PaymentMethod> {
           MaterialPageRoute(builder: (context) => const Search()),
         );
         break;
+      case 5:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MyProfile()),
+        );
     }
   }
 
@@ -303,14 +308,11 @@ class _PaymentMethodState extends State<PaymentMethod> {
           },
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MyProfile()),
-              );
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/login_image-removebg-preview.png'),
+            ),
           ),
         ],
       ),
@@ -403,6 +405,10 @@ class _PaymentMethodState extends State<PaymentMethod> {
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),

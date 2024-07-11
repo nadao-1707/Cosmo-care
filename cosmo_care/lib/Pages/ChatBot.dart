@@ -50,7 +50,7 @@ class _ChatBotState extends State<ChatBot> {
         );
         break;
       case 1:
-      // Stay on the same page
+        // Stay on the same page
         break;
       case 2:
         Navigator.push(
@@ -68,6 +68,12 @@ class _ChatBotState extends State<ChatBot> {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const Search()),
+        );
+        break;
+      case 5:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MyProfile()),
         );
         break;
     }
@@ -114,7 +120,7 @@ class _ChatBotState extends State<ChatBot> {
     return Scaffold(
       backgroundColor: const Color(0xFFCDB7EB),
       appBar: AppBar(
-        backgroundColor: const Color(0xFFE3CCE1),
+        backgroundColor: const Color(0xFFE1BEE7),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -125,14 +131,11 @@ class _ChatBotState extends State<ChatBot> {
           child: Text('Chat with Cosmo Care', style: TextStyle(color: Colors.black)),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MyProfile()),
-              );
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/login_image-removebg-preview.png'), 
+            ),
           ),
         ],
       ),
@@ -216,6 +219,10 @@ class _ChatBotState extends State<ChatBot> {
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),

@@ -70,13 +70,21 @@ class _EditProfileState extends State<EditProfile> {
     return Scaffold(
       backgroundColor: Color(0xFFD1C4E9),
       appBar: AppBar(
-        backgroundColor: Color(0xFFE1BEE7),
+        backgroundColor: const Color(0xFFE1BEE7),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // Go back to the previous page
           },
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/login_image-removebg-preview.png'), 
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -103,9 +111,9 @@ class _EditProfileState extends State<EditProfile> {
                 },
                 child: _image != null
                     ? CircleAvatar(
-                  radius: 50,
-                  backgroundImage: FileImage(_image!),
-                )
+                        radius: 50,
+                        backgroundImage: FileImage(_image!),
+                      )
                     : Icon(Icons.photo, size: 150, color: Colors.black54),
               ),
               SizedBox(height: 20),
