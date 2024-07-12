@@ -44,7 +44,7 @@ class _LoginDemoState extends State<LogIn> {
       if (client != null) {
         navigateToHome();
       } else {
-        _showAlertDialog('Error', 'Failed to sign in. Please check your credentials.');
+        _showAlertDialog('Error', 'Failed to Log in. Please check your credentials.');
       }
     }
   }

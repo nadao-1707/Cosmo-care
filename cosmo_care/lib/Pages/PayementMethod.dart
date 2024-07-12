@@ -24,6 +24,8 @@ class _PaymentMethodState extends State<PaymentMethod> {
   bool isCashSelected = false;
   bool isVisaSelected = false;
   int _selectedIndex = 0; // Initial selected index
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   TextEditingController addressController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
   TextEditingController cardController = TextEditingController();
@@ -79,11 +81,7 @@ class _PaymentMethodState extends State<PaymentMethod> {
   }
 
   void _checkout() async {
-    if ((isCashSelected || isVisaSelected) &&
-        addressController.text.isNotEmpty &&
-        mobileController.text.isNotEmpty &&
-        (!isVisaSelected ||
-            (cardController.text.isNotEmpty && cvvController.text.isNotEmpty))) {
+    if (_formKey.currentState!.validate()) {
       // Update Firestore with user information
       try {
         AuthService authService = AuthService();
@@ -161,7 +159,7 @@ class _PaymentMethodState extends State<PaymentMethod> {
                     color: Colors.black,
                   ),
                 ),
-                TextField(
+                TextFormField(
                   controller: addressController,
                   decoration: InputDecoration(
                     filled: true,
@@ -171,6 +169,12 @@ class _PaymentMethodState extends State<PaymentMethod> {
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your address';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -181,7 +185,7 @@ class _PaymentMethodState extends State<PaymentMethod> {
                     color: Colors.black,
                   ),
                 ),
-                TextField(
+                TextFormField(
                   controller: mobileController,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
@@ -192,6 +196,15 @@ class _PaymentMethodState extends State<PaymentMethod> {
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your mobile number';
+                    }
+                    if (!RegExp(r'^[0-9]{11}$').hasMatch(value)) {
+                      return 'Mobile number must be 11 digits';
+                    }
+                    return null;
+                  },
                 ),
               ],
             ),
@@ -215,7 +228,7 @@ class _PaymentMethodState extends State<PaymentMethod> {
                     color: Colors.black,
                   ),
                 ),
-                TextField(
+                TextFormField(
                   controller: addressController,
                   decoration: InputDecoration(
                     filled: true,
@@ -225,6 +238,12 @@ class _PaymentMethodState extends State<PaymentMethod> {
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your address';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -235,7 +254,7 @@ class _PaymentMethodState extends State<PaymentMethod> {
                     color: Colors.black,
                   ),
                 ),
-                TextField(
+                TextFormField(
                   controller: mobileController,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
@@ -246,6 +265,15 @@ class _PaymentMethodState extends State<PaymentMethod> {
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your mobile number';
+                    }
+                    if (!RegExp(r'^[0-9]{11}$').hasMatch(value)) {
+                      return 'Mobile number must be 11 digits';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -256,7 +284,7 @@ class _PaymentMethodState extends State<PaymentMethod> {
                     color: Colors.black,
                   ),
                 ),
-                TextField(
+                TextFormField(
                   controller: cardController,
                   decoration: InputDecoration(
                     filled: true,
@@ -266,6 +294,12 @@ class _PaymentMethodState extends State<PaymentMethod> {
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your card number';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -276,7 +310,7 @@ class _PaymentMethodState extends State<PaymentMethod> {
                     color: Colors.black,
                   ),
                 ),
-                TextField(
+                TextFormField(
                   controller: cvvController,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -287,6 +321,12 @@ class _PaymentMethodState extends State<PaymentMethod> {
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your CVV';
+                    }
+                    return null;
+                  },
                 ),
               ],
             ),
@@ -316,66 +356,69 @@ class _PaymentMethodState extends State<PaymentMethod> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const Text(
-                    'Choose a payment method',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Text(
+                      'Choose a payment method',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  SwitchListTile(
-                    title: const Text("Cash"),
-                    value: isCashSelected,
-                    onChanged: (bool value) {
-                      setState(() {
-                        isCashSelected = value;
-                        if (value) {
-                          isVisaSelected = false;
-                        }
-                      });
-                    },
-                  ),
-                  SwitchListTile(
-                    title: const Text("Visa"),
-                    value: isVisaSelected,
-                    onChanged: (bool value) {
-                      setState(() {
-                        isVisaSelected = value;
-                        if (value) {
-                          isCashSelected = false;
-                        }
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-            paymentDetails,
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: ElevatedButton(
-                  onPressed: _checkout,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFD9D9D9),
-                    padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-                  ),
-                  child: const Text('CHECK OUT'),
+                    const SizedBox(height: 20),
+                    SwitchListTile(
+                      title: const Text("Cash"),
+                      value: isCashSelected,
+                      onChanged: (bool value) {
+                        setState(() {
+                          isCashSelected = value;
+                          if (value) {
+                            isVisaSelected = false;
+                          }
+                        });
+                      },
+                    ),
+                    SwitchListTile(
+                      title: const Text("Visa"),
+                      value: isVisaSelected,
+                      onChanged: (bool value) {
+                        setState(() {
+                          isVisaSelected = value;
+                          if (value) {
+                            isCashSelected = false;
+                          }
+                        });
+                      },
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+              paymentDetails,
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Center(
+                  child: ElevatedButton(
+                    onPressed: _checkout,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFD9D9D9),
+                      padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+                    ),
+                    child: const Text('CHECK OUT'),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(

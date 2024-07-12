@@ -90,6 +90,13 @@ class ProductDetails extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: () async {
                   await addProductToCart(product.name);
+                  // Show a SnackBar when the product is added to the cart
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${product.name} has been added to the cart'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
@@ -181,13 +188,14 @@ class ProductDetails extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'profile',
+            label: 'Profile',
           ),
         ],
       ),
     );
   }
 }
+
 
 // ignore: must_be_immutable  
 class ProductDetailCard extends StatefulWidget {

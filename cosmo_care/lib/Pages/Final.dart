@@ -77,12 +77,6 @@ class _FinalPageState extends State<Final> {
       backgroundColor: const Color(0xFFCDB7EB),
       appBar: AppBar(
         backgroundColor: const Color(0xFFE1BEE7),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context); // Go back to the previous page
-          },
-        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),

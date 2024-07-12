@@ -166,8 +166,7 @@ class _SkinProblemState extends State<SkinProblem> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              content:
-                                  const Text('Please Choose Your Concerns.'),
+                                title: const Text('Please Choose Your Concerns'),
                               actions: <Widget>[
                                 TextButton(
                                   child: const Text('OK'),
