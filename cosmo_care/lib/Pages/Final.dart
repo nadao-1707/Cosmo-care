@@ -76,6 +76,7 @@ class _FinalPageState extends State<Final> {
     return Scaffold(
       backgroundColor: const Color(0xFFCDB7EB),
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Remove the back button
         backgroundColor: const Color(0xFFE1BEE7),
         actions: [
           Padding(

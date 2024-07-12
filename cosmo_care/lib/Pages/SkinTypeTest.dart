@@ -114,26 +114,6 @@ class _SkinTypeTestState extends State<SkinTypeTest> {
               });
             },
           ),
-          RadioListTile<String>(
-            title: const Text("COMBINATION"),
-            value: "combination",
-            groupValue: selectedSkinType,
-            onChanged: (String? value) {
-              setState(() {
-                selectedSkinType = value;
-              });
-            },
-          ),
-          RadioListTile<String>(
-            title: const Text("SENSITIVE"),
-            value: "sensitive",
-            groupValue: selectedSkinType,
-            onChanged: (String? value) {
-              setState(() {
-                selectedSkinType = value;
-              });
-            },
-          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
