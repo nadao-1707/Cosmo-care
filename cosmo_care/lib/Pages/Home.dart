@@ -40,6 +40,7 @@ class _HomePageState extends State<Home> {
     return Scaffold(
       backgroundColor: const Color(0xFFCDB7EB), // Background color
       appBar: AppBar(
+        automaticallyImplyLeading: false,  // This removes the back button
         backgroundColor: const Color(0xFFE3CCE1),
         actions: [
           Padding(
@@ -177,7 +178,7 @@ class _HomePageState extends State<Home> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'profile',
+            label: 'Profile',
           ),
         ],
         onTap: (index) {
