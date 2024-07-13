@@ -128,7 +128,6 @@ class _SearchState extends State<Search> {
                   ],
                 ),
               ),
-              //const SizedBox(height: 20),
               const SizedBox(height: 20),
               FutureBuilder<List<Map<String, dynamic>>>(
                 future: result,
@@ -157,11 +156,12 @@ class _SearchState extends State<Search> {
                               // Display CircularProgressIndicator while waiting for product data
                               return Center(child: CircularProgressIndicator());
                             } else if (productSnapshot.hasError) {
-                              // Show error message if there's an error fetching product data
-                              return Center(child: Text('Error: ${productSnapshot.error}'));
+                              // Print error in terminal and return an empty SizedBox
+                              print('Error fetching product data: ${productSnapshot.error}');
+                              return SizedBox();
                             } else if (!productSnapshot.hasData || productSnapshot.data == null) {
-                              // Placeholder for handling loading state or error
-                              return SizedBox(); // Alternatively, you can display an error message or retry option
+                              // Return an empty SizedBox for handling loading state or error
+                              return SizedBox();
                             } else {
                               // Product data is fetched, display ListTile with product details
                               Product product = productSnapshot.data!;
